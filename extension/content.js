@@ -306,6 +306,20 @@
     refreshStatus();
     if (failed || seq < q.shownSeq) return;
     q.shownSeq = seq;
+    // Give the seller time to act: a nudge stays up at least MIN_HOLD_MS. Anything newer waits,
+    // and only the newest waiting nudge shows when the hold ends.
+    const held = Date.now() - q.cueAt;
+    if (d.cue && !q.idle && q.cueAt && held < MIN_HOLD_MS) {
+      q.queued = { d, seq };
+      clearTimeout(q.queueTimer);
+      const gen = q.gen;
+      q.queueTimer = setTimeout(() => {
+        const next = q.queued;
+        q.queued = null;
+        if (next && gen === q.gen && !q.askingOutcome && next.seq >= q.shownSeq) applyCue(next.d, next.seq);
+      }, MIN_HOLD_MS - held);
+      return;
+    }
 
     setBuyer(d.buyer_type);
     if (d.buyer_type) q.buyerType = d.buyer_type;
@@ -362,6 +376,8 @@
   // Meet's class names are scrambled and change often, so Q finds the captions by the label Meet
   // gives them for screen readers, and reads each block as "speaker name, then what they said".
   const SETTLE_MS = 350; // a caption counts as finished once it stops changing this long
+  const LINE_DONE_MS = 1000; // the buyer has finished a line: quiet this long (Meet's captions pause mid-sentence)
+  const MIN_HOLD_MS = 6000; // a nudge stays on screen at least this long, so the seller can act on it
   const PACING_STREAK_S = 45; // seller talking this long without the buyer: ask for a pacing nudge
   const PACING_GAP_MS = 30000; // and not more often than this
   const cap = { region: null, visible: false, inCallSince: 0, states: new WeakMap(), lastLookup: 0 };
@@ -473,13 +489,20 @@
       st.turn.name = speaker === "You" ? "" : name;
     }
     const merged = mergeCaption(st.turn.text, text);
-    if (merged === st.turn.text) return;
-    st.turn.text = merged;
-    renderDebug();
-    if (words(merged) < st.turn.sentWords) st.turn.sentWords = words(merged); // Meet rewrote the block: count from here
-    if (speaker === "Buyer" && words(merged) - st.turn.sentWords >= 2) {
-      st.turn.sentWords = words(merged);
-      deliver(st, merged);
+    if (merged !== st.turn.text) {
+      st.turn.text = merged;
+      renderDebug();
+      if (words(merged) < st.turn.sentWords) st.turn.sentWords = words(merged); // Meet rewrote the block: count from here
+    }
+    // Nudge once the buyer is done: quiet for a beat, or someone else started talking.
+    // Nudging on every short caption pause made the card shuffle mid-sentence.
+    const done = !isLatest || now - st.changedAt >= LINE_DONE_MS;
+    // One nudge per buyer line; a line that keeps going only earns another after a lot more (12+ words).
+    const needed = st.turn.nudged ? 12 : 2;
+    if (speaker === "Buyer" && done && words(st.turn.text) - st.turn.sentWords >= needed) {
+      st.turn.sentWords = words(st.turn.text);
+      st.turn.nudged = true;
+      deliver(st, st.turn.text);
     }
   }
 
@@ -854,6 +877,8 @@
 
   function startNewCall() {
     q.gen++;
+    clearTimeout(q.queueTimer);
+    q.queued = null;
     q.live = null;
     q.askingOutcome = false;
     q.turns = [];
