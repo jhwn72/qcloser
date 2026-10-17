@@ -184,7 +184,7 @@ That leaves about 20 minutes for a second take of the call. If the call needs on
 
 **Recording the call's audio:** QuickTime records only the mic, so the buyer's voice from Meet can go missing. Use a recorder that also captures computer audio (for example OBS, or Loom with computer audio on) and play back a 20-second test before the real take. Wear earbuds on the laptop so the buyer's voice doesn't leak into your mic and your captions.
 
-**Edit (about 45 minutes):** CapCut or iMovie. Cut the hook first and test-upload it (see [Hosting](#hosting)), then build the rest. Burned-in captions, chapter labels always in the same corner, the stopwatches as plain monospace text. The hook keeps the film's own audio with one word bleeped; no added music under the hook or the demo (both need their dialogue). A quiet royalty-free bed from the editor's library is fine under the title, scale and end cards. Export 1080p, check the length is 2:00 or less, upload, and submit on Devpost by 10:45 AM.
+**Edit (about 45 minutes):** CapCut or iMovie. Cut the hook first and test-upload it (see [Hosting](#hosting)), then build the rest. Burned-in captions, chapter labels always in the same corner, the stopwatches as plain monospace text. The hook keeps the film's own audio with one word bleeped; no added music under the hook or the demo (both need their dialogue). A quiet royalty-free bed from the editor's library is fine under the title, scale and end cards. Export 1080p, check the length is 2:00 or less, upload, and submit on Devpost by 2:15 PM.
 
 ## Landing page map
 
