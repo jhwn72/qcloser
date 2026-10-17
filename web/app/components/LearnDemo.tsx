@@ -11,28 +11,31 @@ const EVENTS = [
   { toast: "Misfire caught · \u201cOffer a discount\u201d came too early", title: "Offer a discount", chip: "Misfire", note: "From call reviews · Offered before the buyer saw the value, it hurt on 3 calls. Ranked down.", misfire: true },
 ];
 
+const STEP_MS = 4200; // same rhythm as the hero's examples
+
 export default function LearnDemo() {
   const [i, setI] = useState(0);
-  const [on, setOn] = useState(false);
+  const [shown, setShown] = useState(true);
   useEffect(() => {
-    let t1: ReturnType<typeof setTimeout>;
-    const cycle = () => {
-      setOn(true);
-      t1 = setTimeout(() => setOn(false), 3200);
-    };
-    const t0 = setTimeout(cycle, 600);
     const id = setInterval(() => {
-      setI((n) => (n + 1) % EVENTS.length);
-      cycle();
-    }, 4800);
-    return () => {
-      clearTimeout(t0);
-      clearTimeout(t1);
-      clearInterval(id);
-    };
+      setShown(false);
+      setTimeout(() => {
+        setI((n) => (n + 1) % EVENTS.length);
+        setShown(true);
+      }, 300);
+    }, STEP_MS);
+    return () => clearInterval(id);
   }, []);
   const e = EVENTS[i];
   const misfire = "misfire" in e;
+  const on = shown;
+  // The same soft fade the hero uses when its example changes
+  const fade = {
+    opacity: shown ? 1 : 0,
+    transform: shown ? "none" : "translateY(6px)",
+    filter: shown ? "none" : "blur(4px)",
+    transition: "opacity .3s var(--tg-ease), transform .3s var(--tg-ease), filter .3s",
+  };
   return (
     <div className="relative w-full" style={{ maxWidth: 420 }} aria-label="How the playbook learns: a move from a won call, a lesson from a lost one, and a misfire caught after a call">
       <div
@@ -42,15 +45,16 @@ export default function LearnDemo() {
           border: "1px solid var(--tg-line)",
           color: "var(--tg-text)",
           opacity: on ? 1 : 0,
-          transform: on ? "none" : "translateY(-8px)",
-          transition: "opacity .45s var(--tg-ease), transform .45s var(--tg-ease)",
+          transform: on ? "none" : "translateY(-6px)",
+          filter: on ? "none" : "blur(4px)",
+          transition: "opacity .3s var(--tg-ease), transform .3s var(--tg-ease), filter .3s",
         }}
       >
         <span className="tg-orb" />
         {e.toast}
       </div>
       <div className="mt-5 rounded-[var(--tg-radius-card)] border p-5" style={{ borderColor: "var(--tg-line)", background: "rgba(255,255,255,0.025)" }}>
-        <div className="flex items-start justify-between gap-3">
+        <div className="flex items-start justify-between gap-3" style={fade}>
           <span
             style={{
               font: "300 19px/1.3 var(--tg-font)",
@@ -65,7 +69,7 @@ export default function LearnDemo() {
             {e.chip}
           </span>
         </div>
-        <p className="tg-fine mt-3" style={{ color: "var(--tg-muted)" }}>
+        <p className="tg-fine mt-3" style={{ color: "var(--tg-muted)", ...fade }}>
           {e.note}
         </p>
       </div>
