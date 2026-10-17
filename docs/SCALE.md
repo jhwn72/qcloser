@@ -114,7 +114,7 @@ Assumptions (all projections, none achieved):
 | **Latency** | Listen-ahead: Q starts thinking while the buyer is still talking, and the playbook is cached. Nudges land about a second after the buyer stops in our tests. Not yet benchmarked at scale. | A smaller tuned model on the fast path. |
 | **Privacy and consent** | Q reads Meet's captions in the seller's browser and captures no audio. It does save the transcript when the seller ends a call. California requires every party's consent to record a confidential conversation [7]. | Treat Q as recording: a clear notice to the buyer, keep only extracted moves by default, redact personal data, retention controls, enterprise admin settings. |
 | **Dependence on Meet's captions** | Detects when captions are off and asks the seller to turn them on. Typed fallback (Shift+B) if captions can't be read. | Google's real-time Meet Media API is in Developer Preview and closed to new signups [8], and the GA Meet REST API gives transcripts after the meeting [9]. So we'd add our own audio transcription, Zoom, Teams and dialers. The playbook is the moat, and it works on any platform. |
-| **Cold start** | A starter playbook of 250 moves (sample data for this demo: moves, names and records). | Go deep in one segment so data gets dense fast; give-to-get. |
+| **Cold start** | A starter playbook of 500 moves (sample data for this demo: moves, names and records). | Go deep in one segment so data gets dense fast; give-to-get. |
 
 ## Sources
 

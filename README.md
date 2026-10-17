@@ -27,7 +27,7 @@ Q is **closing intelligence**: the moves that are winning right now, getting sha
 
 - **Hears both sides.** Q reads Meet's live captions in the seller's browser. No bot joins the call and no audio is captured.
 - **Nudges, never scripts.** When the buyer objects, warms up, or the call drifts, the card shows a short nudge on where to steer, about a second after the buyer stops talking. "I've paid for gyms before and never go" becomes "Ask what got in the way". The seller says it their own way.
-- **Knows the moment and the buyer.** 36 situations (objections, worries like feeling judged, buying signals, pacing such as talking too long) and a buyer tag (skeptical, rushed, price-focused, curious).
+- **Knows the moment and the buyer.** 60 situations (objections, worries like feeling judged, buying signals, pacing such as talking too long) and a buyer tag (skeptical, rushed, price-focused, curious).
 - **Paces toward the close.** A call clock that follows the buyer: it extends when they're engaged or say there's no rush, and pulls in when they're short on time or going quiet.
 - **Fits your offer.** A saved company profile and a per-call brief make nudges specific ("Offer 0% financing, about 190 monthly").
 - **Every nudge has a source.** Each comes from a playbook move credited to whoever taught it: "Learned from John · Los Angeles".
@@ -92,7 +92,7 @@ End call -> Won or Lost -> POST /api/learn
 ## The AI component
 
 - **The transcript is Meet's own captions.** A MutationObserver watches Meet's captions region, found through ARIA roles and page structure rather than Meet's obfuscated class names. Meet rewrites a caption while the person is still talking, so a line counts as final once it stops changing for a moment or the speaker changes. The seller's own captions are labeled "You"; everyone else is the buyer.
-- **Reading the moment, picking and fitting a move.** For each buyer line, Claude gets the playbook, the company profile, the brief, call stats (minutes used of the target, the seller's talk share and talking streak), the nudges already shown and the whole call. With structured outputs it returns, in order, the moment (one of 36 situations, or none), the buyer type, the aim (probe, answer, acknowledge, calm or advance) and two picks, each a concrete nudge plus the move it uses. Claude commits to what the nudge must do before writing it, and writes the nudge before naming the move, so it doesn't just echo the move. Live nudges run on Claude Opus 5.5 in fast mode at low effort, falling back to Claude Sonnet 5.5 on any error.
+- **Reading the moment, picking and fitting a move.** For each buyer line, Claude gets the playbook, the company profile, the brief, call stats (minutes used of the target, the seller's talk share and talking streak), the nudges already shown and the whole call. With structured outputs it returns, in order, the moment (one of 60 situations, or none), the buyer type, the aim (probe, answer, acknowledge, calm or advance) and two picks, each a concrete nudge plus the move it uses. Claude commits to what the nudge must do before writing it, and writes the nudge before naming the move, so it doesn't just echo the move. Live nudges run on Claude Opus 5.5 in fast mode at low effort, falling back to Claude Sonnet 5.5 on any error.
 - **Outcome-ranked shared playbook, with exploration.** The server maps each pick to a real playbook move, so every nudge traces to a credited source. A nudge that just repeats a move loses to a specific one. Claude's first pick stands unless the other has a clearly better record: its after-call reviews, plus a win-rate edge (with a bonus when it won with this buyer type) once both moves have real use. About 15% of the time a newly learned move gets a fair try, never in sensitive moments or when the buyer asked a direct question.
 - **Learning winning moves.** On a won call, Claude Sonnet 5.5 finds the seller's lines right before the buyer moved toward yes, names the tactic behind them as a short reusable move, keeps the seller's real line and a one-sentence lesson, and learns it only if it's new or a meaningfully sharper version of a move already in the playbook.
 - **Reviewing calls and judging each nudge.** Claude Sonnet 5.5 reads the transcript with every nudge marked where it appeared and returns the turning point, a lesson, and for each nudge: did the seller use it, what the buyer did next, helped, neutral or hurt, and why.
@@ -159,7 +159,7 @@ You need Node.js (20 or newer), a [Supabase](https://supabase.com) project and a
 | [web/lib/review.ts](web/lib/review.ts) | The after-call review: turning point, lesson, a verdict on every nudge |
 | [web/lib/ranking.ts](web/lib/ranking.ts) | Turns helped and hurt verdicts into ranking and retirement |
 | [web/app/api/updates/route.ts](web/app/api/updates/route.ts) | What every Q card polls for new moves and lessons |
-| [web/lib/moments.ts](web/lib/moments.ts) | The 36 situations Q recognizes |
+| [web/lib/moments.ts](web/lib/moments.ts) | The 60 situations Q recognizes |
 | [web/lib/seed-data.json](web/lib/seed-data.json) | The starter playbook (sample data) |
 | [web/app/playbook/page.tsx](web/app/playbook/page.tsx) | The live playbook: moves, records, "What Q learned", "What Q got wrong" |
 | [web/app/call/[id]/page.tsx](web/app/call/%5Bid%5D/page.tsx) | Call report: the transcript with every nudge and its verdict |
@@ -169,7 +169,7 @@ You need Node.js (20 or newer), a [Supabase](https://supabase.com) project and a
 ## Honest status
 
 - A hackathon build. No users, revenue or traction yet.
-- The starter playbook (about 250 moves, their authors such as "Ana · Los Angeles", and their win records) is sample data written from established closing methods. Moves learned on live calls are real and start their own record.
+- The starter playbook (about 500 moves, their authors such as "Ana · Los Angeles", and their win records) is sample data written from established closing methods. Moves learned on live calls are real and start their own record.
 - Google Meet only. Zoom, Microsoft Teams, Slack huddles, Webex and phone calls are on the roadmap. Q depends on Meet's live captions being on.
 - Won or Lost is a button the seller presses, not a CRM deal, and a won call credits every move shown, so attribution is noisy until CRM outcomes are wired in.
 - Royalties are a proposal; no payouts exist yet.

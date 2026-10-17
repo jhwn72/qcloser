@@ -98,7 +98,7 @@ Full-screen recording of the laptop: Meet with Belfort's tile (phone camera) and
 | 1:14 | John's card toast: `Q learned a new move from you: Flip roles, let them sell it` (or whatever it learns on the day) | | |
 | 1:16 | Cut to a second Chrome window, another seller's Q card. Toast: `New move learned from John · Los Angeles`. | **JOHN (VO):** "Other Q cards get it in seconds." | `Another seller's Q card` and a stopwatch: real seconds between the two toasts |
 | 1:19 | Back on John's card: its result toast (it follows the learned-move toast by about 3 seconds and says how Q's nudges did, exactly as the card shows it), then `See the call report`. Click it: the call report, with a verdict chip (Helped, Neutral or Hurt) and a one-line reason beside each nudge, at the line where it appeared. | **JOHN (VO):** "Then Q grades its own nudges by what the buyer did next. The ones that keep hurting drop, then retire." | Chapter label: `FAILURE DETECTION · every nudge judged: helped, neutral or hurt` |
-| 1:26 | /playbook: the new move under Stall with the `New` chip, `John · Los Angeles` and John's real line. Then the side panels: `What Q learned` (this call's `From a win` lesson, the rehearsal's `From a loss` lesson) and `What Q got wrong`. | **JOHN (VO):** "Lose, and Q keeps the lesson." | `250 moves · 36 situations · every call leaves a lesson` · small: `Starter playbook is sample data for this demo. Moves learned on live calls are real.` |
+| 1:26 | /playbook: the new move under Stall with the `New` chip, `John · Los Angeles` and John's real line. Then the side panels: `What Q learned` (this call's `From a win` lesson, the rehearsal's `From a loss` lesson) and `What Q got wrong`. | **JOHN (VO):** "Lose, and Q keeps the lesson." | `500 moves · 60 situations · every call leaves a lesson` · small: `Starter playbook is sample data for this demo. Moves learned on live calls are real.` |
 
 No number goes in the voiceover or the on-screen text for the verdicts. The shot shows whatever the card and the report truly say. The stall nudge will read Neutral, because John deliberately didn't use it; that's expected.
 
@@ -174,9 +174,9 @@ What's on qcloser.vercel.app, top to bottom, and where each part can go in the c
 | Hero | "Every closer needs a Q.", the plain-English line, Download for Chrome | Title (0:30 to 0:41) |
 | Q card | Cycles example nudges below the hero | Title tilt-down, or a design cutaway |
 | Closing intelligence | 3 steps: hears the call, nudges never scripts, learns from every call | Optional B-roll under the AI VO (1:28) |
-| "It knows the moment, and the clock." | The 36 situations, the buyer read and the call clock | B-roll for the clock at 1:28 if it didn't adapt on the call |
+| "It knows the moment, and the clock." | The 60 situations, the buyer read and the call clock | B-roll for the clock at 1:28 if it didn't adapt on the call |
 | "It gets better with every call." | Wins teach moves, losses teach lessons, Q catches its own misfires, the best moves rise | Backup if the /playbook shot fails |
-| Three stats | Moves in the playbook, 36 situations Q recognizes, about a second from the buyer's last word to your nudge | AI beat (1:28) |
+| Three stats | Moves in the playbook, 60 situations Q recognizes, about a second from the buyer's last word to your nudge | AI beat (1:28) |
 | Works with | Google Meet live; Zoom, Microsoft Teams, Slack huddles, Webex and phone calls coming soon | Scale card 3 (1:49) |
 | FAQ, Install | Questions (including "Does Q join the meeting?") and the install steps | Not needed in the video |
 

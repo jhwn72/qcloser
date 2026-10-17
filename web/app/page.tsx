@@ -8,7 +8,7 @@ import LearnDemo from "./components/LearnDemo";
 import QMark from "./components/QMark";
 import Reveal from "./components/Reveal";
 import SiteNav from "./components/SiteNav";
-import HeroDemo from "./HeroDemo";
+import MeetFrame from "./components/MeetFrame";
 
 const STEPS = [
   {
@@ -164,9 +164,9 @@ export default function Home() {
         </div>
       </section>
 
-      {/* The card, on its own */}
+      {/* The card on a Meet call: the address bar and caption show where Q lives */}
       <section className="relative mx-auto w-full max-w-6xl px-4 pb-20 sm:px-8">
-        <HeroDemo />
+        <MeetFrame />
       </section>
 
       {/* How it works */}

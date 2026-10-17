@@ -1,9 +1,10 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import QMark from "../../components/QMark";
+import QMark from "./QMark";
 
-// Same example moments as the landing hero (HeroDemo), copied here so the mockup doesn't touch that file.
+// Example moments: what the buyer said (as Meet's caption), the nudge Q showed, and who taught Q the move.
+// The starter playbook's names are sample data for this demo.
 const MOMENTS = [
   { who: "Taylor", line: "I've paid for gyms before and never go.", nudge: "Ask what got in the way", from: "From the Q starter playbook", label: "Worry · Burned before" },
   { who: "Linda", line: "Our AC still works. We'll wait until it breaks.", nudge: "Ask what a July breakdown costs", from: "Learned from Ana · Los Angeles", label: "Objection · Timing" },

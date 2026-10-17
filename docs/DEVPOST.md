@@ -24,7 +24,7 @@ Every closer needs a Q. Q listens to your sales call and shows you, at a glance,
 ## Honest status
 
 - Hackathon build from SEP Hacks 2026. No users or revenue yet. Every number below is measured in our build or labeled as a projection.
-- The starter playbook (its moves, names and records) is sample data for this demo: 250 moves across 36 situation types, written from established closing methods. Moves learned on live calls are real, credited to the seller who taught them, and start their own record.
+- The starter playbook (its moves, names and records) is sample data for this demo: 500 moves across 60 situation types, written from established closing methods. Moves learned on live calls are real, credited to the seller who taught them, and start their own record.
 
 ## Inspiration
 
@@ -58,7 +58,7 @@ We call it **closing intelligence**: the moves that are winning right now, getti
 
 **Hearing the call.** A MutationObserver watches Meet's captions region, found through ARIA roles and page structure rather than Meet's obfuscated class names. Meet rewrites a caption while the person is still talking, so a line counts as final once it stops changing for a moment or the speaker changes. Meet's own caption bar is hidden with opacity (so Meet keeps rendering it) and Shift+C brings it back. Shift+D shows what Q hears; Shift+B types a buyer line if captions fail.
 
-**Picking a nudge (`/api/cue`).** For each finished buyer line, Claude gets the playbook, the company profile, the brief, call stats (minutes used of the target, seller talk share, talking streak), the nudges already shown, and the whole call. It returns, in this order: the moment (one of 36 situation types, or none), the buyer type, the aim (probe, answer, acknowledge, calm or advance), and two picks, each a concrete nudge plus the playbook move it uses. The order is deliberate: Claude commits to what the nudge must do before writing it, and writes the nudge before naming the move, so it doesn't just echo the move. The server then:
+**Picking a nudge (`/api/cue`).** For each finished buyer line, Claude gets the playbook, the company profile, the brief, call stats (minutes used of the target, seller talk share, talking streak), the nudges already shown, and the whole call. It returns, in this order: the moment (one of 60 situation types, or none), the buyer type, the aim (probe, answer, acknowledge, calm or advance), and two picks, each a concrete nudge plus the playbook move it uses. The order is deliberate: Claude commits to what the nudge must do before writing it, and writes the nudge before naming the move, so it doesn't just echo the move. The server then:
 
 - maps each pick to a real playbook move, so every nudge traces to a credited source;
 - prefers a specific nudge over one that repeats a move word for word or repeats an earlier nudge;
@@ -87,7 +87,7 @@ We call it **closing intelligence**: the moves that are winning right now, getti
 - The whole learning loop runs live: in our test, one won call taught Q "Flip roles, let them sell it" from a single improvised line in about 3 seconds, and it showed up in the feed every other Q card reads.
 - Nudges stay specific to the call. On our demo call, the same buyer line got the same idea 3 out of 3 times ("Ask which pen closes deals"; "Compare $40 to ten-year lease").
 - Q grades its own advice. Every nudge gets a verdict and a reason after the call, and the ranking and retirement rules act on them, with no person in the loop.
-- 36 situation types, including personal moments like grief, embarrassment and money trouble, each with its own rules.
+- 60 situation types, including personal moments like grief, embarrassment and money trouble, each with its own rules.
 - A card that feels alive without being noisy, built on John's own design system.
 
 ## What we learned
