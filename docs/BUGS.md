@@ -1,6 +1,6 @@
 # Q bug hunt: Oct 17, about 2:10 AM PT
 
-Ranked by risk to the 1:15 PM live demo. Line numbers are from the code at commit `63d2311`.
+Ranked by risk to the live demo (filming now around 8:30 AM; Devpost closes at 11:00 AM PT). Line numbers are from the code at commit `63d2311`.
 
 **Status labels**
 - **Reproduced:** seen on the stand-in Meet page (`extension/dev/meet.html`), with curl, or in the server log.
@@ -27,7 +27,7 @@ The stand-in tests used a mocked `/api/cue` with a set delay where timing matter
 - Credit was back by 1:55 AM PT; local and Vercel both returned nudges in 1.3 to 1.6 s.
 
 **Fix:**
-- Turn on auto-reload in the Anthropic console, and check the balance about an hour before 1:15.
+- Turn on auto-reload in the Anthropic console, and check the balance about an hour before filming (8:30 AM).
 - Don't run the compare scripts (the Opus judge) on demo day.
 - Give the dev scripts their own API key, so evals can't drain the key Vercel uses.
 - Optional: have the cue route answer `{ error: "ai_unavailable" }`, and have the card say "Q's AI is unavailable", so the cause is obvious on stage.
@@ -402,7 +402,7 @@ try { const u = new URL(origin); if (u.protocol === "http:" && (u.hostname === "
 - **Learning speed:** about 2 s (`/api/dev/learn`), well under the MV3 30 s fetch limit.
 - **`/api/updates` cursor:** re-polling with the returned `now` gives no repeats, including with µs timestamps and an unencoded `+`.
 
-## Before 1:15
+## Before filming (8:30 AM)
 
 1. Check the Anthropic balance, turn on auto-reload, and stop eval scripts.
 2. In the 4.5-minute wait, say nothing on the laptop (item 3).
