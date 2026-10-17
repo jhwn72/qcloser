@@ -1,7 +1,7 @@
 # Devpost write-up: Q
 
 > **For John, before posting (delete this box):**
-> 1. **Deadline and links.** Devpost closes submissions at **11:00 AM PT**; submit by 10:45 AM. The GitHub repo must be public, with working links, before you submit. Fill in the video URL after upload.
+> 1. **Deadline and links.** Devpost closes submissions at **11:00 AM PT**; submit by 10:45 AM. The GitHub repo is public: https://github.com/jhwn72/qcloser. Fill in the video URL after upload.
 > 2. **Prizes to select:** Grand Tech, Continual Failure Detection, Most Scalable To $1B, Best Visual Design. There is no Agents track.
 > 3. **Thumbnail:** docs/devpost/q-devpost-tagline.png (3:2).
 
@@ -20,7 +20,7 @@ Devpost's "Elevator pitch" field (200 characters max). Pick one:
 ## Links
 
 - **Try it:** https://qcloser.vercel.app (landing, install steps, live playbook)
-- **Code:** [GitHub URL]
+- **Code:** https://github.com/jhwn72/qcloser
 - **Video:** [YouTube or Loom URL]
 
 ## Inspiration

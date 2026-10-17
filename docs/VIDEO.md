@@ -145,7 +145,7 @@ Numbers and wording follow [SCALE.md](SCALE.md). Plain dark title cards in the T
 
 | Time | Picture | Sound | On-screen text |
 |---|---|---|---|
-| 1:52 | End card: the ring, `Every closer needs a Q.` above `Q · your cue to close`. | **JOHN (VO):** "Every closer needs a Q." | `qcloser.vercel.app` · GitHub URL · `Built by John Wang · SEP Hacks 2026` · small: `Film clip: The Wolf of Wall Street (2013), used as parody. Not affiliated with or endorsed by Paramount, Jordan Belfort or the cast.` |
+| 1:52 | End card: the ring, `Every closer needs a Q.` above `Q · your cue to close`. | **JOHN (VO):** "Every closer needs a Q." | `qcloser.vercel.app` · `github.com/jhwn72/qcloser` · `Built by John Wang · SEP Hacks 2026` · small: `Film clip: The Wolf of Wall Street (2013), used as parody. Not affiliated with or endorsed by Paramount, Jordan Belfort or the cast.` |
 | 1:58 | Cut to black. | | |
 
 ## Requirements checklist
