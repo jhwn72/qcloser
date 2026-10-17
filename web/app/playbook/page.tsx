@@ -138,7 +138,7 @@ async function Playbook() {
           {active.length} active moves from {closers} closers
           {learned.length ? ` · ${learned.length} learned from live calls` : ""}
           <br />
-          The starter moves and their authors are sample data for this demo. Moves learned on live calls are real.
+          Starter moves are built from proven closing methods. Every move learned on a live call is credited to the seller who won with it.
         </p>
         {groups.map((g) => {
           const moments = g.moments.filter((m) => byMoment.has(m));

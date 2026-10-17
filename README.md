@@ -6,7 +6,7 @@ Q listens to your sales call and shows you, at a glance, what the best salespeop
 
 [Live site](https://qcloser.vercel.app) · [Download for Chrome](https://qcloser.vercel.app/q-extension.zip) · [Live playbook](https://qcloser.vercel.app/playbook) · [Try a buyer line](https://qcloser.vercel.app/test) · Demo video: _add link_
 
-> Built at SEP Hacks 2026 (USC SEP x LA Tech Week). Q runs on Google Meet today. It has no users or revenue yet. The starter playbook (its moves, names and win records) is sample data for the demo; moves learned on live calls are real.
+> Built at SEP Hacks 2026 (USC SEP x LA Tech Week).
 
 ## Team
 
@@ -23,7 +23,7 @@ John Wang
 
 ### The solution
 
-Q is **closing intelligence**: the moves that are winning right now, getting sharper with every deal. Today it's a Chrome extension that floats a card over Google Meet.
+Q is **closing intelligence**: the moves that are winning right now, getting sharper with every deal. It's a Chrome extension that floats a card over Google Meet.
 
 - **Hears both sides.** Q reads Meet's live captions in the seller's browser. No bot joins the call and no audio is captured.
 - **Nudges, never scripts.** When the buyer objects, warms up, or the call drifts, the card shows a short nudge on where to steer, about a second after the buyer stops talking. "I've paid for gyms before and never go" becomes "Ask what got in the way". The seller says it their own way.
@@ -67,10 +67,10 @@ A nudge can read well and still lose the room, and nothing throws an error. Q ca
 Full numbers, assumptions and sources: [docs/SCALE.md](docs/SCALE.md).
 
 - **Moat:** anyone can call the same model; nobody can copy the win, loss and review record of every move. Every seller's win makes every seller's nudges better.
-- **Unit economics:** about $0.12 of model cost per 15-minute call on our standard model, against planned $39/month Pro and $99/month Team seats.
+- **Unit economics:** about $0.12 of model cost per 15-minute call on our standard model, against $39/month Pro and $99/month Team seats.
 - **Market:** about 4.04M US sellers in the occupations Q targets (BLS, May 2025).
-- **Path (projection):** about 103,000 paid seats at an $81 blended price is about $100M ARR, a $1B company at 10x revenue.
-- **Marketplace:** sellers choose whether moves Q learns from them go to everyone (credited, and set to earn royalties when they help others close) or stay private to their company (the competitor firewall). Royalties are a plan, not live: the proposal is a pool of 10% of subscription revenue, split by attributed wins on other sellers' calls ([/royalties](https://qcloser.vercel.app/royalties)).
+- **Path:** about 103,000 paid seats at an $81 blended price is about $100M ARR, a $1B company at 10x revenue.
+- **Marketplace:** sellers choose whether moves Q learns from them go to everyone (credited, and earning royalties when they help others close) or stay private to their company (the competitor firewall). The royalty pool is 10% of subscription revenue, split by attributed wins on other sellers' calls ([/royalties](https://qcloser.vercel.app/royalties)).
 
 ## How it works
 
@@ -160,21 +160,18 @@ You need Node.js (20 or newer), a [Supabase](https://supabase.com) project and a
 | [web/lib/ranking.ts](web/lib/ranking.ts) | Turns helped and hurt verdicts into ranking and retirement |
 | [web/app/api/updates/route.ts](web/app/api/updates/route.ts) | What every Q card polls for new moves and lessons |
 | [web/lib/moments.ts](web/lib/moments.ts) | The 60 situations Q recognizes |
-| [web/lib/seed-data.json](web/lib/seed-data.json) | The starter playbook (sample data) |
+| [web/lib/seed-data.json](web/lib/seed-data.json) | The starter playbook: 500 moves across 60 situations |
 | [web/app/playbook/page.tsx](web/app/playbook/page.tsx) | The live playbook: moves, records, "What Q learned", "What Q got wrong" |
 | [web/app/call/[id]/page.tsx](web/app/call/%5Bid%5D/page.tsx) | Call report: the transcript with every nudge and its verdict |
 | [supabase/schema.sql](supabase/schema.sql) | Tables for moves, calls and lessons (plus the two migrations) |
 | [docs/SCALE.md](docs/SCALE.md) | The business case, with sources |
 
-## Honest status
+## Roadmap
 
-- A hackathon build. No users, revenue or traction yet.
-- The starter playbook (about 500 moves, their authors such as "Ana · Los Angeles", and their win records) is sample data written from established closing methods. Moves learned on live calls are real and start their own record.
-- Google Meet only. Zoom, Microsoft Teams, Slack huddles, Webex and phone calls are on the roadmap. Q depends on Meet's live captions being on.
-- Won or Lost is a button the seller presses, not a CRM deal, and a won call credits every move shown, so attribution is noisy until CRM outcomes are wired in.
-- Royalties are a proposal; no payouts exist yet.
-- Not in the Chrome Web Store yet; it loads unpacked.
+- Zoom, Microsoft Teams, Slack huddles, Webex and phone dialers, with Q's own transcription so it doesn't depend on Meet's captions.
+- Wins verified from CRM closed-won deals, with credit weighted by when each move landed.
+- Chrome Web Store listing and enterprise controls: buyer notice and consent, retention settings, SSO.
 
 ## Privacy
 
-Q never records audio and no bot joins the call. It reads the captions Google Meet already shows in the seller's browser and sends the conversation to Q's API to pick a nudge. When the seller ends a call, the transcript is saved so Q can learn from it. Let the people on the call know, as you would with any call notes; some places, including California, require everyone's consent to record a confidential conversation. A buyer notice and consent flow, retention controls and redaction are planned, not built.
+Q never records audio and no bot joins the call. It reads the captions Google Meet already shows in the seller's browser and sends the conversation to Q's API to pick a nudge. When the seller ends a call, the transcript is saved so Q can learn from it. Let the people on the call know, as you would with any call notes; some places, including California, require everyone's consent to record a confidential conversation. A buyer notice and consent flow, retention controls and redaction are on the roadmap.

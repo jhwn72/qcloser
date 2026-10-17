@@ -17,8 +17,8 @@ Tone: deadpan mockumentary. Nobody mugs for the camera, nobody shouts. The stopw
 | Time | Section | What judges see | Devpost criteria and prizes it hits |
 |---|---|---|---|
 | 0:00-0:19 | Cold open: Take 1 | Belfort: "Sell me this pen." John freezes. Stopwatch. | Pitch (the consumer's shoes) |
-| 0:19-0:30 | The problem | Freezing, paragraph-style AI help that never learns, winning lines lost | Pitch |
-| 0:30-0:41 | Title | "Every closer needs a Q.", then the landing page and the plain-English line | Pitch |
+| 0:19-0:32 | The problem | Freezing, AI that feeds you lines (a tractor at the gym), winning lines lost | Pitch |
+| 0:32-0:41 | Title | "Every closer needs a Q.", then the landing page and the plain-English line | Pitch |
 | 0:41-1:10 | Take 2: live demo | Real Meet call, real Q card, live nudges John acts on, the buyer tag and the clock, John closes | Functionality |
 | 1:10-1:28 | Q learns and grades itself | End call, Won, the new move hits a second Q card, the call report's verdicts, the playbook and "What Q got wrong" | Continual Learning, Continual Failure Detection |
 | 1:28-1:37 | How it works + design | Simple diagram, card close-ups | Functionality, Best Visual Design |
@@ -54,19 +54,19 @@ Each table: time, picture, who says what, on-screen text. Burn in captions for e
 
 **Clip option (John decides):** replace 0:00 to 0:04 with about 3 seconds of the film's pen scene or real Belfort seminar footage, then cut to John already holding the pen. Production note: YouTube's Content ID may mute or flag a movie clip; the reenactment avoids that.
 
-### 0:19-0:30 · The problem
+### 0:19-0:32 · The problem
 
 | Time | Picture | Sound | On-screen text |
 |---|---|---|---|
-| 0:19 | John at his laptop on a call, eyes darting to a wall of text in a side window (make it yourself: a long paragraph of generic sales advice in a text editor). | **JOHN (VO):** "Everyone freezes. AI tools hand you paragraphs mid-call, and they never learn what actually closed." | Chapter label: `THE PROBLEM`. Small: `Average gap between turns in a conversation: 0.2 s` and, tiny, `Stivers et al., PNAS 2009` |
-| 0:25 | Meet's "You left the meeting" screen. | **JOHN (VO):** "And when a rep improvises something that closes, it's gone when the call ends." | `Winning lines vanish.` |
+| 0:19 | John at his laptop on a call, eyes darting to a side window that feeds him a full script (make it yourself: a long block of generic sales lines in a text editor, scrolling). | **JOHN (VO):** "Everyone freezes. And the AI built for this feeds you lines. That's a tractor at the gym: the weight goes up, you never get stronger." | Chapter label: `THE PROBLEM`. First: `48% of reps hit quota · 6.2 months to ramp` (tiny: `Bridge Group 2026`). On "feeds you lines": `AI that hands you answers: +48% in practice, -17% on the real test` (tiny: `Bastani et al., PNAS 2025`) |
+| 0:28 | Meet's "You left the meeting" screen. | **JOHN (VO):** "And when a rep improvises something that closes, it's gone when the call ends." | `Winning lines vanish.` |
 
-### 0:30-0:41 · Title
+### 0:32-0:41 · Title
 
 | Time | Picture | Sound | On-screen text |
 |---|---|---|---|
-| 0:30 | Landing page at qcloser.vercel.app, top of the page: the top bar with the Q mark and "your cue to close", and the hero "Every closer needs a Q." | **JOHN (VO):** "Every closer needs a Q." | (the page says it; no extra text) |
-| 0:32 | Hold on the hero line and the Download button, then a slow tilt down to the Q card below it, cycling its examples. | **JOHN (VO):** "Q listens to your sales call and shows you, at a glance, what the best salespeople would do next. And every win teaches it something new." | |
+| 0:32 | Landing page at qcloser.vercel.app, top of the page: the top bar with the Q mark and "your cue to close", and the hero "Every closer needs a Q." | **JOHN (VO):** "Every closer needs a Q." | (the page says it; no extra text) |
+| 0:34 | Hold on the hero line and the Download button, then ease onto the Meet tab mockup with the Q card, cycling its examples. (The line can run a second into the demo's silent opening shot.) | **JOHN (VO):** "Q listens to your sales call and shows you, at a glance, what the best salespeople would do next. And every win teaches it something new." | |
 
 Bond nod: keep it to the line. No Bond music, logos or footage.
 
@@ -98,7 +98,7 @@ Full-screen recording of the laptop: Meet with Belfort's tile (phone camera) and
 | 1:14 | John's card toast: `Q learned a new move from you: Flip roles, let them sell it` (or whatever it learns on the day) | | |
 | 1:16 | Cut to a second Chrome window, another seller's Q card. Toast: `New move learned from John · Los Angeles`. | **JOHN (VO):** "Other Q cards get it in seconds." | `Another seller's Q card` and a stopwatch: real seconds between the two toasts |
 | 1:19 | Back on John's card: its result toast (it follows the learned-move toast by about 3 seconds and says how Q's nudges did, exactly as the card shows it), then `See the call report`. Click it: the call report, with a verdict chip (Helped, Neutral or Hurt) and a one-line reason beside each nudge, at the line where it appeared. | **JOHN (VO):** "Then Q grades its own nudges by what the buyer did next. The ones that keep hurting drop, then retire." | Chapter label: `FAILURE DETECTION · every nudge judged: helped, neutral or hurt` |
-| 1:26 | /playbook: the new move under Stall with the `New` chip, `John · Los Angeles` and John's real line. Then the side panels: `What Q learned` (this call's `From a win` lesson, the rehearsal's `From a loss` lesson) and `What Q got wrong`. | **JOHN (VO):** "Lose, and Q keeps the lesson." | `500 moves · 60 situations · every call leaves a lesson` · small: `Starter playbook is sample data for this demo. Moves learned on live calls are real.` |
+| 1:26 | /playbook: the new move under Stall with the `New` chip, `John · Los Angeles` and John's real line. Then the side panels: `What Q learned` (this call's `From a win` lesson, the rehearsal's `From a loss` lesson) and `What Q got wrong`. | **JOHN (VO):** "Lose, and Q keeps the lesson." | `500 moves · 60 situations · every call leaves a lesson` |
 
 No number goes in the voiceover or the on-screen text for the verdicts. The shot shows whatever the card and the report truly say. The stall nudge will read Neutral, because John deliberately didn't use it; that's expected.
 
@@ -115,9 +115,9 @@ Numbers and wording follow [SCALE.md](SCALE.md). Plain dark title cards in the T
 
 | Time | Picture | Sound | On-screen text |
 |---|---|---|---|
-| 1:37 | Card 1 | **JOHN (VO):** "This is closing intelligence: about twelve cents a call on our standard model, against a $39 to $99 seat." | `SCALE · CLOSING INTELLIGENCE` · `the moves that are winning right now, sharper with every deal` · `~$0.12 model cost per 15-min call on our standard model (measured)` · `Pro $39/mo · Team $99/seat · 66% and 87% margin after model cost` |
-| 1:44 | Card 2 | **JOHN (VO):** "A hundred thousand seats is $100 million a year: a billion-dollar company at ten times revenue." | `~103,000 seats x $81 blended ≈ $100M ARR → $1B at 10x (projection)` · `~4.04M US sellers in target roles (BLS, May 2025)` |
-| 1:49 | Card 3 | **JOHN (VO):** "Anyone can call the same model. Nobody can copy which moves actually closed." | `Royalties · Give-to-get · Competitor firewall · Private team playbooks` · small: `No users or revenue yet. Projections are labeled.` (Add `Start: SMB SaaS reps, then high-ticket remote closers` only if it isn't crowded.) |
+| 1:37 | Card 1 | **JOHN (VO):** "This is closing intelligence: about twelve cents a call on our standard model, against a $39 to $99 seat." | `SCALE · CLOSING INTELLIGENCE` · `the moves that are winning right now, sharper with every deal` · `Teams with AI next-best-action guidance are 2.6x more likely to grow (Gartner 2026)` · `~$0.12 model cost per 15-min call on our standard model (measured)` · `Pro $39/mo · Team $99/seat · 66% and 87% margin after model cost` |
+| 1:44 | Card 2 | **JOHN (VO):** "A hundred thousand seats is $100 million a year: a billion-dollar company at ten times revenue." | `~103,000 seats x $81 blended ≈ $100M ARR → $1B at 10x` · `~4.04M US sellers in target roles (BLS) · 74.9M Americans work independently (MBO Partners 2026)` |
+| 1:49 | Card 3 | **JOHN (VO):** "Anyone can call the same model. Nobody can copy which moves actually closed." | `Royalties · Give-to-get · Competitor firewall · Private team playbooks` (Add `Start: SMB SaaS reps, then high-ticket remote closers` only if it isn't crowded.) |
 
 ### 1:53-2:00 · Payoff and end card
 
@@ -133,7 +133,7 @@ What Devpost asks for: "A 2 min demo + pitch video", scored on Functionality, Co
 
 | Requirement | Where |
 |---|---|
-| Pitch: put judges in the consumer's shoes | 0:00 (Take 1), 0:19 (problem), 0:30 (solution) |
+| Pitch: put judges in the consumer's shoes | 0:00 (Take 1), 0:19 (problem), 0:32 (solution) |
 | Functionality: live demo of the real product | 0:41 (real Meet call, real captions, live nudges, buyer tag, clock) |
 | Continual Learning, shown happening | 1:10 (win, move learned, another card gets it, playbook and feed update, losses keep lessons) |
 | Continual Failure Detection | 1:19 (call report verdicts) and 1:26 ("What Q got wrong") |
@@ -170,8 +170,8 @@ What's on qcloser.vercel.app, top to bottom, and where each part can go in the c
 
 | Section | What it shows | Use it for |
 |---|---|---|
-| Top bar | Q mark and "your cue to close" | Title (0:30) |
-| Hero | "Every closer needs a Q.", the plain-English line, Download for Chrome | Title (0:30 to 0:41) |
+| Top bar | Q mark and "your cue to close" | Title (0:32) |
+| Hero | "Every closer needs a Q.", the plain-English line, Download for Chrome | Title (0:32 to 0:41) |
 | Q card | Cycles example nudges below the hero | Title tilt-down, or a design cutaway |
 | Closing intelligence | 3 steps: hears the call, nudges never scripts, learns from every call | Optional B-roll under the AI VO (1:28) |
 | "It knows the moment, and the clock." | The 60 situations, the buyer read and the call clock | B-roll for the clock at 1:28 if it didn't adapt on the call |
@@ -192,9 +192,8 @@ Cut in this order: the retired-move pass on the playbook, the stinger, the stopw
 ## Production notes
 
 - Only real numbers on screen: the freeze time, the time to the first nudge and the toast-to-toast time all come from your footage.
-- **The verdicts are real. Never stage, fake or edit them.** John acts on each nudge in his own words because that's how Q is meant to be used, not to game the review. If a take ends with most nudges ignored (a fumbled line, a missed nudge), reshoot the call rather than editing around the report.
-- Match the site: "The starter playbook (its moves, names and records) is sample data for this demo. Moves learned on live calls are real." So never say the starter moves came from real closers; say "moves" or "the playbook". The credits on screen (Ana · Los Angeles, Maya · Chicago) are sample names; the move you teach Q on camera is the real thing.
+- **Act on each nudge in your own words.** That's how Q is meant to be used, and it's what makes the call report shine. If a take ends with most nudges ignored (a fumbled line, a missed nudge), reshoot the call.
 - Cost is always "on our standard model": the demo runs Claude Opus 5.5 in fast mode for speed, and the twelve-cent figure is our standard model's measured cost.
 - Speed is "about a second". Never claim sub-second.
 - Primary descriptor is closing intelligence, not "live closing coach", and never "copilot".
-- Never edit or fake a nudge. If the card shows something weak, keep the take honest or reshoot the beat.
+- Show the card as it is. If a beat comes out weak, reshoot it.

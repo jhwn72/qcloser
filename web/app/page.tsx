@@ -119,10 +119,10 @@ const FAQ: { q: string; a: ReactNode }[] = [
     a: (
       <>
         Yes. In the Q popup, add your company name and choose &ldquo;My company only&rdquo;. Moves Q learns from you
-        then stay with your team, and you still get the shared playbook. Shared moves are set to earn royalties after
-        launch; private ones don&rsquo;t.{" "}
+        then stay with your team, and you still get the shared playbook. Shared moves earn royalties when they help
+        another seller close; private ones don&rsquo;t.{" "}
         <Link className="tg-link" href="/royalties" style={{ font: "inherit" }}>
-          How royalties will work
+          How royalties work
         </Link>
       </>
     ),

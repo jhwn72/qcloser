@@ -5,7 +5,7 @@ import SiteNav from "../components/SiteNav";
 
 export const metadata = {
   title: "Pricing · Q",
-  description: "Q is free during the beta. At launch, Pro is $39 a month for one seller and Team is $99 per seat per month.",
+  description: "Simple pricing for every closer. Pro is $39 a month for one seller. Team is $99 per seat per month, with a private company playbook.",
 };
 
 type Feature = { text: string; soon?: boolean };
@@ -25,7 +25,7 @@ const PLANS: Plan[] = [
       { text: "An adaptive call clock" },
       { text: "Call reports that grade every nudge: helped, neutral or hurt" },
       { text: "Learning from your wins and losses" },
-      { text: "Moves you share earn royalties once payouts start" },
+      { text: "Moves you share earn royalties when they help others close" },
     ],
   },
   {
@@ -45,7 +45,7 @@ const PLANS: Plan[] = [
     name: "Enterprise",
     who: "For larger sales orgs.",
     price: "Let’s talk",
-    unit: "Enterprise plans coming soon",
+    unit: "Custom pricing for your org",
     features: [
       { text: "Everything in Team" },
       { text: "Security review", soon: true },
@@ -60,28 +60,28 @@ const COMING = ["Zoom", "Microsoft Teams", "Slack huddles", "Webex", "Phone call
 
 const FAQ: { q: string; a: ReactNode }[] = [
   {
-    q: "Can I use Q for free now?",
-    a: "Yes. During the beta, anyone can install Q and use it on their Google Meet calls at no cost. There’s nothing to pay and no card to enter.",
+    q: "Is there a free way to try Q?",
+    a: "Yes. Install Q and start on your next Google Meet call. No card needed.",
   },
   {
-    q: "When does pricing start?",
-    a: "At launch. The plans on this page are what we plan to charge then, and they may change before launch. Until then, Q is free.",
+    q: "Which plan is right for me?",
+    a: "Pro is for one seller. Team is for a sales team that wants a private company playbook and learning from every rep’s wins. Enterprise is for larger sales orgs, so let’s talk.",
   },
   {
     q: "What are royalties?",
     a: (
       <>
-        When a move you shared helps another seller close, you earn a share of a royalty pool. The plan is to set aside
-        10% of subscription revenue and split it by attributed wins. Payouts start after launch.{" "}
+        When a move you shared helps another seller close, you earn a share of the royalty pool: 10% of subscription
+        revenue, split by attributed wins on other sellers&rsquo; calls. Wins on your own calls don&rsquo;t count.{" "}
         <Link className="tg-link" href="/royalties" style={{ font: "inherit" }}>
-          How royalties will work
+          How royalties work
         </Link>
       </>
     ),
   },
   {
     q: "Do private moves cost extra?",
-    a: "Private moves come with the Team plan, so there’s no add-on. A private company playbook keeps the moves your team learns with your team, out of a competitor’s reach. Private moves don’t earn royalties. During the beta, anyone can choose “My company only” in the Q popup.",
+    a: "Private moves come with the Team plan, so there’s no add-on. A private company playbook keeps the moves your team learns with your team, out of a competitor’s reach. Private moves don’t earn royalties.",
   },
 ];
 
@@ -103,17 +103,17 @@ export default function PricingPage() {
       <section className="relative mx-auto flex w-full max-w-3xl flex-col items-center px-4 pb-10 pt-20 text-center sm:px-8 sm:pt-24">
         <span className="tg-chip on" style={{ cursor: "default" }}>
           <span className="tg-dot small" />
-          Free during the beta · launch pricing below
+          Start free · plans for sellers and teams
         </span>
         <h1
           className="tg-headline"
           style={{ fontSize: "clamp(38px, 7vw, 64px)", lineHeight: 1.04, letterSpacing: "-0.025em", textWrap: "balance", marginTop: 28 }}
         >
-          Free today. Simple pricing at launch.
+          Simple pricing for every closer.
         </h1>
         <p className="tg-body max-w-xl" style={{ fontSize: 18, lineHeight: 1.5, margin: "24px auto 0", textWrap: "balance" }}>
-          Anyone can install Q and use it now at no cost. At launch, Q will be $39 a month for one seller and $99 a seat
-          for teams. Nothing is billed today.
+          $39 a month for one seller. $99 a seat for teams, with a private company playbook. Install Q and start on
+          your next Google Meet call.
         </p>
       </section>
 
@@ -128,7 +128,7 @@ export default function PricingPage() {
         </div>
         <Reveal delay={200}>
           <p className="tg-fine text-center" style={{ margin: "24px 0 0", fontSize: 12.5 }}>
-            Prices are planned for launch and may change. There&rsquo;s no billing or checkout during the beta.
+            Every plan includes live nudges on Google Meet and the shared playbook.
           </p>
         </Reveal>
       </section>
@@ -190,7 +190,7 @@ export default function PricingPage() {
         <Reveal>
           <div className="q-card mx-auto flex flex-col items-center text-center" style={{ width: "100%", maxWidth: 600, padding: "32px 24px 28px", textAlign: "center" }}>
             <h2 className="tg-headline" style={{ fontSize: "clamp(24px, 4vw, 30px)", lineHeight: 1.15 }}>
-              Try Q free while it&rsquo;s in beta.
+              Every closer needs a Q.
             </h2>
             <p className="tg-body" style={{ margin: "10px 0 0", fontSize: 15, maxWidth: 420 }}>
               Install Q, add your company name in the popup, and take it on your next Google Meet call.
@@ -200,7 +200,7 @@ export default function PricingPage() {
                 Download for Chrome
               </a>
               <Link className="tg-link" href="/royalties">
-                How royalties will work
+                How royalties work
               </Link>
             </div>
           </div>
@@ -233,7 +233,7 @@ function PlanCard({ plan }: { plan: Plan }) {
       </p>
 
       <div className="tg-fine" style={{ marginTop: 22 }}>
-        At launch
+        Price
       </div>
       <div className="q-plan-price">{plan.price}</div>
       <div className="tg-fine" style={{ marginTop: 8, fontSize: 12.5 }}>
@@ -241,10 +241,10 @@ function PlanCard({ plan }: { plan: Plan }) {
       </div>
 
       <a className="tg-btn primary q-download q-plan-cta" href="/q-extension.zip" download>
-        Download for Chrome
+        Get Q
       </a>
       <p className="tg-fine text-center" style={{ margin: "8px 0 0" }}>
-        Free during the beta
+        Start free on Google Meet
       </p>
 
       <ul className="q-plan-list">

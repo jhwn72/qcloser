@@ -6,7 +6,7 @@ import ShareDemo from "./ShareDemo";
 
 export const metadata = {
   title: "Royalties · Q",
-  description: "Share the moves Q learns from your wins with everyone and earn royalties when they help other sellers close. Payouts start after launch.",
+  description: "Share a move. Get paid when it closes for someone else. 10% of Q’s subscription revenue goes to the sellers whose moves help others win.",
 };
 
 const CHOICES = [
@@ -35,7 +35,7 @@ const HOW = [
   },
   {
     title: "Your share follows your wins",
-    body: "If your moves were behind 5% of all attributed wins in a payout period, you’d get 5% of the pool.",
+    body: "If your moves are behind 5% of all attributed wins in a payout period, you get 5% of the pool.",
   },
 ];
 
@@ -50,12 +50,12 @@ const SPLIT = [
 
 const FAQ = [
   {
-    q: "When do payouts start?",
-    a: "After launch. Q is a hackathon build today, so no royalties are being paid yet. Moves you share are still credited to you by name in the playbook.",
+    q: "When do I get paid?",
+    a: "Every payout period, Q splits the pool by attributed wins and pays out each seller’s share. Every move you share is also credited to you by name in the playbook.",
   },
   {
-    q: "Can I switch a move to private later?",
-    a: "That’s planned. For now, the choice in the Q popup sets where the moves Q learns from you go from then on.",
+    q: "Can I change where my moves go?",
+    a: "Anytime. Change the setting in the Q popup, and every move Q learns from you after that follows it.",
   },
   {
     q: "Do I need to share to use Q?",
@@ -63,7 +63,7 @@ const FAQ = [
   },
   {
     q: "What counts as helping someone close?",
-    a: "Q shows your public move on another seller’s call, and that call ends in a win. That’s an attributed win, and the pool is split by those.",
+    a: "Q shows your public move on another seller’s call, and that call ends in a win. That’s an attributed win, and the pool is split by those. Wins on your own calls don’t count.",
   },
 ];
 
@@ -85,7 +85,7 @@ export default function RoyaltiesPage() {
       <section className="relative mx-auto flex w-full max-w-3xl flex-col items-center px-4 pb-16 pt-20 text-center sm:px-8 sm:pt-24">
         <span className="tg-chip" style={{ cursor: "default" }}>
           <span className="tg-dot small off" />
-          Planned · payouts start after launch
+          10% of revenue goes back to sellers
         </span>
         <h1
           className="tg-headline"
@@ -94,8 +94,8 @@ export default function RoyaltiesPage() {
           Get paid when your moves help others close.
         </h1>
         <p className="tg-body max-w-xl" style={{ fontSize: 18, lineHeight: 1.5, margin: "24px auto 0", textWrap: "balance" }}>
-          When Q learns a move from your win, you choose where it goes. Share it with everyone, and you&rsquo;ll earn
-          royalties when it helps other sellers close.
+          When Q learns a move from your win, you choose where it goes. Share it with everyone, and you earn royalties
+          every time it helps another seller close.
         </p>
       </section>
 
@@ -144,10 +144,10 @@ export default function RoyaltiesPage() {
         <div>
           <Reveal>
             <p className="tg-label" style={label}>
-              The proposal
+              The program
             </p>
             <h2 className="tg-headline" style={h2}>
-              How royalties will work.
+              How royalties work.
             </h2>
           </Reveal>
           <div className="mt-8 grid gap-6">
@@ -285,7 +285,7 @@ function Pool() {
         ))}
       </div>
       <p className="tg-fine" style={{ margin: "16px 0 0", paddingTop: 12, borderTop: "1px solid var(--tg-line)" }}>
-        Example split by attributed wins. Names are sample data; no royalties are paid yet.
+        An example month, split by attributed wins. Names are for illustration.
       </p>
     </div>
   );

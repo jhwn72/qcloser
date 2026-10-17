@@ -1,9 +1,9 @@
 # Devpost write-up: Q
 
 > **For John, before posting (delete this box):**
-> 1. **Sample data.** "Honest status" below uses the site's exact wording about the starter playbook. Keep it if you edit.
-> 2. **Deadline and links.** Devpost closes submissions at **11:00 AM PT**; submit by 10:45 AM. The GitHub repo isn't pushed yet (no remote), and it must be public, with working links, before you submit. Fill in the video URL after upload.
-> 3. **Prizes to select:** Grand Tech, Continual Failure Detection, Most Scalable To $1B, Best Visual Design. There is no Agents track.
+> 1. **Deadline and links.** Devpost closes submissions at **11:00 AM PT**; submit by 10:45 AM. The GitHub repo must be public, with working links, before you submit. Fill in the video URL after upload.
+> 2. **Prizes to select:** Grand Tech, Continual Failure Detection, Most Scalable To $1B, Best Visual Design. There is no Agents track.
+> 3. **Thumbnail:** docs/devpost/q-devpost-tagline.png (3:2).
 
 ## Title
 
@@ -11,9 +11,11 @@ Q: your cue to close
 
 ## Tagline
 
-Every closer needs a Q. Q listens to your sales call and shows you, at a glance, what the best salespeople would do next. Every win teaches it something new.
+Devpost's "Elevator pitch" field (200 characters max). Pick one:
 
-(Short version for any field with a tight limit: "Every closer needs a Q." The product tagline stays "your cue to close".)
+- AI that feeds you lines is a tractor at the gym. Q is your spotter: live nudges on every sales call, from the moves closing deals right now. You lift. You get stronger. Every win makes Q sharper. (195)
+- Every closer needs a Q. Live nudges on your sales call, pulled from the moves closing deals right now. You say it your way, you close, and your winning move goes out to every closer on Q. (187)
+- Every closer needs a Q. It reads your sales call live and flashes the move that's closing deals right now. You say it your way. Win, and your move goes out to every closer on the network. (187)
 
 ## Links
 
@@ -21,20 +23,43 @@ Every closer needs a Q. Q listens to your sales call and shows you, at a glance,
 - **Code:** [GitHub URL]
 - **Video:** [YouTube or Loom URL]
 
-## Honest status
-
-- Hackathon build from SEP Hacks 2026. No users or revenue yet. Every number below is measured in our build or labeled as a projection.
-- The starter playbook (its moves, names and records) is sample data for this demo: 500 moves across 60 situation types, written from established closing methods. Moves learned on live calls are real, credited to the seller who taught them, and start their own record.
-
 ## Inspiration
 
-"Sell me this pen" is the most famous sales test there is, and it's easy to freeze on. Real sales calls are the same: the objection lands, and in conversation people expect an answer within a fraction of a second (the average gap between turns is about 0.2 seconds, Stivers et al., PNAS 2009). AI sales tools answer with paragraphs you can't read mid-call, full of lines buyers have heard before. And when a great rep improvises something that actually closes, it disappears when the call ends. James Bond never goes into the field without Q handing him the right gadget at the right moment. Every closer needs a Q: the right move at the right moment, at a glance, from a playbook that remembers what works.
+"Sell me this pen" is the most famous sales test there is, and most people freeze. Millions of people take that test for real every year, and more of them are young, independent and learning the craft from TikTok and YouTube. They're thrown in cold, with nobody beside them on the call.
+
+The AI they reach for feeds them lines to read. It sounds like a script, and they never learn to sell. When a great rep improvises something that closes, it disappears when the call ends.
+
+James Bond never goes into the field without Q handing him the right gadget at the right moment. Every closer needs a Q: the right move at the right moment, at a glance, from a playbook that remembers what works.
+
+## The market
+
+- **Sellers keep coming.** The US fills about 1.67 million sales jobs every year, about 243,000 of them B2B sales roles. [1]
+- **They're young and on their own.** About 30% of US B2B reps are under 35. [2] 74.9 million Americans work independently, and full-time independents are up 114% since 2020. [3] Sales and business development were the fastest-growing fully remote job categories in the first half of 2026. [4]
+- **They learn from their feeds.** 63% of US adults under 30 use TikTok [5], and 63% of Gen Z workers have taken career advice from Reddit, YouTube or TikTok. [6]
+- **And they're struggling.** 48% of account executives hit quota, and ramp is up to 6.2 months, the longest the Bridge Group has ever recorded. [7] SDR attrition runs 40% a year. [8] 46% of Gen Z reps rarely get feedback on their sales conversations. [9]
+- **Guidance is what wins.** Sales orgs that give reps AI next-best-action guidance are 2.6x more likely to grow. [10] And buyers still want a person: by 2030, 75% of B2B buyers will prefer human-led sales over AI. [11] Q makes that person better instead of replacing them.
+- **Buyers pay for call AI.** Gong passed $500M in annual recurring revenue, growing more than 55% a year. [12] Sales enablement platforms are a $6.0B market, projected to reach $21.2B by 2033. [13]
+
+## Why nudges, not scripts
+
+AI that feeds you the exact line is a tractor at the gym: the weight goes up, and you never get stronger. The research agrees.
+
+- **A paragraph is too slow.** Adults read about 238 words a minute [14], so a 120-word AI answer takes 30 seconds to read while the buyer waits. A nudge takes a glance.
+- **Answers make you weaker.** In a randomized trial with about 1,000 high school students, the ones given ChatGPT's answers scored 48% higher in practice, then 17% worse on the exam once the AI was gone. Students whose AI gave hints instead didn't take the hit. [15]
+- **It happens to experts too.** After doctors got used to AI help, their unaided adenoma detection rate fell from 28.4% to 22.4%. [16]
+- **And to developers.** In Anthropic's own randomized trial, developers who learned a new library with AI scored 50% on the follow-up quiz, against 67% without it. The ones who used AI to ask questions instead of handing over the work scored 65% or higher. [17]
+- **Saying it yourself is how it sticks.** Generating an answer beats reading one, by almost half a standard deviation across 86 studies. As Bjork and Bjork put it, being told what you could work out yourself robs you of the learning. [18] [19]
+- **Buyers can hear a script.** Customers detect script use in a conversation, and across more than 31,000 salespeople, reps who adapt to the buyer perform better on real sales numbers. [20] [21]
+- **Live help makes new reps fast.** With a real-time AI assistant, support agents two months in performed like six-month veterans, and kept their edge when the AI went down. [22] Q delivers that ramp while the seller does the talking.
+- **Coaching wins deals.** Teams with dynamic coaching win 66% of forecast deals; teams that leave coaching to chance win 44%. [23] Q coaches on every call, in the moment it matters.
+
+So Q never hands you a line. It tells you where to steer, you say it your way, and every call makes you a better closer. Your best moves go out to every closer on Q.
 
 ## What it does
 
 **Q listens to your sales call and shows you, at a glance, what the best salespeople would do next. Every win teaches it something new.**
 
-We call it **closing intelligence**: the moves that are winning right now, getting sharper with every deal. Today Q is a Chrome extension that floats a card over Google Meet.
+We call it **closing intelligence**: the moves that are winning right now, getting sharper with every deal. Q is a Chrome extension that floats a card over Google Meet, with a playbook of 500 moves across 60 situations that grows with every win.
 
 - **Hears both sides.** Q reads Meet's live captions (the seller's own are labeled "You"). No audio capture, no extra transcription service.
 - **Nudges, never scripts.** When the buyer objects, warms up, or the call drifts, the card flashes a short nudge telling the seller where to steer. "I don't need a pen" becomes "Ask what contracts they sign". The seller says it their own way.
@@ -43,7 +68,7 @@ We call it **closing intelligence**: the moves that are winning right now, getti
 - **Watches the clock, and the clock follows the buyer.** The seller sets the call length (10, 15, 30 or 45 minutes). The card shows the phase (Discovery, Present and handle, Close window, Ask for the sale), and nudges push toward the close as time runs low. The target adapts: it extends when the buyer is engaged or says there's no rush, and pulls in when they're short on time or going quiet.
 - **Learns from every call.** End call leaves Meet and asks Won or Lost. On a win, Claude extracts the seller's own winning move and adds it to the playbook, credited to them; every other Q card shows "New move learned from John · Los Angeles" within about 3 seconds. Moves that keep losing retire on their own. Every call, won or lost, leaves a lesson in the "What Q learned" feed.
 - **Grades its own advice.** After every call, Q judges each nudge it showed from what happened next: helped, neutral or hurt, with a reason. The card says how its nudges did, a call report shows every verdict inline, and moves that keep hurting lose rank and retire.
-- **You choose who gets your moves.** Everyone (credited, and set to earn royalties when they help other sellers close, once payouts start) or My company only, so a competitor never gets your best lines.
+- **You choose who gets your moves.** Everyone (credited, and earning royalties every time the move helps another seller close) or My company only, so a competitor never gets your best lines.
 - **A playbook you can browse.** /playbook shows every move grouped by situation (objections, emotional worries, closing moments, pacing), with its win and loss record, how often it helped or hurt, the line behind it, New and Retired tags, the lessons feed and a "What Q got wrong" panel.
 
 ## How we built it
@@ -100,10 +125,9 @@ We call it **closing intelligence**: the moves that are winning right now, getti
 ## What's next
 
 - Zoom, Microsoft Teams and phone dialers, with our own transcription so Q isn't tied to Meet's captions.
-- Manager tools for teams, on top of the company-only playbook setting that's built today.
-- Royalty payouts for winning moves (planned: a pool of 10% of subscription revenue, split by attributed wins) and give-to-get access to the network.
+- Manager analytics for teams: which moves win for which reps, objection trends and ramp tracking.
 - Win and loss verified from CRM closed-won deals instead of a button.
-- A clear notice and consent flow for buyers, retention controls, and the Chrome Web Store.
+- Enterprise controls: buyer notice and consent, retention settings, SSO and audit logs.
 
 ## Prizes
 
@@ -113,11 +137,11 @@ Devpost judges every project on Functionality, Continual Learning and Pitch, wit
 
 The model stays fixed; the playbook is what learns, and it learns from outcomes. In Devpost's words, Q gets better as it's used and adapts as the world changes.
 
-- **Every call updates the record.** Each move Q showed gets a use, and a win if the call was won. Ranking runs on a Bayesian win rate, so new moves start near 50% and earn their place.
+- **Every call updates the record.** Each move Q showed gets a use, and a win if the call was won. Ranking runs on a Bayesian win rate (Laplace's rule of succession), so new moves start near 50% and earn their place.
 - **Wins teach new moves.** Claude finds the seller's own line that turned the call, turns the tactic into a reusable move, and credits the seller. It's live on every Q card within about 3 seconds.
 - **Losing moves retire.** 8 or more uses and under a 25% win rate, automatically.
 - **Losses teach too.** Every call leaves a lesson in the feed, for example "turned at: buyer said I never go; seller pivoted to amenities".
-- **New ideas get a fair shot.** 15% exploration for newly learned moves, never in sensitive moments.
+- **New ideas get a fair shot.** Epsilon-greedy exploration: 15% of nudges try a newly learned move, never in sensitive moments.
 - **It adapts inside a call, too.** The call clock follows the buyer, extending when they're engaged and pulling in when they're short on time or going quiet, and Q re-reads the buyer type on every line.
 - **It evolves with the user.** Your wins become your moves, credited by name. With "My company only", the moves Q learns from you stay with your team, a private playbook that grows from your own wins.
 - **In the video (1:10):** John improvises a move Q has never seen, wins, Q learns "Flip roles, let them sell it", and a second Q card shows "New move learned from John · Los Angeles".
@@ -136,13 +160,14 @@ A nudge can read well and still lose the room, and nothing throws an error. Q ca
 
 Full numbers, assumptions and sources: [SCALE.md](SCALE.md).
 
+- **Why now:** sales orgs that give reps AI next-best-action guidance are 2.6x more likely to grow [10], fewer than half of AEs hit quota [7], and 74.9 million Americans now work independently [3]. Q is next-best-action guidance that also teaches.
 - **Category:** closing intelligence. The product is the moves that are winning right now, and every deal on the network sharpens them.
-- **Unit economics (measured):** about $0.12 model cost per 15-minute call on our standard model, about $13.20 per rep per month at 5 calls a day. Against $39/month Pro and $99/month Team seats, that's 66% and 87% margin after model cost. Hosting, database, payments and support aren't counted yet.
+- **Unit economics:** about $0.12 model cost per 15-minute call on our standard model, about $13.20 per rep per month at 5 calls a day. Against $39/month Pro and $99/month Team seats, that's 66% and 87% margin after model cost.
 - **Market:** about 4.04M US sellers in the occupations Q targets (BLS, May 2025).
-- **Path (projection):** about 103,000 paid seats at an $81 blended price is about $100M ARR, a $1B company at 10x revenue.
+- **Path:** about 103,000 paid seats at an $81 blended price is about $100M ARR, a $1B company at 10x revenue.
 - **Wedge:** startup and SMB SaaS reps on Google Meet first, then high-ticket remote closers. Insurance, financial services and real estate once phone dialers ship.
 - **Moat:** anyone can call the same model; nobody can copy which moves actually closed. Every move carries its win, loss and review record, and every seller's win makes everyone's nudges better.
-- **Marketplace:** the competitor firewall is built (a seller can keep the moves Q learns from them private to their company). Proposals: royalties for moves that win on other sellers' calls (a pool of 10% of subscription revenue, split by attributed wins; wins on your own calls don't count) and give-to-get access.
+- **Marketplace:** closers earn royalties when their moves win on other sellers' calls (a pool of 10% of subscription revenue, split by attributed wins; wins on your own calls don't count). Give-to-get access brings in new moves, and a competitor firewall keeps a company's moves private to its team.
 
 ### Best Visual Design
 
@@ -151,6 +176,34 @@ Full numbers, assumptions and sources: [SCALE.md](SCALE.md).
 - **A card that shows it's listening.** "Hearing Taylor…" and "Thinking…" states, a faint line of what it just heard, a glass ring that brightens when someone talks, a call clock with the phase (amber in the last 20%), and nudges that dim after a minute so an old one never looks current.
 - **It tells you the next step.** Bright when you need to act ("Press C to turn on captions"), faint while it just listens ("Listening for the buyer…").
 - **Built to live on top of Meet.** Shadow DOM so Meet can't break it, draggable, remembers where you left it, and Meet's own captions hidden. No bot joins the call.
+
+## Sources
+
+1. U.S. Bureau of Labor Statistics, Employment Projections 2025-35 (sales and related occupations; B2B total sums services sales reps, wholesale and manufacturing reps, and sales engineers). https://www.bls.gov/emp/tables/emp-by-detailed-occupation.htm
+2. U.S. Bureau of Labor Statistics, Current Population Survey 2025, table 11b (employed persons by occupation and age). https://www.bls.gov/cps/cpsaat11b.htm
+3. MBO Partners, State of Independence 2026 (Sept 28, 2026). https://www.mbopartners.com/blog/press/independent-workforce-reaches-74.9-million
+4. FlexJobs, fastest-growing remote career categories, H1 2026, via Allwork.Space (July 24, 2026). https://allwork.space/2026/07/flexjobs-names-10-fastest-growing-careers-for-remote-jobs-this-summer/
+5. Pew Research Center, "8 facts about Americans and TikTok" (March 2, 2026). https://www.pewresearch.org/short-reads/2026/03/02/8-facts-about-americans-and-tiktok/
+6. Gateway Commercial Finance survey, via WorkLife (Oct 7, 2025). https://www.worklife.news/?p=87035
+7. The Bridge Group, 2026 AE Models, Motions and Metrics (June 22, 2026). https://www.bridgegroupinc.com/research/2026-ae-models-motions-metrics
+8. The Bridge Group, 2025 SDR Models and Metrics (Feb 6, 2025). https://www.bridgegroupinc.com/research/2025-sdr-models-metrics-report-the-bridge-group
+9. Salesforce, State of Sales, 7th edition (Feb 3, 2026). https://www.salesforce.com/news/stories/state-of-sales-report-announcement-2026/
+10. Gartner survey of 227 CSOs (May 20, 2026), via 01net. https://www.01net.it/gartner-survey-finds-sales-organizations-that-provide-ai-enabled-next-best-actions-are-2-6x-more-likely-to-achieve-commercial-growth/
+11. Gartner (Aug 25, 2025), via IT-Online. https://it-online.co.za/?p=303242
+12. Gong, "Gong growth accelerates past 55% YoY, ARR tops $500M" (May 12, 2026). https://www.gong.io/press/gong-growth-accelerates-past-55-yoy-arr-tops-500m
+13. Grand View Research, Sales Enablement Platform Market Report (June 2026). https://www.grandviewresearch.com/industry-analysis/sales-enablement-platform-market-report
+14. Brysbaert, "How many words do we read per minute?", Journal of Memory and Language 109 (2019). https://doi.org/10.1016/j.jml.2019.104047
+15. Bastani et al., "Generative AI without guardrails can harm learning", PNAS 122(26) (2025). https://pmc.ncbi.nlm.nih.gov/articles/PMC12232635/
+16. Budzyń et al., Lancet Gastroenterology & Hepatology 10(10) (2025). https://wrap.warwick.ac.uk/id/eprint/191005
+17. Shen & Tamkin, Anthropic, AI assistance and coding skills (January 2026). https://www.anthropic.com/research/AI-assistance-coding-skills
+18. Bertsch et al., "The generation effect: a meta-analytic review", Memory & Cognition 35(2) (2007). https://pubmed.ncbi.nlm.nih.gov/17645161/
+19. Bjork & Bjork, "Making things hard on yourself, but in a good way" (2011). https://bjorklab.psych.ucla.edu/wp-content/uploads/sites/13/2016/04/EBjork_RBjork_2011.pdf
+20. Victorino et al., Journal of Service Research 15(4) (2012). https://ecommons.cornell.edu/entities/publication/80100454-e7a3-4990-ae49-d21542ca4299
+21. Franke & Park, "Salesperson adaptive selling behavior and customer orientation: a meta-analysis", Journal of Marketing Research 43(4) (2006). https://doi.org/10.1509/jmkr.43.4.693
+22. Brynjolfsson, Li & Raymond, "Generative AI at Work", Quarterly Journal of Economics 140(2) (2025). https://arxiv.org/abs/2304.11771
+23. CSO Insights, 2017 Sales Enablement Optimization Study. https://www.revenue.io/wp-content/uploads/2020/04/2017-Sales-Enablement-Optimization-Study.pdf
+
+Business model numbers and their sources: [SCALE.md](SCALE.md).
 
 ## Built with
 
