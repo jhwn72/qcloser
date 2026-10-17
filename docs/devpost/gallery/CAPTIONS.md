@@ -1,10 +1,10 @@
 # Devpost gallery: order and captions
 
-Upload in this order. Image 1 comes from John's filmed call. Images 3, 5 to 9 and 14 come from real test calls run through the live card on Oct 17 (a restaurant owner, Maria, buying Shiftly scheduling software).
+Upload in this order. Image 1 is John's real Meet call. Images 3, 5 to 9 and 14 come from real test calls run through the live card on Oct 17 (a restaurant owner, Maria, buying Shiftly scheduling software).
 
 | # | File | Caption |
 |---|---|---|
-| 1 | after filming: the Q card on the live Meet call, with the new-move toast and a verdict chip | Every closer needs a Q. It nudges, learns from every win, and grades its own advice. |
+| 1 | 01-hero.png | Every closer needs a Q. A real Google Meet call: Q reads a curious buyer and a buying signal, and nudges the seller toward the close. |
 | 2 | 02-loop.png | Continual learning and continual failure detection: every call teaches Q a move or a lesson, and Q grades every nudge it showed, with no human in the loop. |
 | 3 | 03-one-call.png | One call later: a new move credited to the seller, 7 nudges graded, a lesson saved, and the move on every Q card 8 seconds after the win. |
 | 4 | 04-problem.png | AI that feeds you lines is a forklift at the gym: students fed AI answers scored 17% lower, while students given hints didn't drop. |
