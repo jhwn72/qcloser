@@ -1,16 +1,16 @@
 # Devpost gallery: order and captions
 
-Upload in this order. Image 1 comes from John's filmed call. Images 3, 8 and 9 come from a real test call run through the card on Oct 17.
+Upload in this order. Image 1 comes from John's filmed call. Images 3, 5 to 9 and 14 come from real test calls run through the live card on Oct 17 (a restaurant owner, Maria, buying Shiftly scheduling software).
 
 | # | File | Caption |
 |---|---|---|
 | 1 | after filming: the Q card on the live Meet call, with the new-move toast and a verdict chip | Every closer needs a Q. It nudges, learns from every win, and grades its own advice. |
 | 2 | 02-loop.png | Continual learning and continual failure detection: every call teaches Q a move or a lesson, and Q grades every nudge it showed, with no human in the loop. |
-| 3 | 03-one-call.png | One call later: 3 moves learned and credited, 6 nudges graded, a lesson saved, and the new move on another seller's card 9 seconds after the win. |
-| 4 | 04-problem.png | AI that feeds you lines is a forklift at the gym. New sellers need to get stronger, not just read faster. |
-| 5 | 05-nudges.png | A real nudge from the live card, next to the script a line-feeding AI would hand you. |
+| 3 | 03-one-call.png | One call later: a new move credited to the seller, 7 nudges graded, a lesson saved, and the move on every Q card 8 seconds after the win. |
+| 4 | 04-problem.png | AI that feeds you lines is a forklift at the gym: students fed AI answers scored 17% lower, while students given hints didn't drop. |
+| 5 | 05-nudges.png | A script takes 25 seconds to read. A Q nudge takes a glance. |
 | 6 | 06-buyer-clock.png | Q tags the buyer, names the moment (one of 60) and paces the call, stretching it when the buyer's engaged. |
-| 7 | 07-speed.png | Listen-ahead: Q thinks while the buyer talks, so the nudge lands about a second after they stop. |
+| 7 | 07-speed.png | Listen-ahead: Q thinks while the buyer talks. On this line the nudge landed 0.6 seconds after she stopped. |
 | 8 | 08-every-card.png | Continual learning: a win becomes a move on every Q card within seconds, credited to the seller. |
 | 9 | 09-graded.png | Continual failure detection: every nudge graded by what the buyer did next, with a reason. |
 | 10 | dropped unless a real call produces a Hurt verdict (the test call had none) | Self-correcting: moves that keep misfiring rank down, then retire. |

@@ -31,8 +31,8 @@ Planned length 1:58, leaving 2 seconds of slack. About 170 words of narration pl
 
 ## Cast and gear
 
-- **John Wang:** himself. Seller on the live call, narrator, and (face-swapped) the coworker in the film who asks "How'd you do that?"
-- **The buyer:** one helper, on the phone in Meet from another room. Plays a brokerage owner named Jordan, as in [DEMO_SCRIPT.md](DEMO_SCRIPT.md). No costume and no Belfort impression: the film covers Belfort.
+- **John Wang:** himself. Seller on the live call, narrator, and (face-swapped) the coworker in the film who asks "How'd you do that?" On the live call his Q popup name is Jordan, city Long Island, so the move he teaches Q is credited `Jordan · Long Island`, the same as the hook's toast.
+- **The buyer:** one helper, on the phone in Meet from another room, with the Meet display name `John`. Plays a brokerage owner named John, the same name as the buyer Jordan calls in the film, as in [DEMO_SCRIPT.md](DEMO_SCRIPT.md). No costume and no impression: the film covers Belfort.
 - **The film:** the Investors Center scene from *The Wolf of Wall Street* (2013). The scene runs about 2 minutes; the hook keeps under 30 seconds of it.
 - **Gear:** the laptop (Chrome with Q, Google Meet, a screen recorder that captures computer audio), the phone (joins the Meet as the buyer), a Higgsfield account, a quiet room for the narration. A pen for the buyer to hold up on camera is a nice touch.
 - No helper? See [Solo version](#solo-version).
@@ -95,16 +95,18 @@ The plain-English line can run a second into the problem's first shot. Bond nod:
 
 Full-screen recording of the laptop: Meet with the buyer's tile (the helper's phone camera) and the Q card floating on top. In the edit, push in on the card each time a nudge lands. The exact call, setup and test log are in [DEMO_SCRIPT.md](DEMO_SCRIPT.md). **John acts on every nudge, in his own words, except at the stall, where he goes off the playbook on purpose.** The nudges below are what Q gave in testing (they vary a little run to run); use whatever the card actually shows, and never edit a nudge. Unlike the hook's overlay, everything here is the live product.
 
+The names mirror the film's call: the buyer joins Meet as `John`, so the card says `Hearing John…`, and John Wang's Q popup name is `Jordan`, city `Long Island`, so the move he teaches is credited `Jordan · Long Island`, the same toast as the hook.
+
 The whole call happens on camera (it feeds the call report). The edit keeps the opener line, the no-need beat, the stall and the close; John's opener, the price beat and the "J. B." exchange are cut.
 
 | Time | Sound | The Q card | On-screen text |
 |---|---|---|---|
-| 0:47 | **BUYER:** "Sell me this pen." | `Hearing Jordan…`, the ring brightens | Chapter label: `LIVE DEMO · real Q on a real Google Meet call`. Then: `No bot in the call. Q runs in John's browser tab.` |
+| 0:47 | **BUYER:** "Sell me this pen." | `Hearing John…`, the ring brightens | Chapter label: `LIVE DEMO · real Q on a real Google Meet call`. Then: `No bot in the call. Q runs in the seller's browser tab.` |
 | 0:49 | Jump cut. **BUYER:** "I run a brokerage. I don't need a pen. I've got a drawer full of them." | `Thinking…` starts while he's still talking, then e.g. `Ask which pen closes deals` · `Learned from Ana · Los Angeles` · `Objection · No need` and the buyer tag (e.g. `Skeptical buyer`) | Small stopwatch from the end of his line to the nudge (real time from the footage; about a second) |
-| 0:53 | **JOHN** (acting on it): "Fair. So which pen closes your deals? What's the next big one you're signing?" | | `Nudges, never scripts. John says it his way.` |
+| 0:53 | **JOHN** (acting on it): "Fair. So which pen closes your deals? What's the next big one you're signing?" | | `Nudges, never scripts. Jordan says it his way.` |
 | 0:56 | **BUYER:** "A ten-year lease on our new office. I sign it Friday." | | |
 | 0:58 | Jump cut. **BUYER:** "Look, it's a nice pen. Let me think about it." | Clock line reads `Close window · 5 of 10 min` (or the adapted target, see below); e.g. `Offer to ship engraved before Friday` | `Q watches the clock: time to close.` |
-| 1:01 | **JOHN** (his own idea): "Let me flip it. You sell it to me. Why would you sign a ten-year lease with a two-dollar pen?" | | `John goes off the playbook.` |
+| 1:01 | **JOHN** (his own idea): "Let me flip it. You sell it to me. Why would you sign a ten-year lease with a two-dollar pen?" | | `Jordan goes off the playbook.` |
 | 1:05 | **BUYER** (beat): "...Because it's the signature people remember. Fine. Can you get it to me before Friday?" | e.g. `Confirm Friday delivery, ask initials` · `Closing · Ready to buy` | |
 | 1:08 | **JOHN** (acting on it): "Thursday, engraved. What initials?" | | |
 
@@ -116,9 +118,9 @@ The whole call happens on camera (it feeds the call report). The edit keeps the 
 |---|---|---|---|
 | 1:10 | John clicks `End call` on the card. Meet leaves. The card asks `How did it go?` (Skip, Lost, Won). He clicks **Won**. | **JOHN (VO):** "When I win, Q finds the move I improvised and credits it to me." | Chapter label: `CONTINUAL LEARNING` |
 | 1:12 | John's card toast: `Q learned a new move from you: Flip roles, let them sell it` (or whatever it learns on the day) | | |
-| 1:14 | Cut to a second Chrome window, another seller's Q card. Toast: `New move learned from John · Los Angeles`. | **JOHN (VO):** "Every other Q card has it in seconds." | `Another seller's Q card` and a stopwatch: real seconds between the two toasts |
+| 1:14 | Cut to a second Chrome window, another seller's Q card. Toast: `New move learned from Jordan · Long Island`, the same line as the hook's toast. | **JOHN (VO):** "Every other Q card has it in seconds." | `Another seller's Q card` and a stopwatch: real seconds between the two toasts |
 | 1:17 | Back on John's card: its result toast (it follows the learned-move toast by about 3 seconds and says how Q's nudges did, exactly as the card shows it), then `See the call report`. Click it: the call report, with a verdict chip (Helped, Neutral or Hurt) and a one-line reason beside each nudge, at the line where it appeared. | **JOHN (VO):** "Then Q grades its own nudges by what the buyer did next. The ones that keep hurting drop, then retire." | Chapter label: `FAILURE DETECTION · every nudge judged: helped, neutral or hurt` |
-| 1:24 | /playbook: the new move under Stall with the `New` chip, `John · Los Angeles` and John's real line. Then the side panels: `What Q learned` (this call's `From a win` lesson, the rehearsal's `From a loss` lesson) and `What Q got wrong`. | **JOHN (VO):** "Lose, and Q keeps the lesson." | `500 moves · 60 situations · every call leaves a lesson` |
+| 1:24 | /playbook: the new move under Stall with the `New` chip, `Jordan · Long Island` and John's real line. Then the side panels: `What Q learned` (this call's `From a win` lesson, the rehearsal's `From a loss` lesson) and `What Q got wrong`. | **JOHN (VO):** "Lose, and Q keeps the lesson." | `500 moves · 60 situations · every call leaves a lesson` |
 
 No number goes in the voiceover or the on-screen text for the verdicts. The shot shows whatever the card and the report truly say. The stall nudge will read Neutral, because John deliberately didn't use it; that's expected.
 
@@ -137,7 +139,7 @@ Numbers and wording follow [SCALE.md](SCALE.md). Plain dark title cards in the T
 | Time | Picture | Sound | On-screen text |
 |---|---|---|---|
 | 1:44 | Simple diagram built in the editor: `Meet captions (both sides)` → `Claude reads the call + company profile + brief + call clock, starting while the buyer is still talking` → `best move from the playbook` → `a short nudge, credited` → `won call teaches a new move` → `every nudge graded after the call`, with a loop arrow back to the playbook. | **JOHN (VO):** "Claude reads the call, my company profile and the clock, then fits a move from the playbook to this buyer." (runs over the next shot) | `THE AI · Claude Opus 5.5 · listens ahead · prompt caching · about a second per nudge` |
-| 1:48 | Macro of the card from the demo footage: the ring brightening as the buyer talks, `Hearing Jordan…`, `Thinking…`, the faint line of what it just heard, the buyer tag, the clock line. | (voiceover finishes) | `DESIGN · Tango, my own design system: monochrome glass, one glowing ring` |
+| 1:48 | Macro of the card from the demo footage: the ring brightening as the buyer talks, `Hearing John…`, `Thinking…`, the faint line of what it just heard, the buyer tag, the clock line. | (voiceover finishes) | `DESIGN · Tango, my own design system: monochrome glass, one glowing ring` |
 
 ### 1:52-1:58 · End card
 
@@ -163,13 +165,13 @@ What Devpost asks for: "A 2 min demo + pitch video", scored on Functionality, Co
 
 ## Shot list, in filming order (about 55 minutes, 8:30 to 9:45 AM)
 
-Do the setup in [DEMO_SCRIPT.md](DEMO_SCRIPT.md#before-you-film) first (API credits, database reset, popup, second Chrome profile, the rehearsal that ends Lost). That isn't counted below. Shots 1 and 2 don't need the helper, so do them before 8:30 if you can.
+Do the setup in [DEMO_SCRIPT.md](DEMO_SCRIPT.md#before-you-film) first (API credits, database reset, popup as Jordan · Long Island, second Chrome profile, the rehearsal that ends Lost). That isn't counted below. Shots 1 and 2 don't need the helper, so do them before 8:30 if you can.
 
 | # | Shot | Device | Time |
 |---|---|---|---|
 | 1 | Film clip: get the scene, mark the pieces in the hook tables, and export the coworker's reaction shot (and any kept shot he's in) for Higgsfield. | Laptop | 10 min |
 | 2 | Higgsfield: start the face swap on the coworker with a clear, front-lit photo of John. It renders while you film. | Laptop | 5 min |
-| 3 | Helper takes the phone to another room and joins the Meet. John joins on the laptop about 4.5 minutes before the first line. Recorder test (see below) in that wait. | Both | 5 min |
+| 3 | Helper takes the phone to another room and joins the Meet with the display name `John`. John Wang joins on the laptop about 4.5 minutes before the first line. Recorder test (see below) in that wait. | Both | 5 min |
 | 4 | The live call, start to finish, per DEMO_SCRIPT.md. Act on each nudge in your own words. Keep recording through End call and Won. | Laptop screen recording | 4 min |
 | 5 | Bring up the second Chrome window, catch the toast. Back on John's card, open the call report and scroll it slowly. Then /playbook: the new move, "What Q learned", "What Q got wrong", a retired move. | Laptop screen recording | 4 min |
 | 6 | Q card overlay for the hook: the three beats and the toast (see [Building the Q card overlay](#building-the-q-card-overlay)). | Laptop screen recording | 10 min |
@@ -215,7 +217,7 @@ If the hook alone runs past 30 seconds, first trim each listening shot to its ca
 
 ## Solo version
 
-- **A remote friend is the buyer:** they join the Meet from their own phone or laptop. Nothing else changes.
+- **A remote friend is the buyer:** they join the Meet from their own phone or laptop, with the display name `John`. Nothing else changes.
 - **Truly alone:** type the buyer lines into the card with Shift+B and say so on screen (`Buyer lines typed for this take`). It's a weaker demo, so use it only if nobody can join. The hook doesn't need anyone.
 
 ## Production notes
