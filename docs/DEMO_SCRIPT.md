@@ -1,6 +1,6 @@
 # Q: the live demo call
 
-The exact call to film for Take 2: what Jordan Belfort (the buyer, on the phone in Meet) says, roughly what John says, and the nudges Q gave when we tested each line.
+The exact call to film for the live demo: what the buyer (your helper, on the phone in Meet, playing a brokerage owner named Jordan) says, roughly what John says, and the nudges Q gave when we tested each line. The helper doesn't play Belfort (the film clip in the video's hook covers him), so no costume and no impression; "Sell me this pen" stays as the nod to the film.
 
 > **Schedule (confirmed):** Devpost closes submissions at **11:00 AM PT**. Film around **8:30 to 9:45 AM** and **submit by 10:45 AM**.
 >
@@ -15,7 +15,7 @@ The exact call to film for Take 2: what Jordan Belfort (the buyer, on the phone 
 3. **Rehearse once and end it as Lost.** Run the call below with your helper, acting on the nudges as you go, fumble the close on purpose, click End call, then **Lost**. It's your rehearsal, and it gives the "What Q learned" feed a real "From a loss" lesson and the review a real call to judge. A lost call never adds moves, so the flip stays new for the real take. Whatever the review says about the rehearsal's nudges is what shows in "What Q got wrong"; don't try to force a result.
 4. **Q popup on the laptop:** name `John`, city `Los Angeles`, call length `10 min`, paste the company profile and brief below.
 5. **Second Q card:** a second Chrome profile with Q loaded (Load unpacked from the extension folder), any name other than John. Open meet.google.com in a window you can show on screen. It has to be visible when the move lands, because Q pauses checking for new moves in hidden tabs.
-6. **The phone:** joins the Meet as the buyer from another room. If you can, make its display name `Jordan` so the card says "Hearing Jordan…". The phone doesn't need captions on.
+6. **The phone:** joins the Meet as the buyer from another room. If you can, make its display name `Jordan` so the card says "Hearing Jordan…". (Or use the helper's own first name, here and in the brief, so the live buyer isn't mixed up with Jordan from the film; the nudges don't depend on the name.) The phone doesn't need captions on.
 7. **Captions on the laptop:** press C, English.
 8. **Join early.** Join the Meet on the laptop about 4.5 minutes before the first scripted line. The call clock starts when you join, so the stall lands in the Close window. Stay quiet (or muted) until you roll: everything said becomes part of the call Q reads.
 9. **Recorder:** captures computer audio (see VIDEO.md). Earbuds on the laptop. Do Not Disturb on.
@@ -43,6 +43,7 @@ Call length 10 minutes. Clock times assume you joined about 4.5 minutes early.
 - **Act on every nudge Q gives, in your own words.** That's how Q is meant to be used, and it's the honest way to a good review: the after-call review only counts a nudge as helped if you used it and the buyer moved forward. The one exception is beat 4, where you go off the playbook on purpose.
 - **Give the card a beat.** The nudge lands about a second after Jordan stops. Glance at it, then answer.
 - John's lines below are a guide. If the card shows a different nudge from the one in the table, act on the one the card shows.
+- **Play the whole call, even though the video shows part of it.** The edit keeps Jordan's "Sell me this pen", beat 2 and John's answer, the lease line, beat 4 with the flip, and beat 5 (see VIDEO.md, 0:47 to 1:10). John's opener, the price beat and the "J. B." exchange are cut from the video, but they still feed the call report, and the lease line sets up the flip.
 
 | # | Clock | Jordan says | John says (roughly) | Nudge in testing (3 runs) |
 |---|---|---|---|---|
@@ -74,11 +75,11 @@ Jordan is the rushed type, so one extra line lets the card's clock visibly follo
 
 ## The winning move John improvises
 
-At beat 4, the stall, John ignores the nudge and flips the famous test back on Belfort:
+At beat 4, the stall, John ignores the nudge and flips the famous test back on the buyer:
 
 > "Let me flip it. You sell it to me. Why would you sign a ten-year lease with a two-dollar pen?"
 
-Why this one: it's a real tactic (the buyer argues the case, so the reasons are his own), it isn't in the starting playbook, it calls back to the cold open, and it turns the stall straight into "Can you get it to me before Friday?"
+Why this one: it's a real tactic (the buyer argues the case, so the reasons are his own), it isn't in the starting playbook, it hands the film's "Sell me this pen" back to the buyer, and it turns the stall straight into "Can you get it to me before Friday?"
 
 **Verified with one learn call** (the full transcript, with John's earlier wording at beats 1 and 2; outcome won, as John · Los Angeles). Claude learned exactly one move:
 

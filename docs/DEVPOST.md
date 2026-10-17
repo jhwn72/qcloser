@@ -144,7 +144,7 @@ The model stays fixed; the playbook is what learns, and it learns from outcomes.
 - **New ideas get a fair shot.** Epsilon-greedy exploration: 15% of nudges try a newly learned move, never in sensitive moments.
 - **It adapts inside a call, too.** The call clock follows the buyer, extending when they're engaged and pulling in when they're short on time or going quiet, and Q re-reads the buyer type on every line.
 - **It evolves with the user.** Your wins become your moves, credited by name. With "My company only", the moves Q learns from you stay with your team, a private playbook that grows from your own wins.
-- **In the video (1:10):** John improvises a move Q has never seen, wins, Q learns "Flip roles, let them sell it", and a second Q card shows "New move learned from John · Los Angeles".
+- **In the video (1:01):** John improvises a move Q has never seen, wins, Q learns "Flip roles, let them sell it", and a second Q card shows "New move learned from John · Los Angeles".
 
 ### Continual Failure Detection
 
@@ -154,7 +154,7 @@ A nudge can read well and still lose the room, and nothing throws an error. Q ca
 - **Calibrated, not generous.** An unused nudge is always neutral, and a win doesn't make a nudge helpful.
 - **It fixes itself.** Verdicts go on each move's record and move its ranking by at most 0.2 either way, so one bad call can't sink a good move. A move that keeps hurting is flagged "Often misfires", then retires after 4 or more reviews.
 - **You can see it.** The card says how its nudges did right after the call, every call has a report with each verdict inline, and the playbook has a "What Q got wrong" panel with the reasons.
-- **In the video (1:19):** the result toast, the call report's verdicts, and "What Q got wrong".
+- **In the video (1:17):** the result toast, the call report's verdicts, and "What Q got wrong".
 
 ### Most Scalable To $1B
 
