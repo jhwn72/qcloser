@@ -1,4 +1,5 @@
 import Anthropic from "@anthropic-ai/sdk";
+import { createHash } from "node:crypto";
 import { zodOutputFormat } from "@anthropic-ai/sdk/helpers/zod";
 import { z } from "zod";
 import { MOMENT_TYPES } from "./moments";
@@ -171,19 +172,29 @@ How an elite closer reads the moment:
 // How Claude runs for live cues: thinking off, low effort, small output, for speed.
 // Other variants exist so quality and speed can be compared during development.
 type ThinkingParam = Anthropic.MessageCreateParams["thinking"];
-type Variant = { model: string; effort: "low" | "medium" | "high"; thinking?: ThinkingParam };
+type Variant = { model: string; effort: "low" | "medium" | "high"; thinking?: ThinkingParam; speed?: "fast" };
 export const VARIANTS: Record<string, Variant> = {
   "haiku-fast": { model: "claude-haiku-5-5", effort: "low", thinking: { type: "disabled" } },
   "haiku-think": { model: "claude-haiku-5-5", effort: "medium" },
   "sonnet-fast": { model: "claude-sonnet-5-5", effort: "low", thinking: { type: "between_tools" } as unknown as ThinkingParam },
   "sonnet-medium": { model: "claude-sonnet-5-5", effort: "medium", thinking: { type: "between_tools" } as unknown as ThinkingParam },
   "sonnet-think": { model: "claude-sonnet-5-5", effort: "low" },
-  "opus-low": { model: "claude-opus-5-5", effort: "low" },
+  "opus-low": { model: "claude-opus-5-5", effort: "low" }, // Opus 5.5 always thinks (adaptive); between_tools is a 400
+  "opus-low-fast": { model: "claude-opus-5-5", effort: "low", speed: "fast" }, // fast mode: same model, faster output, 2x price
 };
 // Sonnet with thinking off: much more specific nudges than fast Haiku. A "subtext" step (Claude first naming
 // what the buyer really means) added about 0.25 s and didn't fix the hard cases, so it was dropped
 // (web/scripts/compare-cues.py --new, 2026-10-17).
-export const DEFAULT_VARIANT = "sonnet-fast";
+// Opus 5.5 in fast mode (2026-10-17, 12 held-out cases + the demo beats, judged per pick): first picks scored 4.10
+// vs Sonnet's 3.85, and it answers faster (server median 1.09 s vs 1.40 s; first pick ready at 0.98 s vs 1.16 s).
+// Fast mode is a research preview at twice Opus's price, so any fast-mode error or stall falls back to Sonnet.
+// To go back to Sonnet only: DEFAULT_VARIANT = "sonnet-fast".
+export const DEFAULT_VARIANT = "opus-low-fast";
+const FALLBACK_VARIANT = "sonnet-fast";
+// After a fast-mode failure, go straight to Sonnet for a minute instead of paying a failed try on every cue.
+const FAST_PAUSE_MS = 60_000;
+let fastPausedUntil = 0;
+const usable = (v: Variant) => (v.speed && Date.now() < fastPausedUntil ? VARIANTS[FALLBACK_VARIANT] : v);
 
 // The playbook grouped by moment, in the taxonomy's order, so Claude can scan the moves for this moment.
 // The order only depends on the moves, so the text (and the cache) stays the same between cues.
@@ -201,8 +212,81 @@ function playbookText(moves: Move[]) {
   return [...groups].map(([moment, lines]) => `${moment}:\n${lines.join("\n")}`).join("\n");
 }
 
+// Speed settings for live cues (measured with web/scripts/compare-cues.py --repeat, 2026-10-17).
+// The prompt cache lives 1 hour instead of 5 minutes, so a pause in the demo (or the gap between the warm-up and
+// the first buyer line) doesn't cost a full re-read of the playbook. It is written about once an hour, at about 3 cents.
+const CACHE = { type: "ephemeral", ttl: "1h" } as const;
+// A live cue never hangs the card: each try gets a hard deadline (normal cues take 1 to 3 s), and a try that stalls
+// or drops mid-answer gets one retry, so the worst case is about 10 s. The SDK also retries once on a 429/5xx
+// before the answer starts, inside the same deadline.
+const CUE_DEADLINE_MS = 5000;
+const CUE_TRIES = 2;
+
+// The system prompt in blocks, cached at two points: instructions + the public playbook (the same for every
+// seller, so a new company profile still reads ~8k tokens from cache), then the company's own private moves (if
+// any) and its profile, cached together per company. Without private moves the text is the same as one block
+// joined with blank lines.
+function systemBlocks(moves: Move[], profile: string, privateMoves: Move[] = []): Anthropic.TextBlockParam[] {
+  const own = privateMoves.length ? [`\n\nMore playbook moves, private to this seller's company, by moment:\n${playbookText(privateMoves)}`] : [];
+  const tail = [...own, ...(profile.trim() ? [`\n\nSeller's company profile:\n${profile.trim()}`] : [])];
+  return [
+    { type: "text", text: READ_SYSTEM },
+    { type: "text", text: `Playbook moves, by moment:\n${playbookText(moves)}`, cache_control: CACHE },
+    ...tail.map((text, i) => ({ type: "text" as const, text, ...(i === tail.length - 1 ? { cache_control: CACHE } : {}) })),
+  ];
+}
+
+function liveParams(v: Variant, system: Anthropic.TextBlockParam[], content: string, maxTokens: number) {
+  return {
+    model: v.model,
+    max_tokens: maxTokens,
+    ...(v.thinking ? { thinking: v.thinking } : {}),
+    ...(v.speed ? { speed: v.speed } : {}),
+    system,
+    messages: [{ role: "user" as const, content }],
+    output_config: { format: zodOutputFormat(Reading), effort: v.effort },
+  };
+}
+const betaHeaders = (v: Variant) => (v.speed ? { headers: { "anthropic-beta": "fast-mode-2026-02-01" } } : {});
+
+// Where one cue's time went, for the Server-Timing header and the dev log.
+// head: when the moment and buyer type were written; pick1: when the first pick was complete.
+export type CueTiming = {
+  ttft: number;
+  head: number;
+  pick1: number;
+  claude: number;
+  tries: number;
+  early: boolean;
+  in: number;
+  cached: number;
+  write: number;
+  out: number;
+  shared?: boolean; // answered from an identical request a moment earlier
+};
+
+// The first two fields, as soon as Claude has written them: enough to know the answer is "none".
+const HEAD = /^\s*\{\s*"moment"\s*:\s*"([a-z_]+)"\s*,\s*"buyer_type"\s*:\s*"([a-z_]+)"/;
+const PICK1 = /"picks"\s*:\s*\[\s*\{\s*"nudge"\s*:\s*"(?:[^"\\]|\\.)*"\s*,\s*"move"\s*:\s*"(?:[^"\\]|\\.)*"\s*\}/;
+// Everything up to the end of the first pick, captured, so the caller can decide it doesn't need the second.
+const FIRST =
+  /^\s*\{\s*"moment"\s*:\s*"([a-z_]+)"\s*,\s*"buyer_type"\s*:\s*"([a-z_]+)"\s*,\s*"aim"\s*:\s*"([a-z_]+)"\s*,\s*"picks"\s*:\s*\[\s*\{\s*"nudge"\s*:\s*("(?:[^"\\]|\\.)*")\s*,\s*"move"\s*:\s*("(?:[^"\\]|\\.)*")\s*\}/;
+const AIM_SET = new Set<string>(AIMS);
+
+// The caller's early exits: skip the picks when it won't use them, or stop after the first pick when the second
+// can't change its choice.
+type Exits = {
+  skipPicks?: (moment: string) => boolean;
+  firstPickFinal?: (moment: string, aim: string, pick: { nudge: string; move: string }) => boolean;
+};
+const MOMENTS = new Set<string>([...MOMENT_TYPES, "none"]);
+const BUYERS = new Set<string>([...BUYER_TYPES, "unclear"]);
+
+class CueDeadline extends Error {}
+
 // The parts that stay the same from cue to cue (instructions, playbook, company profile) go first and are
 // cached, so Claude doesn't re-read them every time. What changes (brief, stats, nudges shown, transcript) goes after.
+// Streams the answer, and stops early when the caller says the rest won't change anything (see Exits).
 export async function readMoment(
   turns: Turn[],
   moves: Move[],
@@ -211,11 +295,9 @@ export async function readMoment(
   profile = "",
   recent: string[] = [],
   variant = DEFAULT_VARIANT,
+  opts: Exits & { onTiming?: (t: CueTiming) => void; privateMoves?: Move[]; share?: boolean } = {},
 ): Promise<Reading | null> {
-  const v = VARIANTS[variant] ?? VARIANTS[DEFAULT_VARIANT];
-  const stable = [`Playbook moves, by moment:\n${playbookText(moves)}`, profile.trim() && `Seller's company profile:\n${profile.trim()}`]
-    .filter(Boolean)
-    .join("\n\n");
+  const v = usable(VARIANTS[variant] ?? VARIANTS[DEFAULT_VARIANT]);
   const call = [
     brief.trim() && `Seller's brief for this call:\n${brief.trim()}`,
     statsText(stats),
@@ -224,22 +306,151 @@ export async function readMoment(
   ]
     .filter(Boolean)
     .join("\n\n");
-  const res = await client.messages.parse({
-    model: v.model,
-    max_tokens: v.thinking ? 300 : 4000, // variants without a thinking setting think, and need room for it
-    ...(v.thinking ? { thinking: v.thinking } : {}),
-    system: [
-      { type: "text", text: READ_SYSTEM },
-      { type: "text", text: stable, cache_control: { type: "ephemeral" } },
-    ],
-    messages: [{ role: "user", content: `Call so far:\n${call}` }],
-    output_config: { format: zodOutputFormat(Reading), effort: v.effort },
-  });
-  if (process.env.NODE_ENV !== "production") {
-    const u = res.usage;
-    console.log(`[cue] tokens in ${u.input_tokens}, cached ${u.cache_read_input_tokens ?? 0}, cache write ${u.cache_creation_input_tokens ?? 0}, out ${u.output_tokens}`);
+  const params = liveParams(v, systemBlocks(moves, profile, opts.privateMoves), `Call so far:\n${call}`, v.thinking ? 300 : 4000); // variants without a thinking setting think, and need room for it
+  const started = Date.now();
+  // Listen-ahead sends the growing buyer line several times; when a request is word for word one already asked in
+  // the last few seconds (usually the final line matching the last partial), it shares that answer instead of
+  // calling Claude again. Choosing among the picks still happens per request.
+  const key = createHash("sha1").update(JSON.stringify(params)).update(`${!!opts.skipPicks}${!!opts.firstPickFinal}`).digest("hex");
+  const seen = opts.share === false ? undefined : recentReads.get(key); // share: false measures a real call
+  if (seen && Date.now() - seen.at < SHARE_MS) {
+    const reading = await seen.promise;
+    opts.onTiming?.({ ...seen.timing, claude: Date.now() - started, shared: true });
+    return reading;
   }
-  return res.parsed_output ?? null;
+  const timing: CueTiming = { ttft: 0, head: 0, pick1: 0, claude: 0, tries: 0, early: false, in: 0, cached: 0, write: 0, out: 0 };
+  const promise = readOnce(v, params, opts, timing, started);
+  remember(key, { promise, timing, at: Date.now() });
+  try {
+    return await promise;
+  } finally {
+    timing.claude = Date.now() - started;
+    opts.onTiming?.(timing);
+    if (process.env.NODE_ENV !== "production") {
+      console.log(`[cue] tokens in ${timing.in}, cached ${timing.cached}, cache write ${timing.write}, out ${timing.out} | first token ${timing.ttft} ms, claude ${timing.claude} ms${timing.early ? ", stopped early" : ""}${timing.tries > 1 ? `, ${timing.tries} tries` : ""}`);
+    }
+  }
+}
+
+const SHARE_MS = 15000;
+type Shared = { promise: Promise<Reading | null>; timing: CueTiming; at: number };
+const recentReads = new Map<string, Shared>();
+function remember(key: string, entry: Shared) {
+  for (const [k, e] of recentReads) if (Date.now() - e.at > SHARE_MS) recentReads.delete(k);
+  recentReads.set(key, entry);
+  // A failed or empty answer isn't shared: the next request asks Claude again.
+  entry.promise.then(
+    (r) => r || recentReads.delete(key),
+    () => recentReads.delete(key),
+  );
+}
+
+async function readOnce(v: Variant, params: ReturnType<typeof liveParams>, exits: Exits, timing: CueTiming, started: number): Promise<Reading | null> {
+  for (;;) {
+    timing.tries++;
+    try {
+      return await streamOnce(params, v, exits, timing, started);
+    } catch (e) {
+      // Fast mode is a research preview: on any API error (a rate limit, fast mode unavailable) or a stall, the
+      // retry goes to Sonnet. Otherwise retry once on a stall or a dropped connection (an APIError with no status
+      // is an error mid-stream); a bad request or a parse failure won't get better, and the SDK already retried 5xx.
+      const leaveFast = !!v.speed && (e instanceof Anthropic.APIError || e instanceof CueDeadline);
+      const retryable =
+        leaveFast || e instanceof CueDeadline || e instanceof Anthropic.APIConnectionError || (e instanceof Anthropic.APIError && e.status == null);
+      if (!retryable || timing.tries >= CUE_TRIES) throw e;
+      console.warn(`[cue] try ${timing.tries} failed (${e instanceof Error ? e.message : e}), retrying${leaveFast ? " on Sonnet" : ""}`);
+      if (leaveFast) {
+        fastPausedUntil = Date.now() + FAST_PAUSE_MS;
+        v = VARIANTS[FALLBACK_VARIANT];
+        params = liveParams(v, params.system, params.messages[0].content, 300);
+      }
+    }
+  }
+}
+
+async function streamOnce(
+  params: ReturnType<typeof liveParams>,
+  v: Variant,
+  exits: Exits,
+  timing: CueTiming,
+  started: number,
+): Promise<Reading | null> {
+  // Fast mode doesn't wait out a rate limit: it falls back to Sonnet right away (readOnce).
+  const stream = client.messages.stream(params, { timeout: CUE_DEADLINE_MS, maxRetries: v.speed ? 0 : 1, ...betaHeaders(v) });
+  Object.assign(timing, { ttft: 0, head: 0, pick1: 0 }); // a retry reports its own stream
+  const got: { early: Reading | null; late: boolean } = { early: null, late: false };
+  const deadline = setTimeout(() => {
+    got.late = true;
+    stream.abort();
+  }, CUE_DEADLINE_MS);
+  const stop = (reading: Reading) => {
+    got.early = reading;
+    stream.abort(); // nothing after this is used, so stop paying for it
+  };
+  stream.on("streamEvent", (ev) => {
+    if (ev.type !== "message_start") return; // input usage comes first, so a cue stopped early still reports it
+    const u = ev.message.usage;
+    Object.assign(timing, { in: u.input_tokens, cached: u.cache_read_input_tokens ?? 0, write: u.cache_creation_input_tokens ?? 0 });
+  });
+  stream.on("text", (_delta, snapshot) => {
+    if (!timing.ttft) timing.ttft = Date.now() - started;
+    const head = timing.head ? null : HEAD.exec(snapshot);
+    if (head) timing.head = Date.now() - started;
+    const firstDone = !!timing.head && !timing.pick1 && PICK1.test(snapshot);
+    if (firstDone) timing.pick1 = Date.now() - started;
+    if (got.early) return;
+    if (head && exits.skipPicks && MOMENTS.has(head[1]) && BUYERS.has(head[2]) && exits.skipPicks(head[1])) {
+      return stop({ moment: head[1], buyer_type: head[2], aim: "none", picks: [] } as Reading);
+    }
+    const first = firstDone && exits.firstPickFinal ? FIRST.exec(snapshot) : null;
+    if (first && MOMENTS.has(first[1]) && BUYERS.has(first[2]) && AIM_SET.has(first[3])) {
+      const pick = { nudge: JSON.parse(first[4]) as string, move: JSON.parse(first[5]) as string };
+      if (exits.firstPickFinal!(first[1], first[3], pick)) stop({ moment: first[1], buyer_type: first[2], aim: first[3], picks: [pick] } as Reading);
+    }
+  });
+  try {
+    const res = await stream.finalMessage();
+    const u = res.usage;
+    Object.assign(timing, { in: u.input_tokens, cached: u.cache_read_input_tokens ?? 0, write: u.cache_creation_input_tokens ?? 0, out: u.output_tokens });
+    return res.parsed_output ?? null;
+  } catch (e) {
+    if (got.early) {
+      timing.early = true;
+      return got.early;
+    }
+    if (got.late) throw new CueDeadline(`no answer within ${CUE_DEADLINE_MS} ms`);
+    throw e;
+  } finally {
+    clearTimeout(deadline);
+  }
+}
+
+// Pre-reads the instructions and playbook into Claude's prompt cache (the extension's warm-up at the start of a
+// call, and right after the playbook changes), so the next real nudge reads them from cache instead of paying the
+// slow first read of ~8k tokens. One output token.
+let warmed = { text: "", at: 0 };
+const WARM_EVERY_MS = 5 * 60 * 1000; // a public route: the same playbook is warmed at most once per server every 5 minutes
+export async function warmCue(moves: Move[]) {
+  const text = playbookText(moves);
+  if (text === warmed.text && Date.now() - warmed.at < WARM_EVERY_MS) return null;
+  warmed = { text, at: Date.now() };
+  const warm = (v: Variant) =>
+    client.messages.create(liveParams(v, systemBlocks(moves, ""), "Call so far:\nwarm-up", 1), { timeout: 10000, maxRetries: 0, ...betaHeaders(v) });
+  let res;
+  try {
+    const v = usable(VARIANTS[DEFAULT_VARIANT]);
+    try {
+      res = await warm(v);
+    } catch (e) {
+      if (!v.speed || !(e instanceof Anthropic.APIError)) throw e;
+      fastPausedUntil = Date.now() + FAST_PAUSE_MS; // fast mode is unavailable: warm Sonnet, which cues will use
+      res = await warm(VARIANTS[FALLBACK_VARIANT]);
+    }
+  } catch (e) {
+    warmed = { text: "", at: 0 }; // so the next warm-up checks Claude again
+    throw e;
+  }
+  return { cached: res.usage.cache_read_input_tokens ?? 0, write: res.usage.cache_creation_input_tokens ?? 0 };
 }
 
 const Learned = z.object({

@@ -162,6 +162,42 @@ NEW = [
     case(CYBER, [(S, "Thanks for hopping on!"), (B, "Sure. I've only got about 15 minutes, so let's keep it quick.")], {"elapsed_s": 25}, ["opening"]),
 ]
 
+# The live demo (docs/DEMO_SCRIPT.md): John's Pen Co., a 10-minute call, the nudges the card showed before each beat.
+PENCO = "John's Pen Co. sells one product: The Signer, a solid brass refillable ballpoint made for signing things that matter. Price: $40. Teams of 10 or more: $30 each. This week only: free engraving (initials or a name). Lifetime free refills. 30-day money-back guarantee, no questions asked. Ships in 2 business days; next-day delivery in Los Angeles. Ideal customer: people who sign contracts, leases, offers and checks. Never trash other brands. Never pressure."
+JORDAN = "Buyer: Jordan, runs a brokerage and signs deals all day. Skeptical, impatient, hates being pitched. Goal: sell one engraved Signer on this call."
+DEMO_CALL = [
+    (S, "Hey Jordan, good to see you."),
+    (B, "Sell me this pen."),
+    (S, "Sure. What's your day like?"),
+    (B, "I run a brokerage. I don't need a pen. I've got a drawer full of them."),
+    (S, "Fair. What's the last thing you signed that actually mattered?"),
+    (B, "A ten-year lease on our new office. I sign it Friday."),
+    (S, "Then this is your Friday pen. Solid brass, refills for life, and we engrave your initials free this week."),
+    (B, "Forty bucks for a pen? I get twenty for five dollars."),
+    (S, "You can. But it's forty bucks against a ten-year lease. One of those twenty skips on Friday, right in front of your landlord."),
+    (B, "Look, it's a nice pen. Let me think about it."),
+    (S, "Let me flip it. You sell it to me. Why would you sign a ten-year lease with a two-dollar pen?"),
+    (B, "Because it's the signature people remember. It should feel like the deal. Fine. Can you get it to me before Friday?"),
+]
+SHOWN = ["Ask what contracts they sign", "Ask which pen closes deals", "Compare $40 to ten-year lease", "Offer to ship before Friday"]
+
+
+def beat(upto, elapsed, shown, expect):
+    return case(PENCO, DEMO_CALL[:upto], {"elapsed_s": elapsed, "target_s": 600}, expect, SHOWN[:shown], JORDAN)
+
+
+DEMO = [
+    beat(2, 270, 0, ["opening", "no_need"]),
+    beat(4, 285, 1, ["no_need"]),
+    beat(8, 320, 2, ["price"]),
+    beat(10, 340, 3, ["stall"]),
+    beat(12, 380, 4, ["ready", "buying_signal"]),
+    # A direct question must be answered first (seen live: "Ask which warranty worry sparked this").
+    case(PEN, [(S, "It's 40 dollars and comes with a lifetime warranty."), (B, "So how does the warranty work?")], expect=["buying_signal", "proof", "trust", "technical"]),
+    case(PENCO, DEMO_CALL[:7] + [(B, "So how does the warranty work?")], {"elapsed_s": 310, "target_s": 600}, ["buying_signal", "proof", "trust", "technical"], SHOWN[:2], JORDAN),
+    case(HVAC, [(S, "Your AC is 18 years old. I'd recommend a heat pump, 11,500 installed."), (B, "So how does the warranty work?")], expect=["buying_signal", "proof", "trust", "technical"]),
+]
+
 # The same buyer line at different points of the call (target length in stats): early it can be probed,
 # late it should be answered in a beat and turned toward a close or a dated next step.
 def at(minute, target_min=15, **extra):
@@ -199,6 +235,7 @@ URL = (flag("--url", True) or "http://localhost:3000").rstrip("/") + "/api/cue"
 ONLY = flag("--only", True)
 REPEAT = int(flag("--repeat", True) or 1)
 JUDGE = flag("--judge")
+JUDGE_PICKS = flag("--judge-picks")  # grade each of Claude's two picks on its own, to compare ways of choosing between them
 SAVE, LOAD = flag("--save", True), flag("--load", True)
 if flag("--fresh"):
     CASES = FRESH
@@ -206,8 +243,10 @@ elif flag("--new"):
     CASES = NEW
 elif flag("--time"):
     CASES = TIME
+elif flag("--demo"):
+    CASES = DEMO
 elif flag("--all"):
-    CASES = CASES + FRESH + NEW + TIME
+    CASES = CASES + FRESH + NEW + TIME + DEMO
 if ONLY:
     a, _, b = ONLY.partition(":")
     CASES = CASES[int(a or 0) : int(b) if b else None]
@@ -231,13 +270,15 @@ def post(url, payload, timeout=60, meta=None):
         return json.load(resp)
 
 
-# "db;dur=3, ttft;dur=610" -> {"db": 3, "ttft": 610}
+# 'db;dur=3, ttft;dur=610, tok;desc="in=90 cached=8100 write=0 out=70"' -> {"db": 3, "ttft": 610, "in": 90, ...}
 def server_timing(header):
     out = {}
     for part in (header or "").split(","):
         m = re.match(r"\s*([\w-]+)\s*;\s*dur=([\d.]+)", part)
         if m:
             out[m.group(1)] = float(m.group(2))
+        for k, x in re.findall(r"(\w+)=(\d+)", part.split("desc=", 1)[1] if "desc=" in part else ""):
+            out[k] = float(x)
     return out
 
 
@@ -251,7 +292,9 @@ def turns_of(c):
 
 
 def run(variant, c):
-    body = {"turns": turns_of(c), "profile": c["profile"], "brief": c["brief"], "stats": c["stats"], "recent_nudges": c["recent"], "variant": variant}
+    # share: False so repeated runs time a real Claude call instead of reusing the answer to an identical request
+    body = {"turns": turns_of(c), "profile": c["profile"], "brief": c["brief"], "stats": c["stats"], "recent_nudges": c["recent"], "variant": variant,
+            "share": False, **({"org": c["org"]} if c.get("org") else {})}
     t0 = time.time()
     meta = {}
     try:
@@ -270,12 +313,19 @@ def run(variant, c):
             "timing": timing, "region": meta.get("region", "").split("::")[1:2]}
 
 
-def judge(c, r):
+# The route shows Claude's nudge if it has six words or fewer, otherwise the move as written.
+def nudge_or_move(nudge, move):
+    clean = re.sub(r'["\u201c\u201d]', "", nudge or "").strip()
+    return clean if clean and len(clean.split()) <= 6 else move
+
+
+def judge(c, r, pick=None):
     if r["moment"] == "error":
         return {"score": None, "reason": "error", "better": ""}
-    silent = r["nudge"] == "(none)"
+    nudge, move = (nudge_or_move(pick.get("nudge"), pick.get("move")), pick.get("move")) if pick else (r["nudge"], r["move"])
+    silent = nudge == "(none)"
     body = {"profile": c["profile"], "brief": c["brief"], "turns": turns_of(c), "stats": c["stats"], "recent_nudges": c["recent"],
-            "moment": r["moment"], "nudge": None if silent else r["nudge"], "move": r["move"]}
+            "moment": r["moment"], "nudge": None if silent else nudge, "move": move}
     for _ in range(2):
         try:
             return post(JUDGE_URL, body, timeout=300)
@@ -298,7 +348,16 @@ else:
         for _ in range(REPEAT - 1):  # extra runs only feed the latency stats
             for r, c in zip(results[v], CASES):
                 r.setdefault("again", []).append({k: x[k] for x in [run(v, c)] for k in ("ms", "timing", "moment")})
-if JUDGE:
+if JUDGE_PICKS:  # one grade per pick; the shown nudge takes its pick's grade (no extra call), else gets its own
+    with ThreadPoolExecutor(8) as pool:
+        for v in variants:
+            jobs = [(i, k) for i, r in enumerate(results[v]) for k in range(len(r.get("picks") or []))]
+            for (i, k), verdict in zip(jobs, pool.map(lambda ik: judge(CASES[ik[0]], results[v][ik[0]], results[v][ik[0]]["picks"][ik[1]]), jobs)):
+                results[v][i].setdefault("pick_judges", [None, None])[k] = verdict
+            for c, r in zip(CASES, results[v]):
+                shown = [j for p, j in zip(r.get("picks") or [], r.get("pick_judges") or []) if j and norm(nudge_or_move(p.get("nudge"), p.get("move"))) in (norm(r["nudge"]), norm(r["move"]))]
+                r["judge"] = shown[0] if shown else judge(c, r)
+elif JUDGE:
     with ThreadPoolExecutor(8) as pool:
         for v in variants:
             for r, verdict in zip(results[v], pool.map(lambda cr: judge(*cr), zip(CASES, results[v]))):
@@ -322,9 +381,10 @@ for i, c in enumerate(CASES):
         j = r.get("judge")
         score = f'[{j["score"]}] ' if j and j.get("score") else ""
         print(f'  {v:13} {r["ms"]:5} ms  {score}[{r["moment"]}] {r["nudge"]}{move}{tag}{flag_}')
-        if VERBOSE:
-            for p in r.get("picks", []):
-                print(f'  {"":13}            pick: {p.get("nudge")}   (move: {p.get("move")})')
+        if VERBOSE or JUDGE_PICKS:
+            for p, pj in zip(r.get("picks", []), r.get("pick_judges") or [None, None]):
+                grade = f'[{pj["score"]}] ' if pj and pj.get("score") else ""
+                print(f'  {"":13}            pick: {grade}{p.get("nudge")}   (move: {p.get("move")})')
         if j and j.get("score") and j["score"] <= 3:
             print(f'  {"":13}            judge: {j["reason"]}  Better: {j.get("better") or "-"}')
 print()
@@ -343,6 +403,9 @@ for v in variants:
     if parts:
         line += "\n    server: " + ", ".join(f"{k} {pct(x, .5):.0f}/{pct(x, .9):.0f}" for k, x in parts.items()) + " ms (median/p90)"
     scores = [r["judge"]["score"] for r in rs if r.get("judge") and r["judge"].get("score")]
+    firsts = [r["pick_judges"][0]["score"] for r in rs if r.get("pick_judges") and r["pick_judges"][0] and r["pick_judges"][0].get("score")]
+    if firsts:
+        line += f", first pick alone avg {sum(firsts)/len(firsts):.2f} (4-5: {sum(x >= 4 for x in firsts)}/{len(firsts)})"
     if scores:
         good = sum(s >= 4 for s in scores)
         line += f", judge avg {sum(scores)/len(scores):.2f}, 4-5: {good}/{len(scores)} ({100*good//len(scores)}%)"
