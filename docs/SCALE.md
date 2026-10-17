@@ -4,14 +4,14 @@
 
 ## Say it in 20 seconds
 
-> Every closer needs a Q. Q listens to your sales call and shows you, at a glance, what the best salespeople would do next. When anyone wins with a new move, every Q user gets it in seconds, so Q gets sharper with every deal. Each call costs about twelve cents to run on our standard model, against a $39 to $99 seat. About a hundred thousand seats is $100 million a year: a billion-dollar company at ten times revenue.
+> Every closer needs a Q. Q listens to your sales call and shows you, at a glance, what the best salespeople would do next. When anyone wins with a new move, every Q user gets it in seconds, so Q gets sharper with every deal. Each call costs about twelve cents to run on Q's standard model, against a $39 to $99 seat. About a hundred thousand seats is $100 million a year: a billion-dollar company at ten times revenue.
 
 ## Headline numbers
 
 | | Number | Basis |
 |---|---|---|
-| Model cost per nudge | ~$0.0017 | Measured in our build, on our standard model |
-| Model cost per 15-minute call | ~$0.12 | Measured in our build, on our standard model |
+| Model cost per nudge | ~$0.0017 | Measured in Q's build, on Q's standard model |
+| Model cost per 15-minute call | ~$0.12 | Measured in Q's build, on Q's standard model |
 | Model cost per rep per month | ~$13.20 | Standard model; assumes 5 calls a day, 22 workdays |
 | Margin after model cost | 66% Pro, 87% Team | ($39 or $99 minus $13.20) / price |
 | US sellers in the occupations Q targets | ~4.04M | BLS, May 2025 [1] |
@@ -60,12 +60,12 @@ Pricing: **$39/month Pro** (one seller, shared playbook), **$99/month Team seat*
 | Per seat, per month | Pro | Team |
 |---|---|---|
 | Price | $39.00 | $99.00 |
-| Model cost on our standard model (5 calls/day x 22 days x $0.12) | $13.20 | $13.20 |
+| Model cost on Q's standard model (5 calls/day x 22 days x $0.12) | $13.20 | $13.20 |
 | **Margin after model cost** | **66%** | **87%** |
 | Heavy user, 10 calls/day ($26.40) | 32% | 73% |
 
 - At a 70% Team / 30% Pro mix (assumption), the blended price is $81 and the margin after model cost is about 84%.
-- The model cost above is our standard model (Claude Sonnet 5.5). The live demo runs live nudges on Claude Opus 5.5 in fast mode, for speed.
+- The model cost above is Q's standard model (Claude Sonnet 5.5). The live demo runs live nudges on Claude Opus 5.5 in fast mode, for speed.
 - Levers: a fair-use cap on Pro for heavy users, and a smaller tuned model on the fast path.
 
 ## 4. The marketplace: royalties for moves
@@ -138,4 +138,4 @@ Assumptions:
 13. MBO Partners, State of Independence 2026 (Sept 28, 2026). https://www.mbopartners.com/blog/press/independent-workforce-reaches-74.9-million
 14. Salesforce, State of Sales, 7th edition (Feb 3, 2026). https://www.salesforce.com/news/stories/state-of-sales-report-announcement-2026/
 
-Measured costs come from our build on our standard model, Claude Sonnet 5.5, on Next.js (Vercel) with Supabase. The live demo runs live nudges on Claude Opus 5.5 in fast mode for speed. Analyst estimates of the conversation intelligence market disagree widely, so we size the market bottom-up from BLS headcounts instead.
+Measured costs come from Q's build on Q's standard model, Claude Sonnet 5.5, on Next.js (Vercel) with Supabase. The live demo runs live nudges on Claude Opus 5.5 in fast mode for speed. Analyst estimates of the conversation intelligence market disagree widely, so I size the market bottom-up from BLS headcounts instead.

@@ -10,7 +10,7 @@ Q listens to your sales call and shows you, at a glance, what the best salespeop
 
 ## Team
 
-John Wang
+John Wang (solo)
 
 ## Summary
 
@@ -19,19 +19,20 @@ John Wang
 - **There's no time to read on a live call.** In conversation, people reply about 0.2 seconds after the other person stops, on average ([Stivers et al., PNAS 2009](https://pmc.ncbi.nlm.nih.gov/articles/PMC2705608/)). AI tools that hand you a paragraph, or a line to read aloud, don't fit in that gap, and they make you sound scripted.
 - **They don't learn what closes.** Generic AI guesses what sounds persuasive. In-call cards in sales tools show whatever someone set up in advance.
 - **Coaching doesn't scale.** Managers can't join every call, and new reps keep arriving: SDRs take 3.0 months to ramp, stay 1.9 years on average, and median SDR attrition was 40% in 2024 ([Bridge Group, 2025](https://www.bridgegroupinc.com/research/2025-sdr-models-metrics-report-the-bridge-group)).
-- **Winning lines disappear.** When a rep improvises something that closes, it's gone when the call ends.
+- **Winning lines disappear.** When a great sales rep improvises something that closes, it disappears when the call ends.
 
 ### The solution
 
-Q is **closing intelligence**: the moves that are winning right now, getting sharper with every deal. It's a Chrome extension that floats a card over Google Meet.
+I call it **closing intelligence**: the moves that are winning right now, getting sharper with every deal. Q is a Chrome extension that floats a card over Google Meet, with a playbook of 500 moves across 60 situations that grows with every win.
 
 - **Hears both sides.** Q reads Meet's live captions in the seller's browser. No bot joins the call and no audio is captured.
-- **Nudges, never scripts.** When the buyer objects, warms up, or the call drifts, the card shows a short nudge on where to steer, about a second after the buyer stops talking. "I've paid for gyms before and never go" becomes "Ask what got in the way". The seller says it their own way.
+- **Nudges, never scripts.** When the buyer objects, warms up, or the call drifts, the card flashes a short nudge telling the seller where to steer, about a second after the buyer stops talking. "I don't need a pen" becomes "Ask what contracts they sign". The seller says it their own way.
 - **Knows the moment and the buyer.** 60 situations (objections, worries like feeling judged, buying signals, pacing such as talking too long) and a buyer tag (skeptical, rushed, price-focused, curious).
 - **Paces toward the close.** A call clock that follows the buyer: it extends when they're engaged or say there's no rush, and pulls in when they're short on time or going quiet.
 - **Fits your offer.** A saved company profile and a per-call brief make nudges specific ("Offer 0% financing, about 190 monthly").
 - **Every nudge has a source.** Each comes from a playbook move credited to whoever taught it: "Learned from John · Los Angeles".
 - **Learns from every call.** End call leaves Meet and asks Won or Lost. On a win, Q turns the seller's own winning move into a new playbook move, credited to them, and every other Q card shows "New move learned from..." within about 3 seconds. A loss leaves a lesson. Then Q grades each nudge it showed (helped, neutral or hurt) and retires moves that keep losing or keep hurting.
+- **You choose who gets your moves.** Everyone (credited, and earning royalties every time the move helps another seller close) or My company only, so another salesman won't get your best lines unless you want them to.
 
 ## How Q addresses each track and prize
 
@@ -57,7 +58,7 @@ A nudge can read well and still lose the room, and nothing throws an error. Q ca
 
 ### Best Visual Design
 
-- **Tango, John's own design system:** dark monochrome glass and a glowing glass-ring Q, used across the card, popup, landing page, playbook, call report and royalties page.
+- **Tango, my own design system:** dark monochrome glass and a glowing glass-ring Q, used across the card, popup, landing page, playbook, call report and royalties page.
 - **The nudge is the hero.** Short, big, readable at a glance mid-sentence. Under it, small: who the move came from, the situation, the buyer type.
 - **A card that shows it's listening.** "Hearing Jordan…" and "Thinking…" states, a faint line of what it just heard, a ring that brightens when someone talks, a call clock that turns amber in the last 20%, and nudges that dim after a minute so an old one never looks current.
 - **Built to live on top of Meet.** Shadow DOM so Meet's CSS can't touch it, draggable, remembers where you left it, and Meet's own caption bar hidden (Shift+C brings it back).
@@ -67,10 +68,10 @@ A nudge can read well and still lose the room, and nothing throws an error. Q ca
 Full numbers, assumptions and sources: [docs/SCALE.md](docs/SCALE.md).
 
 - **Moat:** anyone can call the same model; nobody can copy the win, loss and review record of every move. Every seller's win makes every seller's nudges better.
-- **Unit economics:** about $0.12 of model cost per 15-minute call on our standard model, against $39/month Pro and $99/month Team seats.
+- **Unit economics:** about $0.12 of model cost per 15-minute call on Q's standard model (Claude Sonnet 5.5), against $39/month Pro and $99/month Team seats.
 - **Market:** about 4.04M US sellers in the occupations Q targets (BLS, May 2025).
 - **Path:** about 103,000 paid seats at an $81 blended price is about $100M ARR, a $1B company at 10x revenue.
-- **Marketplace:** sellers choose whether moves Q learns from them go to everyone (credited, and earning royalties when they help others close) or stay private to their company (the competitor firewall). The royalty pool is 10% of subscription revenue, split by attributed wins on other sellers' calls ([/royalties](https://qcloser.vercel.app/royalties)).
+- **Marketplace:** sellers choose who gets the moves Q learns from them: Everyone (credited, and earning royalties every time the move helps another seller close) or My company only (the competitor firewall). The royalty pool is 10% of subscription revenue, split by attributed wins on other sellers' calls ([/royalties](https://qcloser.vercel.app/royalties)).
 
 ## How it works
 
@@ -92,22 +93,22 @@ End call -> Won or Lost -> POST /api/learn
 ## The AI component
 
 - **The transcript is Meet's own captions.** A MutationObserver watches Meet's captions region, found through ARIA roles and page structure rather than Meet's obfuscated class names. Meet rewrites a caption while the person is still talking, so a line counts as final once it stops changing for a moment or the speaker changes. The seller's own captions are labeled "You"; everyone else is the buyer.
-- **Reading the moment, picking and fitting a move.** For each buyer line, Claude gets the playbook, the company profile, the brief, call stats (minutes used of the target, the seller's talk share and talking streak), the nudges already shown and the whole call. With structured outputs it returns, in order, the moment (one of 60 situations, or none), the buyer type, the aim (probe, answer, acknowledge, calm or advance) and two picks, each a concrete nudge plus the move it uses. Claude commits to what the nudge must do before writing it, and writes the nudge before naming the move, so it doesn't just echo the move. Live nudges run on Claude Opus 5.5 in fast mode at low effort, falling back to Claude Sonnet 5.5 on any error.
+- **Reading the moment, picking and fitting a move.** For each buyer line, Claude gets the playbook, the company profile, the brief, call stats (minutes used of the target, the seller's talk share and talking streak), the nudges already shown and the whole call. With structured outputs it returns, in order, the moment (one of 60 situations, or none), the buyer type, the aim (probe, answer, acknowledge, calm or advance) and two picks, each a concrete nudge plus the move it uses. Claude commits to what the nudge must do before writing it, and writes the nudge before naming the move, so it doesn't just echo the move. Live nudges run on Claude Opus 5.5 in fast mode at low effort, falling back to Claude Sonnet 5.5 if fast mode errors or stalls.
 - **Outcome-ranked shared playbook, with exploration.** The server maps each pick to a real playbook move, so every nudge traces to a credited source. A nudge that just repeats a move loses to a specific one. Claude's first pick stands unless the other has a clearly better record: its after-call reviews, plus a win-rate edge (with a bonus when it won with this buyer type) once both moves have real use. About 15% of the time a newly learned move gets a fair try, never in sensitive moments or when the buyer asked a direct question.
 - **Learning winning moves.** On a won call, Claude Sonnet 5.5 finds the seller's lines right before the buyer moved toward yes, names the tactic behind them as a short reusable move, keeps the seller's real line and a one-sentence lesson, and learns it only if it's new or a meaningfully sharper version of a move already in the playbook.
-- **Reviewing calls and judging each nudge.** Claude Sonnet 5.5 reads the transcript with every nudge marked where it appeared and returns the turning point, a lesson, and for each nudge: did the seller use it, what the buyer did next, helped, neutral or hurt, and why.
-- **Listen-ahead.** While the buyer is still talking, the card asks Q about the words so far. Requests overlap and only the newest answer shows, so by the time the buyer stops, the nudge is ready or nearly ready. In our tests nudges land about a second after the buyer stops.
-- **Prompt caching.** The instructions, the playbook and the company profile are cached, so each nudge sends only what changed. The server keeps the playbook in memory and refreshes it every few seconds, and the card warms the cache when a call starts.
-- **Behaving well.** Q never uses an insecurity, grief or money trouble as leverage, never pushes someone who is struggling, and is told to use only facts from the call, the profile or the brief.
+- **Monitoring its own errors.** After every call, Claude Sonnet 5.5 reads the transcript with every nudge marked where it appeared and returns the turning point, a lesson, and for each nudge: did the seller use it, what the buyer did next, helped, neutral or hurt, and why.
+- **Listen-ahead.** While the buyer is still talking, the card asks Q about the words so far. Requests overlap and only the newest answer shows, so by the time the buyer stops, the nudge is ready or nearly ready. On the live site, nudges land about a second after the buyer stops.
+- **Prompt caching.** The instructions, the playbook and the company profile are cached, so each nudge sends only what changed. The server keeps the playbook in memory and refreshes it every 5 seconds, and the card warms the cache when a call starts.
+- **Behaving well.** Q never uses an insecurity, grief or money trouble as leverage, never pushes someone who is struggling, and only uses facts from the call, the profile or the brief (no invented prices, offers or claims).
 
-## How we built it
+## How I built it
 
 | Piece | Tech |
 |---|---|
 | Caption reader and overlay card | Chrome extension, Manifest V3, plain JavaScript with no build step. The card lives in a Shadow DOM so Meet's CSS can't touch it. |
-| Backend and web pages | Next.js (App Router, TypeScript, Tailwind) on Vercel |
-| Shared playbook | Supabase Postgres: moves, calls, lessons and nudge reviews. The extension only talks to our API. |
-| Brain | Claude via the Anthropic API: Claude Opus 5.5 (fast mode) for live nudges with Claude Sonnet 5.5 as fallback; Claude Sonnet 5.5 for learning and call reviews. Structured outputs with Zod schemas, prompt caching. |
+| Backend and web pages | Next.js 16 (App Router, TypeScript, Tailwind) on Vercel |
+| Shared playbook | Supabase Postgres: moves, calls, lessons and nudge reviews. The extension only talks to Q's API. |
+| Brain | Claude via the Anthropic API: Claude Opus 5.5 (fast mode) for live nudges with Claude Sonnet 5.5 as fallback; Claude Sonnet 5.5 for learning, call reviews, and self error detection and correction. Structured outputs with Zod schemas, prompt caching. |
 | Live updates | Every Q card polls `/api/updates` every 3 seconds |
 
 ## Install (for judges)
@@ -168,9 +169,10 @@ You need Node.js (20 or newer), a [Supabase](https://supabase.com) project and a
 
 ## Roadmap
 
-- Zoom, Microsoft Teams, Slack huddles, Webex and phone dialers, with Q's own transcription so it doesn't depend on Meet's captions.
-- Wins verified from CRM closed-won deals, with credit weighted by when each move landed.
-- Chrome Web Store listing and enterprise controls: buyer notice and consent, retention settings, SSO.
+- Zoom, Microsoft Teams and phone dialers, with Q's own transcription so it isn't tied to Meet's captions.
+- Manager analytics for teams: which moves win for which reps, objection trends and ramp tracking.
+- Win and loss verified from CRM closed-won deals instead of a button.
+- Enterprise controls: buyer notice and consent, retention settings, redaction, SSO and audit logs.
 
 ## Privacy
 
