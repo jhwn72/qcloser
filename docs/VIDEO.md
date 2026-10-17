@@ -89,7 +89,7 @@ The plain-English line can run a second into the problem's first shot. Bond nod:
 
 | Time | Picture | Sound | On-screen text |
 |---|---|---|---|
-| 0:40 | John at his laptop on a call, eyes darting to a side window that feeds him a full script (make it yourself: a long block of generic sales lines in a text editor, scrolling). | **JOHN (VO):** "AI that feeds you lines is a forklift at the gym: the weight goes up, you never get stronger." | Chapter label: `THE PROBLEM`. On "feeds you lines": `AI that hands you answers: +48% in practice, -17% on the real test` (tiny: `Bastani et al., PNAS 2025`) |
+| 0:40 | John at his laptop on a call, eyes darting to a side window that feeds him a full script (make it yourself: a long block of generic sales lines in a text editor, scrolling). | **JOHN (VO):** "AI that feeds you lines is a forklift at the gym: the weight goes up, you never get stronger." | Chapter label: `THE PROBLEM`. On "feeds you lines": `Students fed AI answers scored 17% lower on the real test` (tiny: `Bastani et al., PNAS 2025`) |
 
 ### 0:47-1:10 · Live demo
 
@@ -116,7 +116,7 @@ The whole call happens on camera (it feeds the call report). The edit keeps the 
 
 | Time | Picture | Sound | On-screen text |
 |---|---|---|---|
-| 1:10 | John clicks `End call` on the card. Meet leaves. The card asks `How did it go?` (Skip, Lost, Won). He clicks **Won**. | **JOHN (VO):** "When I win, Q finds the move I improvised and credits it to me." | Chapter label: `CONTINUAL LEARNING` |
+| 1:10 | John clicks `End call` on the card. Meet leaves. The card asks `How did it go?` (Skip, Lost, Won). He clicks **Won**. | **JOHN (VO):** "When you win, Q finds the move you improvised and credits it to you." | Chapter label: `CONTINUAL LEARNING` |
 | 1:12 | John's card toast: `Q learned a new move from you: Flip roles, let them sell it` (or whatever it learns on the day) | | |
 | 1:14 | Cut to a second Chrome window, another seller's Q card. Toast: `New move learned from Jordan · Long Island`, the same line as the hook's toast. | **JOHN (VO):** "Every other Q card has it in seconds." | `Another seller's Q card` and a stopwatch: real seconds between the two toasts |
 | 1:17 | Back on John's card: its result toast (it follows the learned-move toast by about 3 seconds and says how Q's nudges did, exactly as the card shows it), then `See the call report`. Click it: the call report, with a verdict chip (Helped, Neutral or Hurt) and a one-line reason beside each nudge, at the line where it appeared. | **JOHN (VO):** "Then Q grades its own nudges by what the buyer did next. The ones that keep hurting drop, then retire." | Chapter label: `FAILURE DETECTION · every nudge judged: helped, neutral or hurt` |
