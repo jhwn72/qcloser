@@ -28,12 +28,16 @@
     busy: false,
     again: false,
     error: false,
-    lastCueAt: 0,
+    fails: 0, // cue requests that failed in a row
+    lastFailAt: 0,
+    gen: 0, // bumps when a call ends or starts, so late answers for an old call are dropped
+    lastLeaveSeen: 0, // when Meet's Leave button was last on screen
   };
 
   // ---------- Backend (through the background worker) ----------
   function api(path, method = "GET", body) {
     return new Promise((resolve) => {
+      if (!chrome.runtime?.id) return resolve({ ok: false, error: "reloaded" }); // extension updated: this tab needs a refresh
       try {
         chrome.runtime.sendMessage({ type: "api", path, method, body }, (res) => {
           if (chrome.runtime.lastError) resolve({ ok: false, error: chrome.runtime.lastError.message });
@@ -131,7 +135,8 @@
   // Most important problem first: backend down, then captions off. Otherwise say what Q is doing.
   const HEARING_MS = 1200; // someone counts as speaking if their words changed this recently
   function refreshStatus() {
-    if (q.error) return setStatus("off", "Can't reach Q");
+    if (!chrome.runtime?.id) return setStatus("off", "Q was updated · refresh this tab");
+    if (q.error && Date.now() - q.lastFailAt < 30000) return setStatus("off", "Can't reach Q");
     if (cap.inCallSince && !cap.region) return setStatus("off", "Captions off");
     const now = Date.now();
     const speaking = q.live && now - q.live.at < HEARING_MS;
@@ -181,6 +186,7 @@
     cueEl.classList.add("out");
     srcEl.classList.add("out");
     setTimeout(() => {
+      cueEl.classList.remove("stale");
       cueEl.textContent = text;
       cueEl.classList.toggle("muted", muted);
       srcEl.innerHTML = source;
@@ -229,12 +235,14 @@
 
   // ---------- Ask Q for a nudge ----------
   async function requestCue() {
+    if (q.askingOutcome) return; // the call is over
     if (q.busy) {
       q.again = true; // a newer line arrived; ask again as soon as this answer lands
       return;
     }
     q.busy = true;
     refreshStatus();
+    const gen = q.gen;
     const res = await api("/api/cue", "POST", {
       turns: q.turns.slice(-MAX_TURNS).map(({ speaker, text }) => ({ speaker, text })),
       stats: callStats(),
@@ -245,10 +253,20 @@
     });
     q.busy = false;
     q.lastCueAt = Date.now();
-    q.error = !res.ok || !res.data || !!res.data.error;
+    if (gen !== q.gen) {
+      q.again = false; // the call ended while Q was thinking: drop this answer
+      return refreshStatus();
+    }
+    const failed = !res.ok || !res.data || !!res.data.error;
+    q.fails = failed ? q.fails + 1 : 0;
+    if (failed) {
+      q.lastFailAt = Date.now();
+      q.note = { text: "Missed that one", until: Date.now() + 4000 };
+    }
+    q.error = q.fails >= 2; // one blip is a note; two in a row is a real problem
     refreshStatus();
 
-    if (!q.error) {
+    if (!failed) {
       const d = res.data;
       setBuyer(d.buyer_type);
       if (!d.cue) q.note = { text: "Heard it · nothing to coach yet", until: Date.now() + 4000 };
@@ -317,35 +335,49 @@
     return [...box.children].filter((el) => textParts(el).length).map((el) => ({ key: el, el }));
   }
 
-  function parseBlock(block) {
+  function parseBlock(block, hasAvatar = false) {
     const parts = textParts(block);
-    if (parts.length < 2) return { name: "", text: parts[0] || "" };
+    if (parts.length < 2) return { name: hasAvatar ? parts[0] || "" : "", text: hasAvatar ? "" : parts[0] || "" };
     return { name: parts[0], text: parts.slice(1).join(" ").replace(/\s+/g, " ").trim() };
   }
 
   function isMe(name) {
     const n = (name || "").trim().toLowerCase();
-    return n === "you" || (!!q.name && n === q.name.trim().toLowerCase());
+    if (n === "you") return (cap.sawYou = true);
+    return !cap.sawYou && !!q.name && n === q.name.trim().toLowerCase(); // only if Meet never labels you "You"
   }
 
   const words = (t) => (t ? t.split(/\s+/).filter(Boolean).length : 0);
 
   // Meet rewrites a caption as the person keeps talking and drops old words off the front of long
   // blocks. Keep everything heard so far: extend when the new text continues the old, stitch on overlap.
+  const plain = (w) => w.toLowerCase().replace(/[^\w']/g, "");
   function mergeCaption(old, neu) {
     if (!old || neu.startsWith(old)) return neu;
     const a = old.split(" ");
     const b = neu.split(" ");
+    const pa = a.map(plain);
+    const pb = b.map(plain);
     for (let k = Math.min(a.length, b.length); k >= 3; k--) {
-      if (a.slice(-k).join(" ") === b.slice(0, k).join(" ")) return a.concat(b.slice(k)).join(" ");
+      if (pa.slice(-k).join(" ") === pb.slice(0, k).join(" ")) return a.concat(b.slice(k)).join(" ");
     }
     const at = old.lastIndexOf(b.slice(0, 3).join(" "));
     if (at >= 0) return old.slice(0, at) + neu;
     return neu; // Meet revised the words it had shown: trust the newer version
   }
 
+  // A block Meet re-rendered (new avatar, captions back on) continues a line Q already has.
+  function recentTurn(speaker, text) {
+    const t0 = text.split(" ").slice(0, 6).map(plain).join(" ");
+    for (let i = q.turns.length - 1; i >= Math.max(0, q.turns.length - 6); i--) {
+      const t = q.turns[i];
+      if (t.speaker === speaker && t.text && t.text.split(" ").map(plain).join(" ").includes(t0)) return t;
+    }
+    return null;
+  }
+
   function readBlock(block, now, isLatest) {
-    const { name, text } = parseBlock(block.el);
+    const { name, text } = parseBlock(block.el, block.key.tagName === "IMG");
     if (!text) return;
     let st = cap.states.get(block.key);
     if (st?.ignore) return;
@@ -361,11 +393,16 @@
     // Finished when it stops changing, or as soon as someone else starts talking.
     if (isLatest && now - st.changedAt < SETTLE_MS) return;
     const speaker = isMe(name) ? "You" : "Buyer";
-    if (!st.turn) st.turn = addTurn(speaker, "", speaker === "You" ? "" : name, st.firstSeen);
+    if (!st.turn) st.turn = recentTurn(speaker, text) || addTurn(speaker, "", speaker === "You" ? "" : name, st.firstSeen);
+    if (name && st.turn.speaker !== speaker) {
+      st.turn.speaker = speaker; // the name arrived after the words
+      st.turn.name = speaker === "You" ? "" : name;
+    }
     const merged = mergeCaption(st.turn.text, text);
     if (merged === st.turn.text) return;
     st.turn.text = merged;
     renderDebug();
+    if (words(merged) < st.turn.sentWords) st.turn.sentWords = words(merged); // Meet rewrote the block: count from here
     if (speaker === "Buyer" && words(merged) - st.turn.sentWords >= 2) {
       st.turn.sentWords = words(merged);
       requestCue();
@@ -383,13 +420,15 @@
     if (now - cap.lastLookup > 1000) {
       cap.lastLookup = now;
       const calling = inCall();
+      if (calling) q.lastLeaveSeen = now;
       if (calling && !cap.inCallSince) {
         cap.inCallSince = now;
-        startNewCall(); // the clock starts when you join
+        if (!q.askingOutcome) startNewCall(); // the clock starts when you join (a rejoin keeps the question up)
       }
-      if (!calling && cap.inCallSince) {
+      // Gone for 3 seconds, not one flicker of Meet's toolbar: you left with Meet's own button
+      if (!calling && cap.inCallSince && now - q.lastLeaveSeen > 3000) {
         cap.inCallSince = 0;
-        if (q.turns.length && !q.askingOutcome) askOutcome(); // you left with Meet's own button
+        if (q.turns.length && !q.askingOutcome) askOutcome();
       }
       if (!cap.region?.isConnected) cap.region = findCaptionRegion();
       hideCaptions();
@@ -397,7 +436,8 @@
       refreshIdle();
       checkPacing();
     }
-    if (!cap.region || !q.enabled) return renderLive(now);
+    if (!q.enabled) return;
+    if (!cap.region) return renderLive(now);
     const blocks = captionBlocks(cap.region);
     blocks.forEach((b, i) => readBlock(b, now, i === blocks.length - 1));
     renderLive(now);
@@ -440,7 +480,8 @@
 
   // If you've been talking a long time without the buyer getting a word in, ask for a pacing nudge.
   function checkPacing() {
-    if (!cap.inCallSince || q.busy || !q.turns.length) return;
+    if (!cap.inCallSince || q.busy || q.askingOutcome || !q.turns.length) return;
+    if (!(q.live && q.live.speaker === "You" && Date.now() - q.live.at < 3000)) return; // silence isn't talking
     if (callStats().seller_streak_s >= PACING_STREAK_S && Date.now() - q.lastCueAt > PACING_GAP_MS) requestCue();
   }
 
@@ -574,6 +615,8 @@
   }
 
   function askOutcome() {
+    q.gen++;
+    q.again = false;
     q.askingOutcome = true;
     q.idle = false;
     toggleTypeBox(false);
@@ -606,6 +649,7 @@
   // ---------- New moves from everyone (checked every few seconds) ----------
   const POLL_MS = 3000;
   let since = null; // server time of the last check
+  const toasted = new Set(); // learned moves already announced
   async function pollUpdates() {
     if (!q.enabled || document.hidden) return;
     const res = await api(`/api/updates${since ? `?since=${encodeURIComponent(since)}` : ""}`);
@@ -614,6 +658,8 @@
     since = res.data.now;
     if (first) return; // the first check only sets the starting point
     for (const c of res.data.cues || []) {
+      if (toasted.has(c.id)) continue;
+      toasted.add(c.id);
       const mine = c.author_name === (q.name.trim() || "A Q user") && (c.author_city || "") === q.city.trim();
       if (mine) continue; // your own card already said what it learned
       toast(`New move learned from ${[c.author_name, c.author_city].filter(Boolean).join(" · ")}`);
@@ -640,6 +686,9 @@
   }
 
   function startNewCall() {
+    q.gen++;
+    q.again = false;
+    q.live = null;
     q.askingOutcome = false;
     q.turns = [];
     q.shownCueIds = [];
@@ -664,7 +713,7 @@
   }
 
   card.addEventListener("pointerdown", (e) => {
-    if (e.button !== 0 || e.target.closest("button, input")) return;
+    if (e.button !== 0 || e.target.closest("button, input, [data-who], .q-debug")) return;
     const r = host.getBoundingClientRect();
     const dx = e.clientX - r.left;
     const dy = e.clientY - r.top;

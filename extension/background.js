@@ -7,6 +7,8 @@ chrome.runtime.onMessage.addListener((msg, _sender, sendResponse) => {
     method: msg.method || "GET",
     headers: { "Content-Type": "application/json" },
     body: msg.body ? JSON.stringify(msg.body) : undefined,
+    // Give up instead of hanging: learning can take a while, a live nudge can't
+    signal: AbortSignal.timeout(msg.path.startsWith("/api/learn") ? 60000 : 12000),
   })
     .then(async (r) => sendResponse({ ok: r.ok, status: r.status, data: await r.json().catch(() => null) }))
     .catch((e) => sendResponse({ ok: false, error: String(e) }));

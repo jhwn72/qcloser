@@ -3,7 +3,7 @@ import "./globals.css";
 
 export const metadata: Metadata = {
   title: "Q · your cue to close",
-  description: "A live closing coach that flashes five-word cues learned from deals real people won.",
+  description: "Every closer needs a Q. Q listens to your sales call and shows you what the best salespeople would do next, in five words.",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {

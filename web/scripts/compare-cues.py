@@ -2,11 +2,14 @@
 Development only. Usage: python3 -I scripts/compare-cues.py [--fresh | --new | --time | --all] [-v] [--judge] [--save F | --load F] [variant ...]
 --fresh, --new and --time are held-out sets: none of their lines appear as examples in the prompt.
 --judge grades every nudge 1 to 5 with a strong model (web/app/api/dev/judge) and prints the worst ones.
---save writes the results to a JSON file; --load reads them back instead of calling Q (to judge old runs)."""
-import json, os, re, sys, time, urllib.request
+--save writes the results to a JSON file; --load reads them back instead of calling Q (to judge old runs).
+Speed: --only A:B runs a slice of the chosen set, --repeat N runs it N times (latency stats use every run; the
+table and the judge use the first), --url BASE targets another backend (a Vercel preview: run under
+`vercel env run --` so VERCEL_OIDC_TOKEN gets past deployment protection). Latency is reported as median and p90,
+with the server's own breakdown when the backend sends a Server-Timing header."""
+import json, math, os, re, sys, time, urllib.request
 from concurrent.futures import ThreadPoolExecutor
 
-URL = "http://localhost:3000/api/cue"
 JUDGE_URL = "http://localhost:3000/api/dev/judge"
 PEN = "Selling a premium pen, 40 dollars, lifetime warranty."
 HVAC = "Cool Breeze HVAC, Phoenix. Carrier heat pumps and AC, 8,000 to 14,000 installed. 0% financing for 60 months, 10-year parts and labor warranty, price match on any written quote."
@@ -192,6 +195,9 @@ def flag(name, takes_value=False):
 
 
 VERBOSE = flag("-v")  # also print both of Claude's picks
+URL = (flag("--url", True) or "http://localhost:3000").rstrip("/") + "/api/cue"
+ONLY = flag("--only", True)
+REPEAT = int(flag("--repeat", True) or 1)
 JUDGE = flag("--judge")
 SAVE, LOAD = flag("--save", True), flag("--load", True)
 if flag("--fresh"):
@@ -202,6 +208,9 @@ elif flag("--time"):
     CASES = TIME
 elif flag("--all"):
     CASES = CASES + FRESH + NEW + TIME
+if ONLY:
+    a, _, b = ONLY.partition(":")
+    CASES = CASES[int(a or 0) : int(b) if b else None]
 
 # Nudges that are just a playbook move word for word count as generic.
 norm = lambda t: re.sub(r"[^a-z0-9 ]", "", (t or "").lower()).strip()
@@ -210,9 +219,31 @@ with open(seed_path) as f:
     PLAYBOOK = {norm(c["cue_text"]) for c in json.load(f)["cues"]}
 
 
-def post(url, payload, timeout=60):
-    req = urllib.request.Request(url, json.dumps(payload).encode(), {"Content-Type": "application/json"})
-    return json.load(urllib.request.urlopen(req, timeout=timeout))
+def post(url, payload, timeout=60, meta=None):
+    headers = {"Content-Type": "application/json"}
+    if os.environ.get("VERCEL_OIDC_TOKEN") and "localhost" not in url:
+        headers["x-vercel-trusted-oidc-idp-token"] = os.environ["VERCEL_OIDC_TOKEN"]  # gets past preview protection
+    req = urllib.request.Request(url, json.dumps(payload).encode(), headers)
+    with urllib.request.urlopen(req, timeout=timeout) as resp:
+        if meta is not None:
+            meta["timing"] = resp.headers.get("Server-Timing") or ""
+            meta["region"] = resp.headers.get("x-vercel-id") or ""
+        return json.load(resp)
+
+
+# "db;dur=3, ttft;dur=610" -> {"db": 3, "ttft": 610}
+def server_timing(header):
+    out = {}
+    for part in (header or "").split(","):
+        m = re.match(r"\s*([\w-]+)\s*;\s*dur=([\d.]+)", part)
+        if m:
+            out[m.group(1)] = float(m.group(2))
+    return out
+
+
+def pct(values, p):
+    v = sorted(values)
+    return v[max(0, math.ceil(p * len(v)) - 1)] if v else None
 
 
 def turns_of(c):
@@ -222,16 +253,21 @@ def turns_of(c):
 def run(variant, c):
     body = {"turns": turns_of(c), "profile": c["profile"], "brief": c["brief"], "stats": c["stats"], "recent_nudges": c["recent"], "variant": variant}
     t0 = time.time()
+    meta = {}
     try:
-        d = post(URL, body)
+        d = post(URL, body, meta=meta)
     except Exception as e:  # keep going so one failure doesn't hide the rest
         return {"ms": int((time.time() - t0) * 1000), "moment": "error", "nudge": str(e), "move": "", "generic": False, "picks": []}
     ms = int((time.time() - t0) * 1000)
+    timing = server_timing(meta.get("timing"))
+    if d.get("ms") is not None and "total" not in timing:
+        timing["total"] = d["ms"]
     cue = d.get("cue") or {}
     nudge = cue.get("cue_text") or d.get("error") or "(none)"
     move = cue.get("move") or ""
     generic = bool(cue) and (norm(nudge) == norm(move) or norm(nudge) in PLAYBOOK)
-    return {"ms": ms, "moment": d.get("objection_type") or "none", "nudge": nudge, "move": move, "generic": generic, "picks": d.get("picks") or []}
+    return {"ms": ms, "moment": d.get("objection_type") or "none", "nudge": nudge, "move": move, "generic": generic, "picks": d.get("picks") or [],
+            "timing": timing, "region": meta.get("region", "").split("::")[1:2]}
 
 
 def judge(c, r):
@@ -259,6 +295,9 @@ else:
         run(v, simple(PEN, [(S, "hi")], "hello"))  # warm up this model's cache
         for c in CASES:
             results[v].append(run(v, c))
+        for _ in range(REPEAT - 1):  # extra runs only feed the latency stats
+            for r, c in zip(results[v], CASES):
+                r.setdefault("again", []).append({k: x[k] for x in [run(v, c)] for k in ("ms", "timing", "moment")})
 if JUDGE:
     with ThreadPoolExecutor(8) as pool:
         for v in variants:
@@ -291,10 +330,18 @@ for i, c in enumerate(CASES):
 print()
 for v in variants:
     rs = results[v]
-    times = sorted(r["ms"] for r in rs)
+    runs = [x for r in rs for x in [r] + r.get("again", []) if x["moment"] != "error"]
+    times = sorted(r["ms"] for r in runs) or [0]
     generic = sum(r["generic"] for r in rs)
     off = sum(1 for c, r in zip(CASES, rs) if c["expect"] and r["moment"] not in c["expect"])  # zip stops at the shorter list
-    line = f"{v:13} median {times[len(times)//2]} ms, slowest {times[-1]} ms, generic {generic}/{len(rs)}, moment off {off}/{len(rs)}"
+    errors = sum(1 for r in rs for x in [r] + r.get("again", []) if x["moment"] == "error")
+    line = f"{v:13} median {pct(times, .5)} ms, p90 {pct(times, .9)} ms, slowest {times[-1]} ms ({len(runs)} runs, {errors} errors), generic {generic}/{len(rs)}, moment off {off}/{len(rs)}"
+    parts = {}
+    for r in runs:
+        for k, x in (r.get("timing") or {}).items():
+            parts.setdefault(k, []).append(x)
+    if parts:
+        line += "\n    server: " + ", ".join(f"{k} {pct(x, .5):.0f}/{pct(x, .9):.0f}" for k, x in parts.items()) + " ms (median/p90)"
     scores = [r["judge"]["score"] for r in rs if r.get("judge") and r["judge"].get("score")]
     if scores:
         good = sum(s >= 4 for s in scores)

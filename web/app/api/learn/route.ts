@@ -8,6 +8,8 @@ export const OPTIONS = preflight;
 const RETIRE_AFTER_USES = 8;
 const RETIRE_BELOW_WIN_RATE = 0.25;
 const MAX_MOVE_WORDS = 6;
+const MAX_TURNS = 120;
+const MAX_TURN_CHARS = 600;
 
 const norm = (t: string) => t.toLowerCase().replace(/[^a-z0-9 ]/g, "").replace(/\s+/g, " ").trim();
 
@@ -18,20 +20,26 @@ export async function POST(req: Request) {
   let body: {
     transcript?: Turn[];
     outcome?: string;
-    shown_cue_ids?: string[];
-    user_name?: string;
-    user_city?: string;
+    shown_cue_ids?: unknown[];
+    user_name?: unknown;
+    user_city?: unknown;
   };
   try {
     body = await req.json();
+    if (!body || typeof body !== "object") throw new Error();
   } catch {
-    return json(req, { error: "Body must be JSON" }, 400);
+    return json(req, { error: "Body must be a JSON object" }, 400);
   }
   const outcome = body.outcome === "won" ? "won" : body.outcome === "lost" ? "lost" : null;
   if (!outcome) return json(req, { error: "outcome must be won or lost" }, 400);
-  const transcript = (body.transcript ?? []).filter((t) => t?.text?.trim());
-  const userName = body.user_name?.trim() || "A Q user";
-  const userCity = body.user_city?.trim() || null;
+  // Public endpoint: clip everything to sane sizes and drop anything malformed.
+  const clip = (s: unknown, n: number) => (typeof s === "string" ? s.trim().slice(0, n) : "");
+  const transcript: Turn[] = (Array.isArray(body.transcript) ? body.transcript : [])
+    .filter((t) => t && (t.speaker === "You" || t.speaker === "Buyer") && clip(t.text, 1))
+    .slice(-MAX_TURNS)
+    .map((t) => ({ speaker: t.speaker, text: clip(t.text, MAX_TURN_CHARS) }));
+  const userName = clip(body.user_name, 40) || "A Q user";
+  const userCity = clip(body.user_city, 40) || null;
   const supabase = db();
 
   // 1. Save the call
@@ -46,7 +54,9 @@ export async function POST(req: Request) {
   }
 
   // 2. Every move shown counts as used; on a win, it also counts as a win. Losing moves retire.
-  const shownIds = [...new Set((body.shown_cue_ids ?? []).filter(Boolean))];
+  const shownIds = [
+    ...new Set((Array.isArray(body.shown_cue_ids) ? body.shown_cue_ids : []).filter((id) => typeof id === "string" && /^[0-9a-f-]{36}$/i.test(id))),
+  ].slice(0, 30);
   let retired = 0;
   if (shownIds.length) {
     const { data: shown } = await supabase.from("cues").select("id, uses, wins, status").in("id", shownIds);

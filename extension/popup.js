@@ -23,10 +23,12 @@ async function init() {
 
   for (const f of FIELDS) {
     let t;
-    document.getElementById(f).addEventListener("input", (e) => {
+    const el = document.getElementById(f);
+    el.addEventListener("input", (e) => {
       clearTimeout(t);
       t = setTimeout(() => chrome.storage.local.set({ [f]: e.target.value }).then(flashSaved), 250);
     });
+    el.addEventListener("change", () => chrome.storage.local.set({ [f]: el.value })); // closing the popup mid-typing
   }
 
   const flip = () => {

@@ -4,7 +4,10 @@ function allowed(origin: string | null) {
   if (!origin) return null;
   if (origin.startsWith("chrome-extension://")) return origin;
   if (origin === "https://meet.google.com") return origin;
-  if (origin.startsWith("http://localhost")) return origin;
+  try {
+    const { protocol, hostname } = new URL(origin);
+    if (protocol === "http:" && (hostname === "localhost" || hostname === "127.0.0.1")) return origin;
+  } catch {}
   return null;
 }
 

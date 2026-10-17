@@ -37,31 +37,45 @@ export default function Home() {
         style={{ background: "radial-gradient(closest-side, rgba(255,255,255,0.08), transparent)" }}
       />
 
-      {/* Hero */}
-      <section className="relative mx-auto grid w-full max-w-6xl items-center gap-12 px-4 pb-16 pt-16 sm:px-8 lg:grid-cols-[1fr_1.15fr] lg:pt-24">
-        <div className="text-center lg:text-left">
-          <QMark size={96} font={38} />
-          <h1 className="tg-headline mt-8" style={{ fontSize: "clamp(40px, 6vw, 60px)", lineHeight: 1.05, letterSpacing: "-0.02em" }}>
-            your cue to close
-          </h1>
-          <p className="tg-body mx-auto mt-5 max-w-md lg:mx-0" style={{ fontSize: 17 }}>
-            A live closing coach for sales calls. Q hears the objection, reads the buyer, and flashes a five-word
-            nudge from moves real closers won with.
-          </p>
-          <div className="tg-actions mt-7 lg:justify-start">
-            <a className="tg-btn primary" href="#install">
-              Install the extension
-            </a>
-            <Link className="tg-btn" href="/playbook">
-              See the playbook
-            </Link>
-          </div>
+      {/* Top bar: the mark and the tagline, so the hero can stay simple */}
+      <nav className="relative mx-auto flex w-full max-w-6xl items-center justify-between px-4 pt-6 sm:px-8">
+        <span className="flex items-center gap-3">
+          <QMark size={34} font={14} />
+          <span style={{ font: "300 15px var(--tg-font)", color: "var(--tg-muted)" }}>your cue to close</span>
+        </span>
+        <Link className="tg-link" href="/playbook">
+          Playbook
+        </Link>
+      </nav>
+
+      {/* Hero: one line, one sentence, one action */}
+      <section className="relative mx-auto flex w-full max-w-3xl flex-col items-center px-4 pb-14 pt-20 text-center sm:px-8 sm:pt-28">
+        <h1 className="tg-headline" style={{ fontSize: "clamp(44px, 8vw, 76px)", lineHeight: 1.02, letterSpacing: "-0.025em", textWrap: "balance" }}>
+          Every closer needs a Q.
+        </h1>
+        <p className="tg-body mt-6 max-w-xl" style={{ fontSize: 18, lineHeight: 1.5 }}>
+          Q listens to your sales call and shows you what the best salespeople would do next, in five words.
+        </p>
+        <div className="mt-8 flex items-center gap-5">
+          <a className="tg-btn primary" href="#install">
+            Install the extension
+          </a>
+          <Link className="tg-link" href="/playbook">
+            See the playbook
+          </Link>
         </div>
+      </section>
+
+      {/* The card, on its own */}
+      <section className="relative mx-auto w-full max-w-6xl px-4 pb-20 sm:px-8">
         <HeroDemo />
       </section>
 
       {/* How it works */}
       <section className="relative mx-auto w-full max-w-6xl px-4 py-12 sm:px-8">
+        <p className="tg-label" style={{ fontSize: 12, letterSpacing: "0.14em", textTransform: "uppercase", margin: "0 0 24px" }}>
+          Closing intelligence
+        </p>
         <div className="grid gap-8 sm:grid-cols-3">
           {STEPS.map((s, i) => (
             <div key={s.title}>
@@ -82,6 +96,10 @@ export default function Home() {
         <Suspense fallback={<div style={{ height: 96 }} />}>
           <PlaybookNumbers />
         </Suspense>
+        <p className="tg-fine mt-6" style={{ fontSize: 12 }}>
+          The starter playbook (its moves, names and records, and the examples above) is sample data for this demo.
+          Moves learned on live calls are real.
+        </p>
       </section>
 
       {/* Install, for judges */}

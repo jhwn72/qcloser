@@ -52,7 +52,7 @@ export default function PlaybookPage() {
             The playbook
           </h1>
           <p className="tg-sub" style={{ marginTop: 4 }}>
-            Moves from closers who won with them. It grows every time someone does.
+            Every move credited to whoever taught it, with its record. It grows every time someone wins.
           </p>
         </div>
       </header>
@@ -94,6 +94,8 @@ async function Playbook() {
         <p className="tg-fine mb-8" style={{ fontSize: 13 }}>
           {active.length} active moves from {closers} closers
           {learned.length ? ` · ${learned.length} learned from live calls` : ""}
+          <br />
+          The starter moves and their authors are sample data for this demo. Moves learned on live calls are real.
         </p>
         {groups.map((g) => {
           const moments = g.moments.filter((m) => byMoment.has(m));

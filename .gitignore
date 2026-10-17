@@ -7,3 +7,4 @@ node_modules/
 BRIEF.md
 design-refs/
 .claude/
+__pycache__/
