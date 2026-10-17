@@ -17,7 +17,7 @@ Tone: deadpan mockumentary. Nobody mugs for the camera, nobody shouts. The stopw
 | Time | Section | What judges see | Devpost criteria and prizes it hits |
 |---|---|---|---|
 | 0:00-0:19 | Cold open: Take 1 | Belfort: "Sell me this pen." John freezes. Stopwatch. | Pitch (the consumer's shoes) |
-| 0:19-0:32 | The problem | Freezing, AI that feeds you lines (a tractor at the gym), winning lines lost | Pitch |
+| 0:19-0:32 | The problem | Freezing, AI that feeds you lines (a forklift at the gym), winning lines lost | Pitch |
 | 0:32-0:41 | Title | "Every closer needs a Q.", then the landing page and the plain-English line | Pitch |
 | 0:41-1:10 | Take 2: live demo | Real Meet call, real Q card, live nudges John acts on, the buyer tag and the clock, John closes | Functionality |
 | 1:10-1:28 | Q learns and grades itself | End call, Won, the new move hits a second Q card, the call report's verdicts, the playbook and "What Q got wrong" | Continual Learning, Continual Failure Detection |
@@ -58,7 +58,7 @@ Each table: time, picture, who says what, on-screen text. Burn in captions for e
 
 | Time | Picture | Sound | On-screen text |
 |---|---|---|---|
-| 0:19 | John at his laptop on a call, eyes darting to a side window that feeds him a full script (make it yourself: a long block of generic sales lines in a text editor, scrolling). | **JOHN (VO):** "Everyone freezes. And the AI built for this feeds you lines. That's a tractor at the gym: the weight goes up, you never get stronger." | Chapter label: `THE PROBLEM`. First: `48% of reps hit quota · 6.2 months to ramp` (tiny: `Bridge Group 2026`). On "feeds you lines": `AI that hands you answers: +48% in practice, -17% on the real test` (tiny: `Bastani et al., PNAS 2025`) |
+| 0:19 | John at his laptop on a call, eyes darting to a side window that feeds him a full script (make it yourself: a long block of generic sales lines in a text editor, scrolling). | **JOHN (VO):** "Everyone freezes. And the AI built for this feeds you lines. That's a forklift at the gym: the weight goes up, you never get stronger." | Chapter label: `THE PROBLEM`. First: `48% of reps hit quota · 6.2 months to ramp` (tiny: `Bridge Group 2026`). On "feeds you lines": `AI that hands you answers: +48% in practice, -17% on the real test` (tiny: `Bastani et al., PNAS 2025`) |
 | 0:28 | Meet's "You left the meeting" screen. | **JOHN (VO):** "And when a rep improvises something that closes, it's gone when the call ends." | `Winning lines vanish.` |
 
 ### 0:32-0:41 · Title

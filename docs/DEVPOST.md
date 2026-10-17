@@ -13,7 +13,7 @@ Q: your cue to close
 
 Devpost's "Elevator pitch" field (200 characters max). Pick one:
 
-- AI that feeds you lines is a tractor at the gym. Q is your spotter: live nudges on every sales call, from the moves closing deals right now. You lift. You get stronger. Every win makes Q sharper. (195)
+- AI that feeds you lines is a forklift at the gym. Q is your spotter: live nudges on every sales call, from the moves closing deals right now. You lift. You get stronger. Every win makes Q sharper. (196)
 - Every closer needs a Q. Live nudges on your sales call, pulled from the moves closing deals right now. You say it your way, you close, and your winning move goes out to every closer on Q. (187)
 - Every closer needs a Q. It reads your sales call live and flashes the move that's closing deals right now. You say it your way. Win, and your move goes out to every closer on the network. (187)
 
@@ -42,7 +42,7 @@ James Bond never goes into the field without Q handing him the right gadget at t
 
 ## Why nudges, not scripts
 
-AI that feeds you the exact line is a tractor at the gym: the weight goes up, and you never get stronger. The research agrees.
+AI that feeds you the exact line is a forklift at the gym: the weight goes up, and you never get stronger. The research agrees.
 
 - **A paragraph is too slow.** Adults read about 238 words a minute [14], so a 120-word AI answer takes 30 seconds to read while the buyer waits. A nudge takes a glance.
 - **Answers make you weaker.** In a randomized trial with about 1,000 high school students, the ones given ChatGPT's answers scored 48% higher in practice, then 17% worse on the exam once the AI was gone. Students whose AI gave hints instead didn't take the hit. [15]
