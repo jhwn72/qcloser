@@ -1,0 +1,250 @@
+/* The Q card on Google Meet. Loaded into the card's Shadow DOM after tango.css,
+   so Meet's styles can't reach it and it can't leak into Meet. */
+
+:host {
+  all: initial; /* don't inherit Meet's fonts or colors */
+}
+[hidden] {
+  display: none !important;
+}
+
+.q {
+  width: 360px;
+  padding: 16px 18px 14px;
+  border-radius: var(--tg-radius-window);
+  background: rgba(16, 16, 16, 0.66);
+  border: 1px solid var(--tg-line);
+  backdrop-filter: var(--tg-blur-panel);
+  -webkit-backdrop-filter: var(--tg-blur-panel);
+  box-shadow: var(--tg-shadow-window);
+  color: var(--tg-text);
+  cursor: grab;
+  user-select: none;
+  touch-action: none;
+}
+.q.dragging {
+  cursor: grabbing;
+}
+
+/* Top row: Q mark, status, buyer tag */
+.q-top {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.q-mark {
+  position: relative;
+  width: 26px;
+  height: 26px;
+  flex: none;
+}
+.q-mark .tg-glass-ring {
+  --r: 11px;
+  --w: 2px;
+  position: absolute;
+  left: -5px;
+  top: -5px;
+  width: 36px;
+  height: 36px;
+}
+.q.idle .q-mark .tg-glass-ring {
+  opacity: 0.35; /* the glass light is for live moments; dim it when Q isn't listening */
+}
+.q-mark b {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  font: 300 13px var(--tg-font);
+}
+.q-status {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font: var(--tg-text-small);
+  color: var(--tg-muted);
+  min-width: 0;
+}
+.q-status-text {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.q-buyer {
+  margin-left: auto;
+  cursor: default;
+  white-space: nowrap;
+}
+
+/* The hero: the nudge */
+.q-cue {
+  margin: 18px 0 8px;
+  min-height: 72px;
+  font: 300 30px/1.14 var(--tg-font);
+  letter-spacing: -0.01em;
+  text-shadow: 0 0 28px rgba(255, 255, 255, 0.18);
+  transition:
+    opacity var(--tg-medium) var(--tg-ease),
+    transform var(--tg-medium) var(--tg-ease),
+    filter var(--tg-medium);
+}
+.q-cue.muted {
+  color: var(--tg-faint);
+  text-shadow: none;
+}
+.q-cue.out {
+  opacity: 0;
+  transform: translateY(6px);
+  filter: blur(4px);
+}
+.q-src {
+  font: var(--tg-text-fine);
+  color: var(--tg-faint);
+  min-height: 17px;
+  transition: opacity var(--tg-medium);
+}
+.q-src.out {
+  opacity: 0;
+}
+.q-src em {
+  font-style: normal;
+  color: var(--tg-muted);
+}
+
+/* What Q just heard: faint, one line, fades when the talking stops */
+.q-heard {
+  margin-top: 8px;
+  min-height: 17px;
+  font: var(--tg-text-fine);
+  color: var(--tg-faint);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  opacity: 0;
+  transition: opacity var(--tg-slow) var(--tg-ease);
+}
+.q-heard.on {
+  opacity: 1;
+}
+
+/* While someone talks, the glass light brightens and moves a little faster */
+.q .q-mark .tg-glass-ring {
+  transition: filter var(--tg-slow) var(--tg-ease), opacity var(--tg-slow);
+}
+.q.speaking .q-mark .tg-glass-ring {
+  filter: brightness(1.35);
+  animation-duration: 2.6s, 4s;
+}
+
+/* A nudge that's been up a while dims so it doesn't look current */
+.q-cue.stale {
+  opacity: 0.45;
+  text-shadow: none;
+}
+
+/* Call clock: a thin line of light that fills as the call goes on */
+.q-clock {
+  position: relative;
+  height: 1px;
+  margin-top: 14px;
+  background: var(--tg-line);
+}
+.q-clock i {
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 1px;
+  width: 0;
+  background: rgba(255, 255, 255, 0.55);
+  box-shadow: 0 0 8px 1px rgba(255, 255, 255, 0.35);
+  transition: width 1s linear;
+}
+.q-clock.late i {
+  background: var(--tg-amber-hi);
+  box-shadow: 0 0 10px 1px var(--tg-amber);
+}
+
+/* Typed buyer line (Shift+B): the fallback if captions can't be read */
+.q-type {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 12px;
+}
+.q-who {
+  flex: none;
+  cursor: default;
+}
+.q-type .tg-input {
+  flex: 1;
+  min-width: 0;
+}
+.q-type input.tg-input {
+  cursor: text;
+  user-select: text;
+}
+
+/* Debug view (Shift+D): what Q hears */
+.q-debug {
+  margin-top: 12px;
+  padding: 10px 12px;
+  border-radius: var(--tg-radius-card);
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--tg-line);
+  cursor: default;
+}
+.q-debug-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 6px;
+  font: var(--tg-text-label);
+  color: var(--tg-faint);
+}
+.q-debug-lines {
+  max-height: 150px;
+  overflow-y: auto;
+  font: var(--tg-text-fine);
+  color: var(--tg-muted);
+  user-select: text;
+}
+.q-debug-lines > div + div {
+  margin-top: 4px;
+}
+.q-debug-lines b {
+  font-weight: 500;
+  color: var(--tg-text);
+  margin-right: 6px;
+}
+
+/* Footer: what kind of moment, and End call */
+.q-foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding-top: 12px;
+}
+.q-moment {
+  font: var(--tg-text-label);
+  color: var(--tg-faint);
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.q-end {
+  display: flex;
+  gap: 8px;
+  flex: none;
+}
+.q button {
+  cursor: pointer;
+}
+
+/* The toast sits at the top of the screen, outside the card */
+.tg-toast {
+  z-index: 2147483647;
+  color: var(--tg-text);
+  max-width: min(560px, calc(100vw - 32px));
+}

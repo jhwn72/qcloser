@@ -1,0 +1,362 @@
+/* ==========================================================================
+   Tango design system
+   Dark monochrome, smooth glow only (no pixels or dither), Apple's system
+   font at light and regular weights, and one accent: the glass ring, a dark
+   glass track with white light travelling round it, colour only at the
+   light's edges, and a warm amber glow. Motion is calm and slow.
+
+   Everything is prefixed tg- so it can sit alongside other styles. Values
+   are the ones the Tango app uses.
+   ========================================================================== */
+
+/* ---------- Tokens ---------- */
+:root {
+  /* Surfaces */
+  --tg-bg: #070707;                     /* behind everything */
+  --tg-surface-hi: #444444;             /* window: lighter centre */
+  --tg-surface-lo: #262626;             /* window: darker edges */
+  --tg-panel: rgba(22, 22, 22, 0.9);    /* side panels, over blur */
+  --tg-overlay: rgba(20, 20, 20, 0.72); /* sheets over content, over blur */
+  --tg-float: rgba(30, 30, 30, 0.85);   /* toasts */
+  --tg-fill: rgba(255, 255, 255, 0.07); /* quiet fills (segmented track) */
+  --tg-fill-hover: rgba(255, 255, 255, 0.05);
+  --tg-fill-active: rgba(255, 255, 255, 0.16);
+
+  /* Lines */
+  --tg-line: rgba(255, 255, 255, 0.09);
+  --tg-line-strong: rgba(255, 255, 255, 0.35);
+
+  /* Text */
+  --tg-text: #f4f4f4;
+  --tg-text-soft: rgba(244, 244, 244, 0.86); /* big light headlines */
+  --tg-muted: rgba(244, 244, 244, 0.55);
+  --tg-faint: rgba(244, 244, 244, 0.32);
+  --tg-on-light: #111111;                    /* text on the white primary button */
+
+  /* Light: the glow, and the warm amber around the glass light */
+  --tg-glow: rgba(255, 255, 255, 0.8);
+  --tg-amber: rgba(255, 170, 95, 0.42);
+  --tg-amber-hi: rgba(255, 226, 190, 0.5);
+
+  /* Prism fringes: only ever at the edges of the light, never as fills */
+  --tg-prism-red: rgb(255, 45, 35);
+  --tg-prism-green: rgb(45, 255, 80);
+  --tg-prism-blue: rgb(45, 90, 255);
+
+  /* Type: the system font only (San Francisco on a Mac), weights 300 and 400 */
+  --tg-font: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Helvetica Neue", "Segoe UI Variable", "Segoe UI", sans-serif;
+  --tg-text-display: 300 44px/1 var(--tg-font);  /* codes, big numbers */
+  --tg-text-title: 300 24px/1.3 var(--tg-font);
+  --tg-text-headline: 300 23px/1.3 var(--tg-font);
+  --tg-text-body: 400 13.5px/1.55 var(--tg-font);
+  --tg-text-ui: 400 13px var(--tg-font);
+  --tg-text-small: 400 12px var(--tg-font);
+  --tg-text-fine: 400 11.5px/1.5 var(--tg-font);
+  --tg-text-label: 500 11.5px var(--tg-font);    /* section labels */
+
+  /* Shape */
+  --tg-radius-window: 22px;
+  --tg-radius-card: 12px;
+  --tg-radius-row: 10px;
+  --tg-radius-control: 8px;
+  --tg-radius-pill: 999px;
+
+  /* Depth */
+  --tg-shadow-window: 0 8px 30px rgba(0, 0, 0, 0.5);
+  --tg-blur-panel: blur(24px) saturate(1.2);
+  --tg-blur-sheet: blur(18px);
+  --tg-blur-float: blur(20px);
+
+  /* Motion: calm. Things ease out softly; nothing snaps. */
+  --tg-ease: cubic-bezier(0.6, 0, 0.2, 1);
+  --tg-ease-out: cubic-bezier(0.2, 0.6, 0.2, 1);
+  --tg-fast: 0.2s;
+  --tg-medium: 0.3s;
+  --tg-slow: 0.45s;
+  --tg-ring-speed: 6.5s;   /* one lap of the glass ring's main light */
+  --tg-ring-speed-2: 10s;  /* the second, dimmer light */
+}
+
+/* ---------- Base ---------- */
+.tg {
+  color: var(--tg-text);
+  font-family: var(--tg-font);
+  -webkit-font-smoothing: antialiased;
+}
+.tg *, .tg *::before, .tg *::after { box-sizing: border-box; }
+
+/* ---------- Type ---------- */
+.tg-title { font: var(--tg-text-title); margin: 0 0 10px; }
+.tg-headline { font: var(--tg-text-headline); letter-spacing: -0.005em; color: var(--tg-text-soft); margin: 0; }
+.tg-sub { display: block; margin-top: 6px; font: var(--tg-text-ui); color: var(--tg-muted); }
+.tg-body { font: var(--tg-text-body); color: var(--tg-muted); margin: 0 0 20px; }
+.tg-label { font: var(--tg-text-label); color: var(--tg-faint); margin: 18px 0 6px; }
+.tg-fine { font: var(--tg-text-fine); color: var(--tg-faint); }
+.tg-muted { color: var(--tg-muted); }
+/* A number or code that glows a little: pairing codes and the like. */
+.tg-code { font: var(--tg-text-display); letter-spacing: 0.18em; text-shadow: 0 0 24px rgba(255, 255, 255, 0.35); }
+
+/* ---------- Surfaces ---------- */
+/* The window: grey, lighter towards the top centre. */
+.tg-window {
+  border-radius: var(--tg-radius-window);
+  background: radial-gradient(110% 85% at 50% 35%, var(--tg-surface-hi), var(--tg-surface-lo) 72%);
+  border: 1px solid var(--tg-line);
+  box-shadow: var(--tg-shadow-window);
+  overflow: hidden;
+}
+/* A side panel that slides in over the window (add .open). */
+.tg-panel {
+  background: var(--tg-panel);
+  border-right: 1px solid var(--tg-line);
+  backdrop-filter: var(--tg-blur-panel);
+  -webkit-backdrop-filter: var(--tg-blur-panel);
+  padding: 66px 22px 48px;
+  overflow-y: auto; overscroll-behavior: contain;
+  transform: translateX(-102%);
+  transition: transform var(--tg-slow) var(--tg-ease);
+}
+.tg-panel.open { transform: none; }
+/* A sheet: dims and blurs whatever is behind it, content centred (add .show). */
+.tg-sheet {
+  position: absolute; inset: 0; display: grid; place-items: center;
+  background: var(--tg-overlay);
+  backdrop-filter: var(--tg-blur-sheet);
+  -webkit-backdrop-filter: var(--tg-blur-sheet);
+  opacity: 0; pointer-events: none; transition: opacity var(--tg-medium);
+}
+.tg-sheet.show { opacity: 1; pointer-events: auto; }
+.tg-sheet > .tg-card { width: min(420px, 80%); text-align: center; }
+.tg-actions { display: flex; gap: 10px; justify-content: center; margin-top: 18px; }
+
+/* ---------- Buttons and links ---------- */
+.tg-btn {
+  padding: 8px 16px; border-radius: var(--tg-radius-row);
+  border: 1px solid var(--tg-line-strong); background: transparent;
+  color: var(--tg-text); font: var(--tg-text-ui); cursor: pointer;
+  transition: background var(--tg-fast), filter var(--tg-fast);
+}
+.tg-btn:hover { background: rgba(255, 255, 255, 0.08); }
+/* The one main action: solid white. */
+.tg-btn.primary { background: rgba(255, 255, 255, 0.92); color: var(--tg-on-light); border-color: transparent; }
+.tg-btn.primary:hover { background: #fff; }
+.tg-btn.small { padding: 4px 10px; border-radius: 7px; border-color: rgba(255, 255, 255, 0.3); font: var(--tg-text-small); }
+/* Outlined with an icon, like the Menu button. */
+.tg-btn.outline {
+  display: inline-flex; align-items: center; gap: 7px;
+  padding: 6px 11px; border-radius: var(--tg-radius-control);
+  border-color: rgba(255, 255, 255, 0.45); font: 400 12.5px var(--tg-font);
+}
+/* Small round window buttons (minimise, close). */
+.tg-btn.round {
+  width: 20px; height: 20px; padding: 0; border-radius: 50%;
+  border-color: rgba(255, 255, 255, 0.28); color: var(--tg-muted); font: 400 12px/1 var(--tg-font);
+}
+.tg-btn.round:hover { background: rgba(255, 255, 255, 0.1); color: var(--tg-text); }
+
+.tg-link {
+  background: none; border: 0; padding: 0; cursor: pointer;
+  font: var(--tg-text-small); color: var(--tg-muted);
+  text-decoration: underline; text-underline-offset: 3px; text-decoration-color: rgba(255, 255, 255, 0.25);
+}
+.tg-link:hover { color: var(--tg-text); }
+
+/* The three-line icon used on the Menu button. */
+.tg-menu-icon { display: grid; gap: 2.5px; }
+.tg-menu-icon b { display: block; height: 1.3px; background: currentColor; border-radius: 1px; }
+.tg-menu-icon b:nth-child(1), .tg-menu-icon b:nth-child(3) { width: 10px; }
+.tg-menu-icon b:nth-child(2) { width: 6px; }
+
+/* ---------- Controls ---------- */
+/* A settings row: label on the left, control or value on the right. */
+.tg-row {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 8px 12px; margin: 0 -12px; border-radius: var(--tg-radius-row);
+  font: 400 13.5px var(--tg-font);
+}
+.tg-row:hover { background: var(--tg-fill-hover); }
+.tg-row small { font: var(--tg-text-small); color: var(--tg-muted); }
+
+/* On/off switch (add .on). White when on, with a dark knob. */
+.tg-toggle {
+  width: 32px; height: 19px; border-radius: 10px; flex: none; position: relative; cursor: pointer;
+  background: rgba(255, 255, 255, 0.16); transition: background var(--tg-fast);
+}
+.tg-toggle::after {
+  content: ""; position: absolute; top: 2px; left: 2px; width: 15px; height: 15px; border-radius: 50%;
+  background: #fff; transition: transform var(--tg-fast), background var(--tg-fast);
+}
+.tg-toggle.on { background: rgba(255, 255, 255, 0.88); }
+.tg-toggle.on::after { transform: translateX(13px); background: #1c1c1c; }
+
+/* Segmented choice: <div class="tg-seg"><span class="on">A</span><span>B</span></div> */
+.tg-seg { display: inline-flex; padding: 2px; border-radius: var(--tg-radius-control); background: var(--tg-fill); }
+.tg-seg > * { padding: 3px 9px; border-radius: 6px; font: var(--tg-text-small); color: var(--tg-muted); cursor: pointer; transition: background var(--tg-fast), color var(--tg-fast); }
+.tg-seg > .on { background: var(--tg-fill-active); color: var(--tg-text); }
+
+/* Chips: small rounded choices (add .on). Optional status dot inside. */
+.tg-chip {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 5px 11px; border-radius: var(--tg-radius-pill);
+  border: 1px solid var(--tg-line); background: rgba(255, 255, 255, 0.03);
+  font: var(--tg-text-small); color: var(--tg-muted); cursor: pointer;
+  transition: color var(--tg-fast), background var(--tg-fast), border-color var(--tg-fast);
+}
+.tg-chip:hover { color: var(--tg-text); }
+.tg-chip.on { color: var(--tg-text); background: rgba(255, 255, 255, 0.09); border-color: rgba(255, 255, 255, 0.22); }
+
+/* Text field; .code makes it a big spaced-out code entry. */
+.tg-input {
+  padding: 10px 14px; border-radius: var(--tg-radius-card);
+  border: 1px solid rgba(255, 255, 255, 0.25); background: rgba(255, 255, 255, 0.06);
+  color: var(--tg-text); font: var(--tg-text-ui); outline: none;
+  transition: border-color var(--tg-fast);
+}
+.tg-input:focus { border-color: rgba(255, 255, 255, 0.55); }
+.tg-input.code { width: 220px; text-align: center; font: 300 28px var(--tg-font); letter-spacing: 0.2em; }
+
+/* ---------- Status ---------- */
+/* A dot that glows when live (add .off for an empty ring). */
+.tg-dot { display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: #fff; box-shadow: 0 0 10px 2px rgba(255, 255, 255, 0.55); }
+.tg-dot.small { width: 5px; height: 5px; box-shadow: 0 0 6px var(--tg-glow); }
+.tg-dot.off { background: transparent; border: 1px solid var(--tg-faint); box-shadow: none; }
+
+/* The tiny glass light: white, split slightly into colour at its edges. */
+.tg-orb {
+  display: inline-block; width: 9px; height: 9px; border-radius: 50%; background: #fff;
+  box-shadow: -1.2px 0 1.5px rgba(255, 50, 40, 0.9), 1.2px 0 1.5px rgba(50, 90, 255, 0.9), 0 0 10px 2px rgba(255, 180, 110, 0.45);
+}
+
+/* A message that drops in at the top (add .show). Put a .tg-orb first. */
+.tg-toast {
+  position: fixed; left: 50%; top: 22px; transform: translate(-50%, -12px);
+  display: flex; gap: 10px; align-items: center;
+  padding: 9px 16px 9px 11px; border-radius: var(--tg-radius-pill);
+  background: var(--tg-float); border: 1px solid var(--tg-line);
+  backdrop-filter: var(--tg-blur-float); -webkit-backdrop-filter: var(--tg-blur-float);
+  font: var(--tg-text-ui);
+  opacity: 0; pointer-events: none; transition: opacity var(--tg-medium), transform var(--tg-medium);
+}
+.tg-toast.show { opacity: 1; transform: translate(-50%, 0); pointer-events: auto; }
+
+/* ---------- The glass ring ----------
+   A thin dark glass track with bright white light travelling round it.
+   Colour appears only at the edges of the light, the way light splits in
+   glass: the light is drawn three times (red, green, blue), each a little
+   offset, and the copies add back up to white where they overlap.
+
+   <div class="tg-glass-ring">
+     <i class="bloom"></i><i class="track"></i>
+     <i class="ch red"></i><i class="ch green"></i><i class="ch blue"></i>
+     <i class="hot"></i><i class="streaks"></i>
+   </div>
+
+   Size it with width/height and --r (radius of the middle of the ring). */
+@property --tg-a1 { syntax: "<angle>"; inherits: true; initial-value: 0deg; }
+@property --tg-a2 { syntax: "<angle>"; inherits: true; initial-value: 140deg; }
+.tg-glass-ring {
+  --r: 31px;   /* radius of the middle of the ring */
+  --w: 3.5px;  /* ring thickness */
+  position: relative; width: 72px; height: 72px; pointer-events: none;
+  animation: tg-arc1 var(--tg-ring-speed) linear infinite, tg-arc2 var(--tg-ring-speed-2) linear infinite;
+}
+@keyframes tg-arc1 { from { --tg-a1: 0deg; } to { --tg-a1: 360deg; } }
+@keyframes tg-arc2 { from { --tg-a2: 140deg; } to { --tg-a2: 500deg; } }
+.tg-glass-ring > i { position: absolute; inset: 0; border-radius: 50%; }
+.tg-glass-ring .track {
+  background: radial-gradient(circle,
+    transparent calc(var(--r) - 3.5px), rgba(255, 255, 255, 0.10) calc(var(--r) - 3px),
+    #040406 calc(var(--r) - 2px), #0b0b12 calc(var(--r) + 2px),
+    rgba(255, 255, 255, 0.16) calc(var(--r) + 3px), transparent calc(var(--r) + 3.8px));
+}
+/* The warm glow, faded out fully at its edge so nothing ever cuts it off. */
+.tg-glass-ring .bloom {
+  inset: -12px; filter: blur(10px);
+  background: conic-gradient(from var(--tg-a1), transparent 0deg, rgba(255, 160, 80, 0) 20deg,
+    var(--tg-amber) 55deg, var(--tg-amber-hi) 75deg, rgba(255, 170, 95, 0.26) 100deg, transparent 135deg, transparent 360deg);
+  -webkit-mask: radial-gradient(closest-side, #000 58%, transparent 100%);
+          mask: radial-gradient(closest-side, #000 58%, transparent 100%);
+}
+/* One copy of the light per colour: a long bright arc and a shorter dim one. */
+.tg-glass-ring .ch {
+  mix-blend-mode: plus-lighter; filter: blur(0.45px);
+  background:
+    conic-gradient(from calc(var(--tg-a1) + var(--da)), transparent 0deg, var(--c) 22deg, var(--c) 68deg, transparent 92deg, transparent 360deg),
+    conic-gradient(from calc(var(--tg-a2) + var(--da)), transparent 0deg, var(--c2) 18deg, var(--c2) 30deg, transparent 52deg, transparent 360deg);
+  -webkit-mask: radial-gradient(circle, transparent calc(var(--r) + var(--dr) - var(--w) / 2 - 0.7px),
+    #000 calc(var(--r) + var(--dr) - var(--w) / 2), #000 calc(var(--r) + var(--dr) + var(--w) / 2),
+    transparent calc(var(--r) + var(--dr) + var(--w) / 2 + 0.7px));
+          mask: radial-gradient(circle, transparent calc(var(--r) + var(--dr) - var(--w) / 2 - 0.7px),
+    #000 calc(var(--r) + var(--dr) - var(--w) / 2), #000 calc(var(--r) + var(--dr) + var(--w) / 2),
+    transparent calc(var(--r) + var(--dr) + var(--w) / 2 + 0.7px));
+}
+.tg-glass-ring .red   { --c: var(--tg-prism-red);   --c2: rgba(255, 45, 35, 0.65); --da: 17deg;  --dr: 1.5px; }
+.tg-glass-ring .green { --c: var(--tg-prism-green); --c2: rgba(45, 255, 80, 0.65); --da: 0deg;   --dr: 0px; }
+.tg-glass-ring .blue  { --c: var(--tg-prism-blue);  --c2: rgba(45, 90, 255, 0.65); --da: -17deg; --dr: -1.5px; }
+/* A soft white halo on the brightest part, so it reads as white-hot. */
+.tg-glass-ring .hot {
+  inset: -8px; filter: blur(5px); mix-blend-mode: plus-lighter;
+  background: conic-gradient(from var(--tg-a1), transparent 0deg, rgba(255, 255, 255, 0) 30deg, rgba(255, 255, 255, 0.55) 48deg, rgba(255, 255, 255, 0.55) 56deg, transparent 90deg, transparent 360deg);
+  -webkit-mask: radial-gradient(circle, transparent calc(var(--r) - 1px), #000 calc(var(--r) + 3px), #000 calc(var(--r) + 8px), transparent calc(var(--r) + 12px));
+          mask: radial-gradient(circle, transparent calc(var(--r) - 1px), #000 calc(var(--r) + 3px), #000 calc(var(--r) + 8px), transparent calc(var(--r) + 12px));
+}
+/* Fine streaks across the light, like a prism's texture. */
+.tg-glass-ring .streaks {
+  opacity: 0.25;
+  background: repeating-conic-gradient(from 0deg, rgba(0, 0, 0, 0.3) 0deg 0.35deg, transparent 0.35deg 1.1deg);
+  -webkit-mask: radial-gradient(circle, transparent calc(var(--r) - 2.4px), #000 calc(var(--r) - 2px), #000 calc(var(--r) + 2px), transparent calc(var(--r) + 2.4px));
+          mask: radial-gradient(circle, transparent calc(var(--r) - 2.4px), #000 calc(var(--r) - 2px), #000 calc(var(--r) + 2px), transparent calc(var(--r) + 2.4px));
+}
+
+/* ---------- Edge glow ----------
+   The same glass light as a line, for a flash along an edge (add .go).
+   .v for a vertical line, .h for horizontal.
+   <div class="tg-edge-glow v"><i class="warm"></i><i class="ch red"></i><i class="ch green"></i><i class="ch blue"></i></div> */
+.tg-edge-glow { position: relative; pointer-events: none; opacity: 0; }
+.tg-edge-glow > i { position: absolute; }
+.tg-edge-glow .warm {
+  inset: -40px; border-radius: var(--tg-radius-pill); filter: blur(30px);
+  background: radial-gradient(closest-side, rgba(255, 190, 120, 0.55), rgba(255, 150, 80, 0.18) 60%, transparent);
+}
+.tg-edge-glow .ch {
+  mix-blend-mode: plus-lighter; filter: blur(0.6px); border-radius: var(--tg-radius-pill);
+  background: linear-gradient(var(--along), transparent 8%, var(--c) calc(30% + var(--sh)), #0000 calc(46% + var(--sh)),
+    var(--c) calc(54% + var(--sh)), var(--c) calc(68% + var(--sh)), transparent calc(92% + var(--sh)));
+}
+.tg-edge-glow.v .ch { left: calc(50% - 2px + var(--off)); width: 4px; top: 0; bottom: 0; --along: 180deg; }
+.tg-edge-glow.h .ch { top: calc(50% - 2px + var(--off)); height: 4px; left: 0; right: 0; --along: 90deg; }
+.tg-edge-glow .red   { --c: rgb(255, 40, 30); --off: 1.2px;  --sh: 2%; }
+.tg-edge-glow .green { --c: rgb(40, 255, 70); --off: 0px;    --sh: 0%; }
+.tg-edge-glow .blue  { --c: rgb(40, 80, 255); --off: -1.2px; --sh: -2%; }
+.tg-edge-glow.go { animation: tg-edgeflash 1.4s var(--tg-ease-out) forwards; }
+@keyframes tg-edgeflash {
+  0% { opacity: 0; transform: scale(0.6); }
+  20% { opacity: 1; transform: scale(1); }
+  100% { opacity: 0; transform: scale(1.05); }
+}
+
+/* ---------- Scroll bars ----------
+   Slim and see-through (Windows otherwise shows its default grey one).
+   Add .tg-scroll to anything that scrolls. */
+.tg-scroll::-webkit-scrollbar { width: 10px; background: transparent; }
+.tg-scroll::-webkit-scrollbar-track { background: transparent; }
+.tg-scroll::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.14); border-radius: var(--tg-radius-pill);
+  border: 3px solid transparent; background-clip: padding-box;
+}
+.tg-scroll::-webkit-scrollbar-thumb:hover { background-color: rgba(255, 255, 255, 0.26); }
+.tg-scroll::-webkit-scrollbar-button { display: none; height: 0; }
+.tg-scroll::-webkit-scrollbar-corner { background: transparent; }
+
+/* ---------- Reduced motion ----------
+   The ring slows right down instead of stopping, so it still reads as light. */
+@media (prefers-reduced-motion: reduce) {
+  .tg-glass-ring { animation-duration: 40s, 60s; }
+  .tg-edge-glow.go { animation-duration: 0.6s; }
+  .tg-panel, .tg-toast, .tg-sheet { transition-duration: 0.01s; }
+}
+.tg-reduce-motion .tg-glass-ring { animation-duration: 40s, 60s; }
+
+/* Not in CSS: the light in the Tango window and the portal on the screen are
+   drawn on a <canvas> in JavaScript (soft layered radial glows with a gently
+   wobbling edge, and a thin line of light with drifting wisps). */

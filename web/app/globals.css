@@ -1,0 +1,32 @@
+@import "tailwindcss";
+@import "./tango.css";
+
+html,
+body {
+  background: var(--tg-bg);
+  color: var(--tg-text);
+  font-family: var(--tg-font);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* The Tango glass ring as the Q mark: ring with a light-weight Q in the middle */
+.q-mark { position: relative; display: inline-grid; place-items: center; }
+.q-mark > b { position: absolute; inset: 0; display: grid; place-items: center; font-weight: 300; color: var(--tg-text); }
+
+/* The Q card, shared by the test page and the landing hero */
+.q-card {
+  width: min(380px, 100%);
+  padding: 18px 20px 16px;
+  border-radius: var(--tg-radius-window);
+  background: rgba(18, 18, 18, 0.62);
+  border: 1px solid var(--tg-line);
+  backdrop-filter: var(--tg-blur-panel);
+  -webkit-backdrop-filter: var(--tg-blur-panel);
+  box-shadow: var(--tg-shadow-window);
+  text-align: left;
+}
+.q-cue {
+  font: 300 34px/1.12 var(--tg-font);
+  letter-spacing: -0.01em;
+  text-shadow: 0 0 28px rgba(255, 255, 255, 0.18);
+}

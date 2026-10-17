@@ -1,0 +1,9 @@
+.env*
+node_modules/
+.next/
+.DS_Store
+.claude/settings.local.json
+# Kept out of the repo: internal build brief, another project's design files, local tool settings
+BRIEF.md
+design-refs/
+.claude/

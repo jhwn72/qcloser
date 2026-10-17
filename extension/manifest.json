@@ -1,0 +1,53 @@
+{
+  "manifest_version": 3,
+  "name": "Q: your cue to close",
+  "version": "0.1.0",
+  "description": "A live closing coach for Google Meet. Five-word nudges from moves that real closers won with.",
+  "icons": {
+    "16": "icons/q16.png",
+    "48": "icons/q48.png",
+    "128": "icons/q128.png"
+  },
+  "action": {
+    "default_title": "Q",
+    "default_popup": "popup.html",
+    "default_icon": {
+      "16": "icons/q16.png",
+      "48": "icons/q48.png",
+      "128": "icons/q128.png"
+    }
+  },
+  "permissions": [
+    "storage"
+  ],
+  "host_permissions": [
+    "http://localhost:3000/*",
+    "https://*.vercel.app/*"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "https://meet.google.com/*"
+      ],
+      "js": [
+        "moments.js",
+        "content.js"
+      ],
+      "run_at": "document_idle"
+    }
+  ],
+  "web_accessible_resources": [
+    {
+      "resources": [
+        "tango.css",
+        "card.css"
+      ],
+      "matches": [
+        "https://meet.google.com/*"
+      ]
+    }
+  ]
+}

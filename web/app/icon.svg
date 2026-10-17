@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="128" height="128" viewBox="0 0 128 128">
+  <defs>
+    <radialGradient id="bg" cx="50%" cy="38%" r="70%"><stop offset="0" stop-color="#2a2a2a"/><stop offset="1" stop-color="#070707"/></radialGradient>
+    <linearGradient id="ring" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ffffff"/><stop offset="0.55" stop-color="#ffe2be"/><stop offset="1" stop-color="#ffffff" stop-opacity="0.25"/></linearGradient>
+  </defs>
+  <rect width="128" height="128" rx="28" fill="url(#bg)"/>
+  <circle cx="64" cy="64" r="40" fill="none" stroke="#ff2d23" stroke-opacity="0.55" stroke-width="5" transform="translate(1.6 0)"/>
+  <circle cx="64" cy="64" r="40" fill="none" stroke="#2d5aff" stroke-opacity="0.55" stroke-width="5" transform="translate(-1.6 0)"/>
+  <circle cx="64" cy="64" r="40" fill="none" stroke="url(#ring)" stroke-width="5"/>
+  <text x="64" y="81" text-anchor="middle" font-family="-apple-system, Helvetica Neue, Helvetica, Arial" font-weight="300" font-size="50" fill="#f4f4f4">Q</text>
+</svg>

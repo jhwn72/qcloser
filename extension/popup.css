@@ -1,0 +1,87 @@
+/* The popup from the Q icon. Tango tokens come from tango.css. */
+html,
+body {
+  margin: 0;
+  background: var(--tg-bg);
+}
+body {
+  width: 340px;
+  padding: 18px 18px 14px;
+  box-sizing: border-box;
+  background: radial-gradient(120% 70% at 50% 0%, #1c1c1c, var(--tg-bg) 70%);
+}
+
+header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 6px;
+}
+.mark {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  flex: none;
+}
+.mark .tg-glass-ring {
+  --r: 17px;
+  --w: 2.5px;
+  position: absolute;
+  inset: 0;
+  width: 40px;
+  height: 40px;
+}
+.mark b {
+  position: relative;
+  font: 300 17px var(--tg-font);
+}
+.title {
+  font: var(--tg-text-title);
+  line-height: 1;
+}
+header .tg-toggle {
+  margin-left: auto;
+}
+
+section {
+  margin-top: 4px;
+}
+.tg-label {
+  margin: 16px 0 7px;
+}
+.row-label {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+}
+.row-label .tg-seg {
+  align-self: center;
+}
+.pair {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr;
+  gap: 8px;
+}
+.tg-input {
+  width: 100%;
+  box-sizing: border-box;
+}
+textarea.tg-input {
+  resize: vertical;
+  font: var(--tg-text-ui);
+  line-height: 1.45;
+}
+.hint {
+  margin-top: 6px;
+}
+
+footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 16px;
+  padding-top: 12px;
+  border-top: 1px solid var(--tg-line);
+}

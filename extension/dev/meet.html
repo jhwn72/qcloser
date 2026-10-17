@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Q card preview</title>
+<style>
+  html, body { margin: 0; height: 100%; background: #202124; overflow: hidden; font-family: Arial, sans-serif; }
+  .call { position: absolute; inset: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 8px; padding: 12px 12px 80px; }
+  .tile { position: relative; border-radius: 12px; background: radial-gradient(90% 90% at 50% 40%, #3b3f46, #1b1d21); }
+  .tile.you { background: radial-gradient(90% 90% at 50% 40%, #463f38, #1e1b19); }
+  .tile span { position: absolute; left: 12px; bottom: 10px; color: #fff; font-size: 13px; }
+  .bar { position: absolute; left: 0; right: 0; bottom: 0; height: 72px; display: flex; justify-content: center; align-items: center; gap: 12px; }
+  .bar i { width: 40px; height: 40px; border-radius: 50%; background: #3c4043; }
+  .bar i.end { width: 56px; border-radius: 20px; background: #ea4335; }
+  /* A stand-in for Meet's captions area, built the way Meet's is: labeled region, avatar, name, words */
+  .captions { position: absolute; left: 50%; bottom: 84px; transform: translateX(-50%); width: 60%; background: rgba(0,0,0,.7); color: #fff; border-radius: 8px; padding: 10px 14px; font-size: 15px; }
+  .cap-block { display: flex; gap: 10px; margin: 4px 0; }
+  .cap-block img { width: 24px; height: 24px; border-radius: 50%; background: #8ab4f8; }
+  .cap-name { font-weight: bold; font-size: 13px; }
+  .sim { position: absolute; left: 12px; bottom: 16px; display: flex; gap: 6px; }
+  .sim button { font: 12px Arial; padding: 6px 10px; border-radius: 6px; border: 0; background: #e8eaed; cursor: pointer; }
+</style>
+</head>
+<body>
+  <!-- Stand-in for a Meet call, only so the card has something behind it -->
+  <div class="call"><div class="tile"><span>Buyer</span></div><div class="tile you"><span>You</span></div></div>
+  <div class="bar"><i></i><i></i><i></i><i class="end" aria-label="Leave call" role="button"></i></div>
+  <div class="captions" role="region" aria-label="Captions">
+    <div class="cap-list"></div>
+    <button aria-label="Jump to bottom"><i aria-hidden="true">arrow_downward</i></button>
+  </div>
+  <div class="sim"><button id="play">Play a gym call</button></div>
+  <script>
+    // Speaks lines into the fake captions word by word, the way Meet's captions grow.
+    const list = document.querySelector(".cap-list");
+    const avatar = "data:image/svg+xml," + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"><circle cx="12" cy="12" r="12" fill="#8ab4f8"/></svg>');
+    const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+    async function say(name, line) {
+      const block = document.createElement("div");
+      block.className = "cap-block";
+      block.innerHTML = `<img src="${avatar}" alt=""><div><div class="cap-name">${name}</div><div class="cap-text"><span></span></div></div>`;
+      list.appendChild(block);
+      const span = block.querySelector(".cap-text span");
+      for (const w of line.split(" ")) { span.textContent += (span.textContent ? " " : "") + w; await sleep(110); }
+    }
+    document.getElementById("play").onclick = async () => {
+      await say("You", "Thanks for jumping on. Membership is 89 a month and includes two personal training sessions.");
+      await sleep(900);
+      await say("Taylor Kim", "Honestly I have paid for gyms before and I never actually go.");
+      await sleep(3500);
+      await say("You", "Totally fair. What got in the way last time?");
+      await sleep(900);
+      await say("Taylor Kim", "I felt judged by everyone there because of my weight.");
+    };
+  </script>
+  <script src="chrome-shim.js"></script>
+  <script src="../moments.js"></script>
+  <script src="../content.js"></script>
+</body>
+</html>

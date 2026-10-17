@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Q</title>
+    <link rel="stylesheet" href="tango.css" />
+    <link rel="stylesheet" href="popup.css" />
+  </head>
+  <body class="tg">
+    <header>
+      <span class="mark">
+        <span class="tg-glass-ring"><i class="bloom"></i><i class="track"></i><i class="ch red"></i><i class="ch green"></i><i class="ch blue"></i><i class="hot"></i><i class="streaks"></i></span>
+        <b>Q</b>
+      </span>
+      <div>
+        <div class="title">Q</div>
+        <div class="tg-fine">your cue to close</div>
+      </div>
+      <div class="tg-toggle on" id="enabled" role="switch" aria-checked="true" aria-label="Show Q on Google Meet" tabindex="0"></div>
+    </header>
+
+    <section>
+      <div class="tg-label">You</div>
+      <div class="pair">
+        <input class="tg-input" id="name" placeholder="Your name" autocomplete="given-name" />
+        <input class="tg-input" id="city" placeholder="City" autocomplete="address-level2" />
+      </div>
+      <div class="tg-fine hint">Shown on moves you teach Q: "Learned from Alex · Austin".</div>
+    </section>
+
+    <section>
+      <div class="tg-label row-label">
+        <span>Typical call length</span>
+        <div class="tg-seg" id="callLength" role="radiogroup" aria-label="Typical call length">
+          <span data-min="10" role="radio">10 min</span><span data-min="15" role="radio">15</span><span data-min="30" role="radio">30</span><span data-min="45" role="radio">45</span>
+        </div>
+      </div>
+      <div class="tg-fine hint">Q paces toward the close: discovery early, asking for the sale before time runs out.</div>
+    </section>
+
+    <section>
+      <div class="tg-label">Your company</div>
+      <textarea
+        class="tg-input"
+        id="profile"
+        rows="4"
+        placeholder="What you sell, prices, standard offers, ideal customer, anything Q should never suggest…"
+      ></textarea>
+      <div class="tg-fine hint">Saved. Used on every call.</div>
+    </section>
+
+    <section>
+      <div class="tg-label row-label">
+        <span>Brief for your next call</span>
+        <button class="tg-link" id="clear-brief" type="button">Clear</button>
+      </div>
+      <textarea
+        class="tg-input"
+        id="brief"
+        rows="3"
+        placeholder="Who the buyer is, what they care about, anything special about this call…"
+      ></textarea>
+    </section>
+
+    <footer>
+      <button class="tg-link" id="playbook" type="button">Open the playbook</button>
+      <span class="tg-fine" id="saved"></span>
+    </footer>
+
+    <script src="config.js"></script>
+    <script src="popup.js"></script>
+  </body>
+</html>
