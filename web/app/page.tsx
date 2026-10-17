@@ -66,8 +66,8 @@ const FAQ: { q: string; a: ReactNode }[] = [
     a: "Q never records audio. It reads the live captions Google Meet already shows in your browser and sends the conversation to Q to pick a nudge. When you end a call, the transcript is saved so Q can learn from it. As with any call notes, let the people on the call know.",
   },
   {
-    q: "Can the buyer see Q?",
-    a: "No. The card lives in your own browser tab, not in the meeting. The only way they'd see it is if you share your whole screen, so share a window or tab instead.",
+    q: "Does Q join the meeting?",
+    a: "No. No bot joins and nothing is added to the call. The card lives in your own browser tab, so if you present, share a window or a tab instead of your whole screen.",
   },
   {
     q: "Is it going to put words in my mouth?",
@@ -75,11 +75,15 @@ const FAQ: { q: string; a: ReactNode }[] = [
   },
   {
     q: "How fast is it?",
-    a: "About two seconds from the buyer's last word to the nudge on your screen. If the buyer is just making small talk, Q stays quiet and simply shows that it heard.",
+    a: "About a second from the buyer's last word to the nudge on your screen. Q starts thinking while the buyer is still talking, so the nudge is nearly ready when they stop. If it's just small talk, Q stays quiet and shows that it heard.",
   },
   {
     q: "Where do the moves come from?",
-    a: "Q starts with a playbook of closing moves. Every time a seller wins with a move Q hasn't seen, it's added and credited to them, and every Q user has it within seconds. Moves that keep losing retire on their own.",
+    a: "Q starts with a playbook of closing moves. Every time a seller wins with a move Q hasn't seen, it's added and credited to them, and every Q user has it within seconds. Moves that keep losing, or keep misfiring, retire on their own.",
+  },
+  {
+    q: "How does Q know a nudge was wrong?",
+    a: "After each call, Q reads what happened right after every nudge it showed: did you use it, and did the buyer move toward yes or pull back? Each one gets helped, neutral or hurt, with a reason, in the call report. One bad call can't sink a move, but moves that keep hurting drop in rank and then retire.",
   },
   {
     q: "Can I keep my company's moves private?",
@@ -118,7 +122,8 @@ export default function Home() {
           Every closer needs a Q.
         </h1>
         <p className="tg-body max-w-xl" style={{ fontSize: 18, lineHeight: 1.5, margin: "24px 0 0" }}>
-          Q listens to your sales call and shows you, at a glance, what the best salespeople would do next.
+          Q listens to your sales call and shows you, at a glance, what the best salespeople would do next. Every
+          win teaches it something new.
         </p>
         <div className="mt-8 flex items-center gap-5">
           <a className="tg-btn primary" href="#install">
@@ -165,11 +170,14 @@ export default function Home() {
           </h2>
           <p className="tg-body" style={{ fontSize: 16, margin: "20px 0 0" }}>
             Q recognizes {MOMENT_TYPES.length} situations, from price pushback and &ldquo;let me think about it&rdquo; to a buyer
-            who just got personal. It also watches the time: early on it helps you find the need, and near the end it
-            pushes you to ask for the sale.
+            who just got personal, and it reads the buyer too: skeptical, rushed, price-focused or curious. It also
+            watches the time. Early on it helps you find the need; near the end it pushes you to ask for the sale. And
+            the clock follows the buyer: it stretches when they&rsquo;re engaged or say there&rsquo;s no rush, and pulls
+            in when they&rsquo;re short on time or going quiet.
           </p>
           <p className="tg-body" style={{ fontSize: 16, margin: "12px 0 0" }}>
-            Tell Q what you sell once, add a quick brief before a call, and every nudge fits your offer.
+            Tell Q what you sell once, add a quick brief before a call, and nudges use your real offer, like
+            &ldquo;Offer 0% financing, about 190 monthly&rdquo;.
           </p>
           <div className="mt-6 flex flex-wrap gap-2">
             {SITUATIONS.map((s) => (
@@ -320,7 +328,7 @@ async function Numbers() {
   const stats = [
     { node: <CountUp to={count ?? 0} />, label: "moves in the playbook" },
     { node: <CountUp to={MOMENT_TYPES.length} />, label: "situations Q recognizes" },
-    { node: <CountUp to={2} prefix="~" suffix=" s" />, label: "from the buyer's words to your nudge" },
+    { node: <CountUp to={1} prefix="~" suffix=" s" />, label: "from the buyer's last word to your nudge" },
   ];
   return (
     <div className="grid grid-cols-1 gap-10 sm:grid-cols-3">
