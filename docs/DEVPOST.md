@@ -17,7 +17,7 @@ Every closer needs a Q. Q listens to your sales call and shows you, at a glance,
 
 ## Links
 
-- **Try it:** https://q-cue-to-close.vercel.app (landing, install steps, live playbook)
+- **Try it:** https://qcloser.vercel.app (landing, install steps, live playbook)
 - **Code:** [GitHub URL]
 - **Video:** [YouTube or Loom URL]
 

@@ -70,25 +70,43 @@ export type Move = { text: string; moment: string };
 const MOMENT_GUIDE = `Opening and discovery:
    opening: the first minutes: the buyer sets a time limit, asks what this is about, or grudgingly gives the seller a minute. Set the agenda and earn the next minute.
    pain: shares a problem, a goal, or what the problem costs them. Dig deeper before pitching.
+   hidden_need: mentions a problem in passing or in small talk, without asking for help. Pick it up.
+   price_upfront: asks the price early, before the seller knows what they need. Give an honest range, then earn the questions.
    Objections and questions:
    no_need: doesn't see the need.
    price: it costs too much or doesn't fit the budget.
    discount: haggles or asks for a better deal.
+   lowball: names a much lower number, a take-it-or-leave-it offer, or a cheaper quote to match.
+   payment_plan: asks to split payments, pay monthly or finance it. Usually a buying signal.
+   terms: asks to change terms other than price (contract length, payment timing, extras, service levels).
    timing: not now, maybe later.
+   busy_season: wants to wait out a busy season or a crunch at work.
+   budget_cycle: no budget until the next quarter or fiscal year, or this year's budget is spent.
    trust: doubts it works, or doubts the seller.
+   bad_reviews: read bad reviews or heard bad things about the company or product.
    proof: asks for references, reviews, case studies or data.
+   trial: asks for a demo, a free trial or a pilot before deciding.
    authority: someone else decides or handles it (a boss, an office manager, a team or committee).
+   champion: wants it, but says their boss or team won't go for it, or asks how to sell it inside.
+   group_call: several people on the buyer's side are on the call, with different concerns, or one stays quiet.
    partner: a spouse, partner or family member has a say.
-   competitor: uses or prefers another option, including doing it themselves.
+   competitor: uses or prefers another vendor or product.
+   loyalty: sticks with a current provider out of a personal relationship, not because it's better.
+   diy: would rather do it themselves, build it in-house or hire someone for it.
    shopping: comparing several vendors or quotes.
    locked_in: stuck in a contract or setup they can't leave yet.
+   switching: worried about the hassle of switching (setup, moving data, training, downtime).
    stall: a vague put-off ("let me think about it").
    send_info: "just send me something", usually a polite exit.
    process: procurement, legal review, contracts or approval steps.
-   compliance: worried about legal, privacy, security or regulations.
+   compliance: worried about legal, privacy, data security or regulations.
    technical: detailed technical or integration questions.
+   blocker: names a missing feature, integration or requirement as a dealbreaker.
+   exit_terms: asks about cancelling, contract length, lock-in or refunds.
    tough_question: a question the profile and brief don't answer, or one the seller just fumbled.
    not_fit: reveals the product really doesn't fit them.
+   upset_customer: an existing customer is upset about a problem with what they bought. Fix it before any selling.
+   cancel: an existing customer wants to cancel, downgrade or not renew.
    Personal moments (the buyer shares a feeling or something about their life):
    judged: embarrassed, self-conscious or afraid of being judged (body, age, skill, money).
    fear: scared of failing, of the risk or of choosing wrong, or doubts they'll stick with it.
@@ -96,16 +114,22 @@ const MOMENT_GUIDE = `Opening and discovery:
    overwhelmed: too much going on, can't take on one more thing.
    hardship: real money trouble (lost job, debt, a tight month).
    health_loss: grief, illness, a health scare or another hard life event.
+   life_change: a big life change that isn't a loss (a move, a new baby, a wedding, a new job, retirement).
    Closing:
    buying_signal: warming up (likes it, asks how it would work for them, asks about price, delivery or start dates in a positive way).
    ready: says yes, or asks how to buy, sign up or start.
-   early_yes: says yes too fast or half-heartedly while an earlier worry is still open.
+   contract_request: asks for the contract, a written quote or the paperwork to sign. Lock who signs and when.
+   price_silence: goes quiet, or answers with a flat "hm" or "okay", right after hearing the price.
+   early_yes: says yes too fast, or a hesitant yes ("I guess so"), while an earlier worry is still open.
+   dodging: talks around it or changes the subject each time the seller asks for a decision.
    ghost_risk: the call is wrapping up without a firm next step ("I'll get back to you").
+   after_yes: has just bought or signed and is happy: lock the start, then a referral or a natural add-on.
    Flow (judge from the whole call and the stats):
    pacing: the seller is monologuing (a long stretch, or most of the talking).
    dragging: the call has run past the point the buyer was ready, or it's the closing window or later and the seller hasn't asked for the sale or a next step.
    disengaged: the buyer has gone quiet, gives one-word answers or seems distracted.
    confused: the buyer is lost, often after jargon.
+   language: the buyer struggles with the language (asks to repeat, misunderstands, says their English isn't strong).
    tangent: a long off-topic stretch mid-call. Brief friendly small talk is none.
    hostile: the buyer is rude, angry or insulting.`;
 

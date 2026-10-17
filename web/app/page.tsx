@@ -21,7 +21,7 @@ const STEPS = [
   },
   {
     title: "Learns from every call",
-    body: "Win, and your best move joins everyone's playbook, credited to you. Lose, and Q keeps the lesson.",
+    body: "Win, and your best move joins everyone's playbook, credited to you. Lose, and Q keeps the lesson. Either way, Q checks which of its own nudges helped.",
   },
 ];
 
@@ -36,6 +36,35 @@ const SITUATIONS = [
   "Closing · Yes too early",
   "Pacing · Talking too long",
   "Heads up · Hostile buyer",
+];
+
+// What Q reads during a call, in five beats. The last one spans both columns.
+const READS: { title: string; body: ReactNode }[] = [
+  {
+    title: "Reads the moment",
+    body: (
+      <>
+        Q recognizes {MOMENT_TYPES.length} situations, from price pushback and &ldquo;let me think about it&rdquo; to a
+        buyer who just got personal.
+      </>
+    ),
+  },
+  {
+    title: "Reads the buyer",
+    body: "It can tell whether a buyer is skeptical, rushed, price-focused or curious.",
+  },
+  {
+    title: "Watches the clock",
+    body: "Early on it helps you find the need; near the end it pushes you to ask for the sale.",
+  },
+  {
+    title: "Follows the buyer's pace",
+    body: "The clock stretches when they're engaged or say there's no rush, and pulls in when they're short on time or going quiet.",
+  },
+  {
+    title: "Knows your offer",
+    body: "Tell Q what you sell once, add a quick brief before a call, and nudges use your real offer, like “Offer 0% financing, about 190 monthly”.",
+  },
 ];
 
 // The learning loop, in four beats
@@ -168,18 +197,17 @@ export default function Home() {
           <h2 className="tg-headline" style={{ fontSize: "clamp(28px, 4vw, 40px)", lineHeight: 1.1, textWrap: "balance" }}>
             It knows the moment, and the clock.
           </h2>
-          <p className="tg-body" style={{ fontSize: 16, margin: "20px 0 0" }}>
-            Q recognizes {MOMENT_TYPES.length} situations, from price pushback and &ldquo;let me think about it&rdquo; to a buyer
-            who just got personal, and it reads the buyer too: skeptical, rushed, price-focused or curious. It also
-            watches the time. Early on it helps you find the need; near the end it pushes you to ask for the sale. And
-            the clock follows the buyer: it stretches when they&rsquo;re engaged or say there&rsquo;s no rush, and pulls
-            in when they&rsquo;re short on time or going quiet.
-          </p>
-          <p className="tg-body" style={{ fontSize: 16, margin: "12px 0 0" }}>
-            Tell Q what you sell once, add a quick brief before a call, and nudges use your real offer, like
-            &ldquo;Offer 0% financing, about 190 monthly&rdquo;.
-          </p>
-          <div className="mt-6 flex flex-wrap gap-2">
+          <div className="mt-8 grid gap-x-8 gap-y-6 sm:grid-cols-2">
+            {READS.map((b, i) => (
+              <div key={b.title} className={i === READS.length - 1 ? "sm:col-span-2" : undefined} style={{ borderTop: "1px solid var(--tg-line)", paddingTop: 14 }}>
+                <h3 style={{ font: "300 17px/1.3 var(--tg-font)", color: "var(--tg-text-soft)", margin: 0 }}>{b.title}</h3>
+                <p className="tg-body" style={{ margin: "6px 0 0" }}>
+                  {b.body}
+                </p>
+              </div>
+            ))}
+          </div>
+          <div className="mt-8 flex flex-wrap gap-2">
             {SITUATIONS.map((s) => (
               <span key={s} className="tg-chip" style={{ cursor: "default" }}>
                 {s}
@@ -326,8 +354,8 @@ export default function Home() {
 async function Numbers() {
   const { count } = await db().from("cues").select("*", { count: "exact", head: true }).eq("status", "active").eq("visibility", "public");
   const stats = [
-    { node: <CountUp to={count ?? 0} />, label: "moves in the playbook" },
-    { node: <CountUp to={MOMENT_TYPES.length} />, label: "situations Q recognizes" },
+    { node: <CountUp to={count ?? 0} />, label: "moves in the playbook so far, growing as sellers win" },
+    { node: <CountUp to={MOMENT_TYPES.length} />, label: "situations Q recognizes so far, and counting" },
     { node: <CountUp to={1} prefix="~" suffix=" s" />, label: "from the buyer's last word to your nudge" },
   ];
   return (

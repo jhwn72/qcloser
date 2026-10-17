@@ -9,7 +9,7 @@ For John. Written Oct 17, 2026, around 3 AM PT, from the local files (the live s
 3. **Keep the cost numbers, attribute them exactly.** John's call: keep $0.12 per 15-minute call, $39 Pro / $99 Team and the margins. That $0.12 was measured on Sonnet 5.5 before listen-ahead, not on the setup the demo runs. So everywhere it appears, say "about $0.12 per call on our standard model", never "the demo costs $0.12".
 4. **Speed: say "about a second".** On the live site, nudges landed about 1.0 to 1.3 s after the buyer stopped in a realistic-pace test call. Never claim sub-second, and retire the old "~2 s" and "1.5 to 2 s" everywhere.
 5. **No a16z judges are listed, and there is no Agents track.** Devpost lists four judges and five prizes [1a]. The event is part of a16z's Tech Week [16], and a16z led Cluely's Series A [7], so treat Cluely with respect on stage. One judge works at OpenAI, so "generic AI" is a better foil than naming ChatGPT.
-6. **The live site is behind the local files.** On q-cue-to-close.vercel.app right now, /royalties and /q-extension.zip return 404, and the FAQ still says private team playbooks are on the roadmap. The README's install link and the eligibility rule "ensure your project AND GitHub links work" [1a] both depend on a deploy. The repo also has no git remote yet.
+6. **The live site is behind the local files.** On qcloser.vercel.app right now, /royalties and /q-extension.zip return 404, and the FAQ still says private team playbooks are on the roadmap. The README's install link and the eligibility rule "ensure your project AND GitHub links work" [1a] both depend on a deploy. The repo also has no git remote yet.
 
 ## 1. The hackathon, confirmed
 

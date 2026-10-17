@@ -38,10 +38,16 @@ export default function HeroDemo() {
 
   return (
     <div className="mx-auto flex w-full max-w-md flex-col items-center gap-5" aria-label="An example: what the buyer said, and the nudge Q showed">
-      {/* Room for two lines on a phone, so a longer line doesn't push the card down as it rotates in */}
-      <div className="flex min-h-[42px] w-full items-end justify-center sm:min-h-[26px]">
-        <p className="text-center tg-body" style={{ margin: 0, color: "var(--tg-muted)", ...fade }}>
-          <span style={{ color: "var(--tg-faint)" }}>{m.who}:</span> &ldquo;{m.line}&rdquo;
+      {/* Always room for two lines (2 x 1.35em), so a longer line never pushes the card down as it rotates in */}
+      <div
+        className="flex w-full items-end justify-center"
+        style={{ font: "300 clamp(17px, 4.6vw, 20px)/1.35 var(--tg-font)", minHeight: "2.7em" }}
+      >
+        <p
+          className="text-center"
+          style={{ margin: 0, font: "inherit", letterSpacing: "-0.005em", color: "var(--tg-text-soft)", textWrap: "balance", ...fade }}
+        >
+          <span style={{ color: "var(--tg-muted)" }}>{m.who}:</span> &ldquo;{m.line}&rdquo;
         </p>
       </div>
       <div className="q-card" style={{ width: "100%" }}>

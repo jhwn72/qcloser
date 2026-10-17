@@ -11,14 +11,20 @@ export const metadata = { title: "Playbook · Q" };
 
 // How moments are grouped on the page. Anything not listed lands in "More".
 const GROUPS: { title: string; moments: Moment[] }[] = [
-  { title: "Opening and discovery", moments: ["opening", "pain"] },
+  { title: "Opening and discovery", moments: ["opening", "pain", "hidden_need", "price_upfront"] },
   {
     title: "Objections",
-    moments: ["no_need", "price", "discount", "timing", "trust", "proof", "authority", "partner", "competitor", "shopping", "locked_in", "stall", "send_info", "process", "compliance", "technical", "tough_question", "not_fit"],
+    moments: [
+      "no_need", "price", "timing", "busy_season", "budget_cycle", "trust", "bad_reviews", "proof", "trial", "competitor", "loyalty", "diy",
+      "shopping", "locked_in", "switching", "stall", "send_info", "process", "compliance", "technical", "blocker", "exit_terms", "tough_question", "not_fit",
+    ],
   },
-  { title: "Worries and personal moments", moments: ["judged", "fear", "burned", "overwhelmed", "hardship", "health_loss"] },
-  { title: "Closing", moments: ["buying_signal", "ready", "early_yes", "ghost_risk"] },
-  { title: "Flow of the call", moments: ["pacing", "dragging", "disengaged", "confused", "tangent", "hostile"] },
+  { title: "Negotiating", moments: ["discount", "lowball", "payment_plan", "terms"] },
+  { title: "Who decides", moments: ["authority", "champion", "partner", "group_call"] },
+  { title: "Worries and personal moments", moments: ["judged", "fear", "burned", "overwhelmed", "hardship", "health_loss", "life_change"] },
+  { title: "Closing", moments: ["buying_signal", "ready", "contract_request", "price_silence", "early_yes", "dodging", "ghost_risk", "after_yes"] },
+  { title: "Existing customers", moments: ["upset_customer", "cancel"] },
+  { title: "Flow of the call", moments: ["pacing", "dragging", "disengaged", "confused", "language", "tangent", "hostile"] },
 ];
 const NEW_FOR_MS = 24 * 3600 * 1000;
 
@@ -55,11 +61,11 @@ const shortLabel = (m: string) => (MOMENT_LABELS[m as Moment] ?? m.replace(/_/g,
 export default function PlaybookPage() {
   return (
     <main className="mx-auto w-full max-w-6xl flex-1 px-4 py-10 sm:px-8">
-      <header className="mb-10 flex items-center gap-4">
+      <header className="mb-10 flex flex-wrap items-center gap-x-4 gap-y-5">
         <Link href="/" aria-label="Q home">
           <QMark size={52} font={20} />
         </Link>
-        <div>
+        <div className="min-w-0 flex-1 basis-64">
           <h1 className="tg-title" style={{ margin: 0 }}>
             The playbook
           </h1>
@@ -67,6 +73,18 @@ export default function PlaybookPage() {
             Every move credited to whoever taught it, with its record. It grows every time someone wins.
           </p>
         </div>
+        {/* The same links as the top bar on the other pages (components/SiteNav) */}
+        <nav className="order-first flex w-full items-center justify-end gap-4 sm:order-none sm:w-auto sm:gap-5" aria-label="Pages">
+          <Link className="tg-link" href="/playbook" aria-current="page" style={{ color: "var(--tg-text)", textDecorationColor: "rgba(255,255,255,0.6)" }}>
+            Playbook
+          </Link>
+          <Link className="tg-link" href="/royalties">
+            Royalties
+          </Link>
+          <Link className="tg-link" href="/pricing">
+            Pricing
+          </Link>
+        </nav>
       </header>
       <Suspense fallback={<p className="tg-body">Loading the playbook…</p>}>
         <Playbook />

@@ -65,7 +65,7 @@ Each table: time, picture, who says what, on-screen text. Burn in captions for e
 
 | Time | Picture | Sound | On-screen text |
 |---|---|---|---|
-| 0:30 | Landing page at q-cue-to-close.vercel.app, top of the page: the top bar with the Q mark and "your cue to close", and the hero "Every closer needs a Q." | **JOHN (VO):** "Every closer needs a Q." | (the page says it; no extra text) |
+| 0:30 | Landing page at qcloser.vercel.app, top of the page: the top bar with the Q mark and "your cue to close", and the hero "Every closer needs a Q." | **JOHN (VO):** "Every closer needs a Q." | (the page says it; no extra text) |
 | 0:32 | Hold on the hero line and the Download button, then a slow tilt down to the Q card below it, cycling its examples. | **JOHN (VO):** "Q listens to your sales call and shows you, at a glance, what the best salespeople would do next. And every win teaches it something new." | |
 
 Bond nod: keep it to the line. No Bond music, logos or footage.
@@ -124,7 +124,7 @@ Numbers and wording follow [SCALE.md](SCALE.md). Plain dark title cards in the T
 | Time | Picture | Sound | On-screen text |
 |---|---|---|---|
 | 1:53 | Black. | Silence | Two lines: `Take 1: frozen for 11 s.` / `Take 2: first nudge in 1.1 s.` (both real numbers from your footage) |
-| 1:55 | End card: the ring, `Every closer needs a Q.` above `Q · your cue to close`. | | `q-cue-to-close.vercel.app` · GitHub URL · `Built by John Wang · SEP Hacks 2026` · small: `Jordan Belfort played by [helper]. Not affiliated with or endorsed by Jordan Belfort.` |
+| 1:55 | End card: the ring, `Every closer needs a Q.` above `Q · your cue to close`. | | `qcloser.vercel.app` · GitHub URL · `Built by John Wang · SEP Hacks 2026` · small: `Jordan Belfort played by [helper]. Not affiliated with or endorsed by Jordan Belfort.` |
 | 1:58 | Stinger, back at the table. Belfort alone, clicks the pen twice. | **BELFORT** (to himself): "It is a nice pen." | Cut to black |
 
 ## Requirements checklist
@@ -166,7 +166,7 @@ If the call needs a second take, reset at /admin first (Q won't relearn a move t
 
 ## Landing page map
 
-What's on q-cue-to-close.vercel.app, top to bottom, and where each part can go in the cut. The site is being updated this morning, so check it once before shot 7.
+What's on qcloser.vercel.app, top to bottom, and where each part can go in the cut. The site is being updated this morning, so check it once before shot 7.
 
 | Section | What it shows | Use it for |
 |---|---|---|

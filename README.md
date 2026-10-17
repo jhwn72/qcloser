@@ -4,7 +4,7 @@
 
 Q listens to your sales call and shows you, at a glance, what the best salespeople would do next. Every win teaches it something new.
 
-[Live site](https://q-cue-to-close.vercel.app) · [Download for Chrome](https://q-cue-to-close.vercel.app/q-extension.zip) · [Live playbook](https://q-cue-to-close.vercel.app/playbook) · [Try a buyer line](https://q-cue-to-close.vercel.app/test) · Demo video: _add link_
+[Live site](https://qcloser.vercel.app) · [Download for Chrome](https://qcloser.vercel.app/q-extension.zip) · [Live playbook](https://qcloser.vercel.app/playbook) · [Try a buyer line](https://qcloser.vercel.app/test) · Demo video: _add link_
 
 > Built at SEP Hacks 2026 (USC SEP x LA Tech Week). Q runs on Google Meet today. It has no users or revenue yet. The starter playbook (its moves, names and win records) is sample data for the demo; moves learned on live calls are real.
 
@@ -70,7 +70,7 @@ Full numbers, assumptions and sources: [docs/SCALE.md](docs/SCALE.md).
 - **Unit economics:** about $0.12 of model cost per 15-minute call on our standard model, against planned $39/month Pro and $99/month Team seats.
 - **Market:** about 4.04M US sellers in the occupations Q targets (BLS, May 2025).
 - **Path (projection):** about 103,000 paid seats at an $81 blended price is about $100M ARR, a $1B company at 10x revenue.
-- **Marketplace:** sellers choose whether moves Q learns from them go to everyone (credited, and set to earn royalties when they help others close) or stay private to their company (the competitor firewall). Royalties are a plan, not live: the proposal is a pool of 10% of subscription revenue, split by attributed wins on other sellers' calls ([/royalties](https://q-cue-to-close.vercel.app/royalties)).
+- **Marketplace:** sellers choose whether moves Q learns from them go to everyone (credited, and set to earn royalties when they help others close) or stay private to their company (the competitor firewall). Royalties are a plan, not live: the proposal is a pool of 10% of subscription revenue, split by attributed wins on other sellers' calls ([/royalties](https://qcloser.vercel.app/royalties)).
 
 ## How it works
 
@@ -112,7 +112,7 @@ End call -> Won or Lost -> POST /api/learn
 
 ## Install (for judges)
 
-1. Download the extension: [q-extension.zip](https://q-cue-to-close.vercel.app/q-extension.zip). (Or clone this repo and use the `extension/` folder.)
+1. Download the extension: [q-extension.zip](https://qcloser.vercel.app/q-extension.zip). (Or clone this repo and use the `extension/` folder.)
 2. Unzip it.
 3. In Chrome, open `chrome://extensions`, turn on **Developer mode** (top right), and drag the `q-extension` folder onto the page. (Or click **Load unpacked** and choose the folder.)
 4. Click the Q icon in the toolbar (pin it from the puzzle-piece menu). Add your name and city, your company name and what you sell, your typical call length (10, 15, 30 or 45 minutes), and where moves Q learns from you should go. A brief for the next call is optional.
@@ -121,7 +121,7 @@ End call -> Won or Lost -> POST /api/learn
 
 Shortcuts on the call: **Shift+D** shows what Q hears, **Shift+B** types a buyer line (if captions fail), **Shift+C** shows Meet's captions.
 
-No call handy? Type a buyer line at [/test](https://q-cue-to-close.vercel.app/test) and get a real nudge back.
+No call handy? Type a buyer line at [/test](https://qcloser.vercel.app/test) and get a real nudge back.
 
 ## Run it locally
 

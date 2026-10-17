@@ -118,7 +118,7 @@ function winRate(c: Cue) {
 type Pick = { cue: Cue; nudge: string; generic: boolean };
 
 // Moments where Q never experiments: a buyer who is struggling or upset always gets the best-fitting move.
-const NO_EXPLORE_MOMENTS = new Set(["judged", "fear", "burned", "overwhelmed", "hardship", "health_loss", "hostile"]);
+const NO_EXPLORE_MOMENTS = new Set(["judged", "fear", "burned", "overwhelmed", "hardship", "health_loss", "hostile", "upset_customer", "life_change", "cancel"]);
 
 // Picks arrive in Claude's fit order. A nudge that just repeats a playbook move loses to a specific one; otherwise
 // the first pick stands unless the other has a much better record (plus a nudge toward moves that won with this

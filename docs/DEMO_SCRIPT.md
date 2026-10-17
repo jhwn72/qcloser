@@ -133,7 +133,7 @@ Notes:
 Paste into a terminal. Each cue call costs about $0.0017 on our standard model, more on the live Opus fast-mode setup; the loop makes 15. Change `API` to test the live site.
 
 ```bash
-API=http://localhost:3000   # or https://q-cue-to-close.vercel.app
+API=http://localhost:3000   # or https://qcloser.vercel.app
 D=$(mktemp -d)
 cat > "$D/profile.txt" <<'TXT'
 John's Pen Co. sells one product: The Signer, a solid brass refillable ballpoint made for signing things that matter. Price: $40. Teams of 10 or more: $30 each. This week only: free engraving (initials or a name). Lifetime free refills. 30-day money-back guarantee, no questions asked. Ships in 2 business days; next-day delivery in Los Angeles. Ideal customer: people who sign contracts, leases, offers and checks. Never trash other brands. Never pressure.
