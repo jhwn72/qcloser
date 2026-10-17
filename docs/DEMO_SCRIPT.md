@@ -2,7 +2,7 @@
 
 The exact call to film for the live demo: what the buyer (your helper, on the phone in Meet, playing a brokerage owner named John) says, roughly what you say as the seller, and the nudges Q gave when we tested each line. The names mirror the film's call in the hook: the buyer is John, and your Q card goes by Jordan (city Long Island), so the move you teach Q is credited "Jordan · Long Island", the same as the hook's toast. Nobody plays Belfort (the film clip covers him), so no costume and no impression; "Sell me this pen" stays as the nod to the film.
 
-> **Schedule (confirmed):** Devpost closes submissions at **11:00 AM PT**. Film around **8:30 to 9:45 AM** and **submit by 10:45 AM**.
+> **Schedule (updated Oct 17, noon):** Devpost closes submissions at **2:30 PM PDT**. Upload the final cut by about 2:00 PM and **submit by 2:15 PM**.
 >
 > **Status:** the test log below ran Oct 17, about 1:55 AM PT, on Claude Sonnet 5.5. Live nudges now run on **Claude Opus 5.5 in fast mode** (Sonnet 5.5 as fallback) with listen-ahead, so on the live site nudges land about a second after the buyer stops, and the wording may differ a little. John's lines were also changed so he acts on each nudge. Run [Re-run the checks](#re-run-the-checks) once before filming if there's time.
 >

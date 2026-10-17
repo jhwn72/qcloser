@@ -1,6 +1,6 @@
 # Q: 2-minute video script
 
-> **Schedule (confirmed):** Devpost closes submissions at **11:00 AM PT** on Oct 17. Film around **8:30 to 9:45 AM**, edit and upload right after, and **submit by 10:45 AM**.
+> **Schedule (updated Oct 17, noon):** Devpost closes submissions at **2:30 PM PDT**. Upload the final cut by about 2:00 PM and **submit by 2:15 PM**.
 
 > **Risk note:** the hook uses under 30 seconds of *The Wolf of Wall Street* (2013) as parody: a Q card laid over the scene, and John's own face swapped onto one coworker with Higgsfield. Nothing says or implies that Jordan Belfort, the film, Paramount or the cast endorse or use Q, nobody's voice is cloned, and the end card credits the film. YouTube's Content ID can mute or block movie clips even on unlisted videos, so test-upload the hook early (see [Hosting](#hosting)).
 
@@ -163,7 +163,7 @@ What Devpost asks for: "A 2 min demo + pitch video", scored on Functionality, Co
 | Most Scalable To $1B | 1:28 |
 | Eligibility: a legible demo, working links | Burned-in captions, push-ins on the card, links at 1:52 |
 
-## Shot list, in filming order (about 55 minutes, 8:30 to 9:45 AM)
+## Shot list, in filming order (about 55 minutes)
 
 Do the setup in [DEMO_SCRIPT.md](DEMO_SCRIPT.md#before-you-film) first (API credits, database reset, popup as Jordan · Long Island, second Chrome profile, the rehearsal that ends Lost). That isn't counted below. Shots 1 and 2 don't need the helper, so do them before 8:30 if you can.
 
@@ -184,7 +184,7 @@ That leaves about 20 minutes for a second take of the call. If the call needs on
 
 **Recording the call's audio:** QuickTime records only the mic, so the buyer's voice from Meet can go missing. Use a recorder that also captures computer audio (for example OBS, or Loom with computer audio on) and play back a 20-second test before the real take. Wear earbuds on the laptop so the buyer's voice doesn't leak into your mic and your captions.
 
-**Edit (9:45 to 10:30):** CapCut or iMovie. Cut the hook first and test-upload it (see [Hosting](#hosting)), then build the rest. Burned-in captions, chapter labels always in the same corner, the stopwatches as plain monospace text. The hook keeps the film's own audio with one word bleeped; no added music under the hook or the demo (both need their dialogue). A quiet royalty-free bed from the editor's library is fine under the title, scale and end cards. Export 1080p, check the length is 2:00 or less, upload, and submit on Devpost by 10:45 AM.
+**Edit (about 45 minutes):** CapCut or iMovie. Cut the hook first and test-upload it (see [Hosting](#hosting)), then build the rest. Burned-in captions, chapter labels always in the same corner, the stopwatches as plain monospace text. The hook keeps the film's own audio with one word bleeped; no added music under the hook or the demo (both need their dialogue). A quiet royalty-free bed from the editor's library is fine under the title, scale and end cards. Export 1080p, check the length is 2:00 or less, upload, and submit on Devpost by 10:45 AM.
 
 ## Landing page map
 
@@ -280,9 +280,9 @@ The clock line under the card shows the stand-in page's real clock (it will read
 
 ### Hosting
 
-- YouTube's Content ID can mute or block movie clips even on unlisted videos. As soon as the hook is cut (aim for about 9:50 AM), upload it alone to YouTube as unlisted and watch for a claim, a block or muted audio.
+- YouTube's Content ID can mute or block movie clips even on unlisted videos. As soon as the hook is cut, upload it alone to YouTube as unlisted and watch for a claim, a block or muted audio.
 - If YouTube blocks or mutes it, use Loom or Vimeo for the final cut (Vimeo also scans for copyrighted material, so test it too). Devpost embeds YouTube and Vimeo links; check that a Loom link is accepted before relying on it, or put it under the project's links.
-- Final upload by about 10:30, then check the length (2:00 or less) and that the link plays logged out. Submit by 10:45 AM.
+- Final upload by about 2:00 PM, then check the length (2:00 or less) and that the link plays logged out. Submit by 2:15 PM.
 
 ### Always
 
