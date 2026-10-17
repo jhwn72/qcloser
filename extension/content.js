@@ -15,7 +15,15 @@
     city: "",
     brief: "",
     profile: "",
+    org: "", // company name, for moves kept private to it
+    share: "public", // where moves Q learns from you go: "public" or "org"
     callLength: 15, // minutes, from the popup
+    targetMin: 15, // the call length Q is pacing toward right now; adapts to the buyer
+    timeNote: "", // why the target changed, shown in the footer
+    timeAdjustedAt: 0,
+    extensions: 0,
+    shortened: false,
+    buyerType: null, // Q's latest read of the buyer, from the server
     idle: true, // the card is showing a "what to do next" message, not a nudge
     askingOutcome: false, // the call ended and the card is asking "How did it go?"
     live: null, // the words being spoken right now: { speaker, name, text, at }
@@ -24,10 +32,15 @@
     turns: [], // { speaker: "You" | "Buyer", name, text, t }
     callStart: Date.now(),
     shownCueIds: [],
+    shownNudges: [], // { cue_id, text, at_turn }: at_turn is how many lines were heard when it appeared
+    reportUrl: "", // the last call's report, once Q has reviewed it
     recentNudges: [],
     busy: false,
     again: false,
     error: false,
+    seq: 0, // numbers every request, so only the newest answer shows
+    shownSeq: 0,
+    pending: 0, // requests whose answer will be shown (listen-ahead ones don't count)
     fails: 0, // cue requests that failed in a row
     lastFailAt: 0,
     gen: 0, // bumps when a call ends or starts, so late answers for an old call are dropped
@@ -87,8 +100,9 @@
         <div class="q-debug-lines tg-scroll"></div>
       </div>
       <div class="q-clock"><i></i></div>
+      <div class="q-clockrow"><span class="q-phase"></span><span class="q-moment"></span></div>
       <div class="q-foot">
-        <span class="q-moment"></span>
+        <span class="q-timenote"></span>
         <div class="q-end"></div>
       </div>
     </div>
@@ -110,6 +124,8 @@
   const endBox = $(".q-end");
   const heardEl = $(".q-heard");
   const clockBar = $(".q-clock i");
+  const phaseEl = $(".q-phase");
+  const timeNoteEl = $(".q-timenote");
   const debugBox = $(".q-debug");
   const debugLines = $(".q-debug-lines");
   const toastEl = $(".tg-toast");
@@ -137,11 +153,11 @@
   function refreshStatus() {
     if (!chrome.runtime?.id) return setStatus("off", "Q was updated · refresh this tab");
     if (q.error && Date.now() - q.lastFailAt < 30000) return setStatus("off", "Can't reach Q");
-    if (cap.inCallSince && !cap.region) return setStatus("off", "Captions off");
+    if (cap.inCallSince && !cap.region) return setStatus("off", "Can't hear · captions off");
     const now = Date.now();
     const speaking = q.live && now - q.live.at < HEARING_MS;
     card.classList.toggle("speaking", !!speaking);
-    if (q.busy) return setStatus("live", "Thinking…");
+    if (q.pending > 0) return setStatus("live", "Thinking…");
     if (speaking) return setStatus("live", q.live.speaker === "You" ? "Hearing you…" : `Hearing ${firstName(q.live.name) || "the buyer"}…`);
     if (q.note && now < q.note.until) return setStatus("live", q.note.text);
     setStatus("live", "Listening");
@@ -194,7 +210,7 @@
       momentEl.dataset.moment = moment;
       cueEl.classList.remove("out");
       srcEl.classList.remove("out");
-    }, 220);
+    }, 140);
   }
 
   let toastTimer;
@@ -227,37 +243,60 @@
     for (let i = q.turns.length - 1; i >= 0 && q.turns[i].speaker === "You"; i--) streakStart = q.turns[i].t;
     return {
       elapsed_s: Math.round((now - q.callStart) / 1000),
-      target_s: q.callLength * 60,
+      target_s: Math.round(q.targetMin * 60),
       seller_talk_share: all ? Math.round((you / all) * 100) / 100 : undefined,
       seller_streak_s: streakStart ? Math.round((now - streakStart) / 1000) : 0,
     };
   }
 
   // ---------- Ask Q for a nudge ----------
-  async function requestCue() {
+  // Listen-ahead: while the buyer is still talking, the card asks Q about the words so far, so by the
+  // time they stop, the nudge is ready or nearly ready. Requests overlap; only the newest answer shows.
+  async function requestCue(opts = {}) {
     if (q.askingOutcome) return; // the call is over
-    if (q.busy) {
-      q.again = true; // a newer line arrived; ask again as soon as this answer lands
-      return;
-    }
-    q.busy = true;
-    refreshStatus();
+    const { line = null, st = null, partial = false, words: n = 0 } = opts;
+    const seq = ++q.seq;
     const gen = q.gen;
+    const req = { seq, words: n, show: !partial, st };
+    if (st) (st.flights ||= []).push(req);
+    if (req.show) q.pending++;
+    refreshStatus();
+    // A listen-ahead request uses the buyer's words so far for the line that's still coming in
+    let turns = q.turns.slice(-MAX_TURNS).map((t) => ({ speaker: t.speaker, text: line && t === st?.turn ? line : t.text }));
+    if (line && !st?.turn) turns = [...turns, { speaker: "Buyer", text: line }].slice(-MAX_TURNS);
     const res = await api("/api/cue", "POST", {
-      turns: q.turns.slice(-MAX_TURNS).map(({ speaker, text }) => ({ speaker, text })),
+      turns,
       stats: callStats(),
       brief: q.brief,
       profile: q.profile,
       user_name: q.name,
       recent_nudges: q.recentNudges.slice(-3), // so Q builds on what you already tried
+      org: q.org, // your company's private moves are included for you
+      partial,
+      seq,
     });
-    q.busy = false;
-    q.lastCueAt = Date.now();
-    if (gen !== q.gen) {
-      q.again = false; // the call ended while Q was thinking: drop this answer
+    if (st) st.flights = st.flights.filter((f) => f !== req);
+    if (req.show) q.pending--;
+    if (gen !== q.gen) return refreshStatus(); // the call ended while Q was thinking: drop this answer
+    const failed = !res.ok || !res.data || !!res.data.error;
+    if (!req.show) {
+      // Ready for when the buyer finishes: keep the answer that heard the most
+      if (!failed && st && (!st.held || n >= st.held.words)) st.held = { words: n, data: res.data, seq };
       return refreshStatus();
     }
-    const failed = !res.ok || !res.data || !!res.data.error;
+    applyCue(failed ? null : res.data, seq, failed, st);
+  }
+
+  // Show an answer, unless a newer one is already on screen. The first answer that covers a finished
+  // line wins: other requests still out for that line are dropped, so the nudge doesn't flicker.
+  function applyCue(d, seq, failed = false, st = null) {
+    for (const f of failed ? [] : (st?.flights ?? [])) {
+      if (f.show) {
+        f.show = false;
+        q.pending--;
+      }
+    }
+    q.lastCueAt = Date.now();
     q.fails = failed ? q.fails + 1 : 0;
     if (failed) {
       q.lastFailAt = Date.now();
@@ -265,30 +304,64 @@
     }
     q.error = q.fails >= 2; // one blip is a note; two in a row is a real problem
     refreshStatus();
+    if (failed || seq < q.shownSeq) return;
+    q.shownSeq = seq;
 
-    if (!failed) {
-      const d = res.data;
-      setBuyer(d.buyer_type);
-      if (!d.cue) q.note = { text: "Heard it · nothing to coach yet", until: Date.now() + 4000 };
+    setBuyer(d.buyer_type);
+    if (d.buyer_type) q.buyerType = d.buyer_type;
+    if (!d.cue) q.note = { text: "Heard it · nothing to coach yet", until: Date.now() + 4000 };
+    {
       if (d.cue) {
         q.cueAt = Date.now();
         cueEl.classList.remove("stale");
         q.idle = false;
         q.shownCueIds.push(d.cue.cue_id);
+        q.shownNudges.push({ cue_id: d.cue.cue_id, text: d.cue.cue_text, at_turn: q.turns.filter((t) => t.text.trim()).length });
         q.recentNudges.push(d.cue.cue_text);
         showCue(d.cue.cue_text, { source: sourceHtml(d.cue), moment: momentLabel(d.objection_type) });
       }
     }
-    if (q.again) {
-      q.again = false;
-      requestCue();
+  }
+
+  // Listen-ahead triggers: two new words since the last ask, at most every 0.45 s.
+  const LISTEN_EVERY_MS = 500;
+  const LISTEN_MIN_WORDS = 4;
+  // An answer is good enough to show if it heard all but the last two words (and at least 70% of the line)
+  const covers = (heard, n) => heard >= n - 2 && heard >= n * 0.7;
+  function listenAhead(st, line, now) {
+    const n = words(line);
+    if (n < LISTEN_MIN_WORDS || n - (st.aheadWords || 0) < 2 || now - (st.aheadAt || 0) < LISTEN_EVERY_MS) return;
+    st.aheadAt = now;
+    st.aheadWords = n;
+    requestCue({ line, st, partial: true, words: n });
+  }
+
+  // The buyer finished a line: show the answer Q already has if it covers almost all of it,
+  // wait for one that's on its way, or ask now.
+  function deliver(st, text) {
+    const n = words(text);
+    if (st.held && covers(st.held.words, n)) {
+      const h = st.held;
+      st.held = null;
+      return applyCue(h.data, h.seq, false, st);
     }
+    const coming = (st.flights ?? []).filter((f) => covers(f.words, n));
+    if (coming.length) {
+      for (const f of coming) {
+        if (!f.show) {
+          f.show = true; // whichever lands first is shown the moment it arrives
+          q.pending++;
+        }
+      }
+      return refreshStatus();
+    }
+    requestCue({ st, words: n });
   }
 
   // ---------- Reading Meet's live captions ----------
   // Meet's class names are scrambled and change often, so Q finds the captions by the label Meet
   // gives them for screen readers, and reads each block as "speaker name, then what they said".
-  const SETTLE_MS = 500; // a caption counts as finished once it stops changing this long
+  const SETTLE_MS = 350; // a caption counts as finished once it stops changing this long
   const PACING_STREAK_S = 45; // seller talking this long without the buyer: ask for a pacing nudge
   const PACING_GAP_MS = 30000; // and not more often than this
   const cap = { region: null, visible: false, inCallSince: 0, states: new WeakMap(), lastLookup: 0 };
@@ -389,6 +462,7 @@
       st.seen = text;
       st.changedAt = now;
       if (isLatest) q.live = { speaker: isMe(name) ? "You" : "Buyer", name, text, at: now };
+      if (isLatest && name && !isMe(name)) listenAhead(st, st.turn ? mergeCaption(st.turn.text, text) : text, now);
     }
     // Finished when it stops changing, or as soon as someone else starts talking.
     if (isLatest && now - st.changedAt < SETTLE_MS) return;
@@ -405,7 +479,7 @@
     if (words(merged) < st.turn.sentWords) st.turn.sentWords = words(merged); // Meet rewrote the block: count from here
     if (speaker === "Buyer" && words(merged) - st.turn.sentWords >= 2) {
       st.turn.sentWords = words(merged);
-      requestCue();
+      deliver(st, merged);
     }
   }
 
@@ -434,6 +508,7 @@
       hideCaptions();
       refreshStatus();
       refreshIdle();
+      adaptCallLength(now);
       checkPacing();
     }
     if (!q.enabled) return;
@@ -461,26 +536,94 @@
     }
     // Old nudges dim
     if (!q.idle && q.cueAt && now - q.cueAt > STALE_AFTER_MS) cueEl.classList.add("stale");
-    // Call clock: how far into the call, and which phase that is
+    // Call clock: how far into the call, against a target that adapts to the buyer
     if (cap.inCallSince && !q.askingOutcome) {
-      const share = (now - q.callStart) / (q.callLength * 60000);
+      const share = (now - q.callStart) / (q.targetMin * 60000);
       clockBar.style.width = `${Math.min(100, share * 100)}%`;
       clockBar.parentElement.classList.toggle("late", share >= 0.8);
-      if (q.idle || !momentEl.dataset.moment) momentEl.textContent = phaseLabel(now, share);
+      const phase = phaseLabel(now, share);
+      if (phaseEl.textContent !== phase) phaseEl.textContent = phase;
     } else {
       clockBar.style.width = "0%";
+      phaseEl.textContent = "";
     }
+    if (timeNoteEl.textContent !== q.timeNote) timeNoteEl.textContent = q.timeNote;
   }
 
   function phaseLabel(now, share) {
     const min = Math.floor((now - q.callStart) / 60000);
     const phase = share < 0.2 ? "Discovery" : share < 0.55 ? "Present and handle" : share < 0.8 ? "Close window" : share < 1 ? "Ask for the sale" : "Over time";
-    return `${phase} · ${min} of ${q.callLength} min`;
+    return `${phase} · ${min} of ${Math.round(q.targetMin)} min`;
+  }
+
+  // ---------- Adaptive call length: the clock follows the buyer, not a fixed number ----------
+  // Starts at the length picked in the popup. Extends when the buyer is relaxed and engaged,
+  // pulls in when they're short on time or going quiet. Q's nudges pace toward this target.
+  const RUSHED = /\b(have|got|need) to (go|run|jump|hop|leave)\b|\b(only|just) (have|got) (a few|a couple|\d+|five|ten|two|three) min|short on time|in a (hurry|rush)|next (meeting|call)|running late|hard stop/i;
+  const RELAXED = /\bno rush\b|\b(i'?ve|i have) (got )?(time|all day)|take your time|not in a (hurry|rush)|\bi'?m (free|in no rush)|all afternoon|plenty of time/i;
+  const WORD_MIN = { two: 2, three: 3, five: 5, ten: 10, "a few": 3, "a couple": 2 };
+  const MAX_EXTENSIONS = 2;
+  const EXTEND_MIN = 5;
+  const ADJUST_GAP_MS = 60000; // at most one change a minute, so the clock doesn't jitter
+
+  function setTarget(min, note, now) {
+    q.targetMin = Math.max(min, 1);
+    q.timeNote = note;
+    q.timeAdjustedAt = now;
+    q.note = { text: note, until: now + 5000 }; // also flashes in the status line
+  }
+
+  function minutesMentioned(text) {
+    const m = text.match(/(\d+|a few|a couple|five|ten|two|three) min/i);
+    if (!m) return null;
+    return Number(m[1]) || WORD_MIN[m[1].toLowerCase()] || null;
+  }
+
+  function adaptCallLength(now) {
+    if (!cap.inCallSince || q.askingOutcome || now - q.timeAdjustedAt < ADJUST_GAP_MS) return;
+    const elapsedMin = (now - q.callStart) / 60000;
+    const recent = q.turns.filter((t) => now - t.t < 180000 && t.text);
+    const buyer = recent.filter((t) => t.speaker === "Buyer");
+    const lastBuyer = [...q.turns].reverse().find((t) => t.speaker === "Buyer" && t.text);
+
+    // 1. The buyer says it outright
+    if (lastBuyer && !lastBuyer.timeChecked && now - lastBuyer.t > 1500) {
+      lastBuyer.timeChecked = true;
+      if (RUSHED.test(lastBuyer.text)) {
+        const left = minutesMentioned(lastBuyer.text) ?? 3;
+        const by = Math.ceil(elapsedMin + left);
+        if (by < q.targetMin) return setTarget(by, `Buyer's short on time · wrap up by ${by} min`, now);
+      }
+      if (RELAXED.test(lastBuyer.text) && q.extensions < MAX_EXTENSIONS) {
+        q.extensions++;
+        return setTarget(q.targetMin + EXTEND_MIN, `Buyer has time · extended to ${Math.round(q.targetMin + EXTEND_MIN)} min`, now);
+      }
+    }
+
+    // 2. Read the room over the last three minutes
+    const words = (ts) => ts.reduce((n, t) => n + t.text.split(/\s+/).length, 0);
+    const all = words(recent);
+    const buyerShare = all ? words(buyer) / all : 0;
+    const avgBuyer = buyer.length ? words(buyer) / buyer.length : 0;
+    const questions = buyer.filter((t) => t.text.includes("?")).length;
+    const share = elapsedMin / q.targetMin;
+    const engaged = buyer.length >= 2 && ((buyerShare >= 0.4 && avgBuyer >= 10) || questions >= 2 || q.buyerType === "curious");
+    const fading = buyer.length >= 3 && avgBuyer <= 4 && buyerShare < 0.25;
+
+    if (share >= 0.7 && engaged && q.buyerType !== "rushed" && q.extensions < MAX_EXTENSIONS) {
+      q.extensions++;
+      return setTarget(q.targetMin + EXTEND_MIN, `Buyer's engaged · extended to ${Math.round(q.targetMin + EXTEND_MIN)} min`, now);
+    }
+    if (!q.shortened && share >= 0.3 && (fading || q.buyerType === "rushed")) {
+      q.shortened = true;
+      const by = Math.max(Math.ceil(elapsedMin + 4), Math.round(q.targetMin - 3));
+      if (by < q.targetMin) return setTarget(by, `${fading ? "Buyer's going quiet" : "Buyer seems rushed"} · aim to close by ${by} min`, now);
+    }
   }
 
   // If you've been talking a long time without the buyer getting a word in, ask for a pacing nudge.
   function checkPacing() {
-    if (!cap.inCallSince || q.busy || q.askingOutcome || !q.turns.length) return;
+    if (!cap.inCallSince || q.pending > 0 || q.askingOutcome || !q.turns.length) return;
     if (!(q.live && q.live.speaker === "You" && Date.now() - q.live.at < 3000)) return; // silence isn't talking
     if (callStats().seller_streak_s >= PACING_STREAK_S && Date.now() - q.lastCueAt > PACING_GAP_MS) requestCue();
   }
@@ -587,7 +730,9 @@
   // ---------- End call: leave Meet, then "How did it go?" ----------
   function renderEnd(step = "start") {
     if (step === "start") {
-      endBox.innerHTML = `<button class="tg-btn small" data-act="end" title="Leaves the Meet call, then asks how it went">End call</button>`;
+      endBox.innerHTML =
+        (q.reportUrl ? `<button class="tg-link" data-act="report" title="How each of Q's nudges landed on your last call">See the call report</button>` : "") +
+        `<button class="tg-btn small" data-act="end" title="Leaves the Meet call, then asks how it went">End call</button>`;
     } else {
       endBox.innerHTML =
         `<button class="tg-link" data-act="skip" title="Don't record this call">Skip</button>` +
@@ -599,6 +744,7 @@
     const act = e.target.closest("button")?.dataset.act;
     if (act === "end") endCall();
     if (act === "won" || act === "lost") finishCall(act);
+    if (act === "report" && q.reportUrl) window.open(q.reportUrl, "_blank", "noopener");
     if (act === "skip") {
       startNewCall();
       toast("Call skipped. Nothing recorded.");
@@ -616,7 +762,6 @@
 
   function askOutcome() {
     q.gen++;
-    q.again = false;
     q.askingOutcome = true;
     q.idle = false;
     toggleTypeBox(false);
@@ -625,25 +770,46 @@
     showCue("How did it go?", { source: "Won or lost, Q learns from every call", moment: "Call ended" });
   }
 
-  // Send the call to Q: shown moves get their win or loss, and on a win Q learns your own moves.
+  // Send the call to Q: shown moves get their win or loss, Q checks how each nudge landed, and on a win
+  // Q learns your own moves.
   async function finishCall(outcome) {
     const transcript = q.turns.filter((t) => t.text.trim()).map(({ speaker, text }) => ({ speaker, text }));
     const shown = q.shownCueIds.filter(Boolean);
+    const nudges = q.shownNudges.filter((n) => n.cue_id);
     startNewCall();
+    const gen = q.gen;
     if (!transcript.length) return toast(outcome === "won" ? "Nice close." : "On to the next one.");
     toast(outcome === "won" ? "Nice close. Learning from your call…" : "Learning from this one…");
     const res = await api("/api/learn", "POST", {
       transcript,
       outcome,
       shown_cue_ids: shown,
+      shown_nudges: nudges,
       user_name: q.name,
       user_city: q.city,
+      share: q.share, // moves learned from you: everyone (earns royalties) or your company only
+      org: q.org,
     });
     if (!res.ok || !res.data?.ok) return toast("Couldn't save the call");
     const learned = res.data.learned || [];
-    if (learned.length) toast(`Q learned a new move from you: ${learned[0].cue_text}${learned.length > 1 ? ` (+${learned.length - 1} more)` : ""}`);
+    const checked = reviewLine(res.data.review);
+    if (learned.length) {
+      toast(`Q learned a new move from you: ${learned[0].cue_text}${learned.length > 1 ? ` (+${learned.length - 1} more)` : ""}`);
+      if (checked) setTimeout(() => toast(checked), 3400);
+    } else if (checked) toast(`${outcome === "won" ? "Win" : "Loss"} recorded · ${checked}`);
     else if (res.data.lesson) toast(`${outcome === "won" ? "Win" : "Loss"} recorded. Lesson saved to the playbook.`);
     else toast(`${outcome === "won" ? "Win" : "Loss"} recorded.`);
+    // Until the next call starts, the card links to this one's report
+    if (res.data.report_url && gen === q.gen) {
+      q.reportUrl = res.data.report_url;
+      renderEnd("start");
+    }
+  }
+
+  // Failure detection, in a line: how Q's own nudges landed on the call, e.g. "3 of 4 nudges helped · 1 missed"
+  function reviewLine(r) {
+    if (!r || !r.total) return "";
+    return `${r.helped} of ${r.total} nudge${r.total === 1 ? "" : "s"} helped${r.hurt ? ` · ${r.hurt} missed` : ""}`;
   }
 
   // ---------- New moves from everyone (checked every few seconds) ----------
@@ -669,8 +835,9 @@
   // What the card says before the first nudge: the next thing you need to do.
   function idleView() {
     // Steps you need to take are shown bright; passive listening stays faint.
-    if (!cap.inCallSince) return { text: "Join a call to start", source: "Then press C to turn on captions", action: true };
-    if (!cap.region) return { text: "Press C to turn on captions", source: "Q listens through Meet's captions", action: true };
+    if (!cap.inCallSince) return { text: "Join a call to start", source: "Then press C for captions. Q needs them to hear.", action: true };
+    // No-break spaces keep "Turn on captions" together on line 2
+    if (!cap.region) return { text: "Q can't hear. Turn\u00a0on\u00a0captions", source: "Press C. Q hides them, so you won't see them.", action: true };
     if (!q.profile.trim()) return { text: "Listening for the buyer…", source: "Tip: add your company in the Q popup for sharper nudges" };
     return { text: "Listening for the buyer…", source: "Shift+D shows what Q hears · Shift+B to type a line" };
   }
@@ -687,13 +854,21 @@
 
   function startNewCall() {
     q.gen++;
-    q.again = false;
     q.live = null;
     q.askingOutcome = false;
     q.turns = [];
     q.shownCueIds = [];
+    q.shownNudges = [];
+    q.reportUrl = ""; // a new call (or skip) retires the last call's report link
     q.callStart = Date.now();
     q.recentNudges = [];
+    if (cap.inCallSince) api("/api/cue"); // warm Claude's cache as you join, so the first nudge is quick
+    q.targetMin = q.callLength;
+    q.timeNote = "";
+    q.timeAdjustedAt = 0;
+    q.extensions = 0;
+    q.shortened = false;
+    q.buyerType = null;
     cap.states = new WeakMap(); // captions already on screen belong to the old call
     if (cap.region) for (const b of captionBlocks(cap.region)) cap.states.set(b.key, { ignore: true });
     renderEnd("start");
@@ -738,9 +913,13 @@
   // ---------- Settings from the popup ----------
   function applySettings(s) {
     if ("enabled" in s) q.enabled = s.enabled !== false;
-    for (const k of ["name", "city", "brief", "profile"]) if (k in s) q[k] = s[k] || "";
+    for (const k of ["name", "city", "brief", "profile", "org"]) if (k in s) q[k] = s[k] || "";
+    if ("share" in s) q.share = s.share === "org" ? "org" : "public";
     host.hidden = !q.enabled;
-    if ("callLength" in s) q.callLength = Number(s.callLength) || 15;
+    if ("callLength" in s) {
+      q.callLength = Number(s.callLength) || 15;
+      if (!q.timeNote) q.targetMin = q.callLength; // only if the clock hasn't adapted to the buyer yet
+    }
     if ("profile" in s) refreshIdle();
   }
   chrome.storage.onChanged.addListener((changes, area) => {
@@ -753,7 +932,7 @@
   // ---------- Start ----------
   async function start() {
     await loadStyles();
-    const saved = await chrome.storage.local.get(["enabled", "name", "city", "brief", "profile", "callLength", "qPos"]);
+    const saved = await chrome.storage.local.get(["enabled", "name", "city", "brief", "profile", "org", "share", "callLength", "qPos"]);
     applySettings({ enabled: saved.enabled ?? true, ...saved });
     document.documentElement.appendChild(host);
     if (saved.qPos) placeAt(saved.qPos.left, saved.qPos.top);
@@ -763,7 +942,7 @@
       q.error = !r.ok; // warm up the backend so the first real nudge is quick, and spot it being down
       refreshStatus();
     });
-    setInterval(tickCaptions, 200);
+    setInterval(tickCaptions, 100);
     pollUpdates();
     setInterval(pollUpdates, POLL_MS);
   }

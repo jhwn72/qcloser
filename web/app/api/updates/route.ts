@@ -16,6 +16,7 @@ export async function GET(req: Request) {
       .from("cues")
       .select("id, cue_text, objection_type, author_name, author_city, created_at")
       .eq("is_seed", false)
+      .eq("visibility", "public") // company-only moves aren't announced to other sellers
       .gt("created_at", since)
       .order("created_at", { ascending: true }),
     supabase

@@ -6,7 +6,7 @@
 
 **Take 1:** Jordan Belfort slides a pen across the table, says "Sell me this pen", and John freezes while a stopwatch counts the silence. **Take 2:** same pen, same guy, now on Google Meet with Q; Q gets John through the objections, John flips the famous test back on Belfort to close him, and Q learns that move and hands it to every other seller.
 
-**Messaging, in this order:** the hero line "Every closer needs a Q." (the Bond angle: Q hands the agent the right gadget at the right moment), then the tagline "your cue to close", then the plain-English line the first time we explain the product: "Q listens to your sales call and shows you what the best salespeople would do next, in five words", followed by the wow: every win teaches it something new. For the business beat, the category is **closing intelligence**: the moves that are winning right now, getting sharper with every deal.
+**Messaging, in this order:** the hero line "Every closer needs a Q." (the Bond angle: Q hands the agent the right gadget at the right moment), then the tagline "your cue to close", then the plain-English line the first time we explain the product: "Q listens to your sales call and shows you, at a glance, what the best salespeople would do next.", followed by the wow: every win teaches it something new. For the business beat, the category is **closing intelligence**: the moves that are winning right now, getting sharper with every deal.
 
 Tone: deadpan mockumentary. Nobody mugs for the camera, nobody shouts. The stopwatch is the joke, and it pays off at the end with real numbers.
 
@@ -63,8 +63,8 @@ Each table: time, picture, who says what, on-screen text. Burn in captions for e
 
 | Time | Picture | Sound | On-screen text |
 |---|---|---|---|
-| 0:28 | Black title card, Tango style. | **JOHN (VO):** "Every closer needs a Q." | `Every closer needs a Q.` |
-| 0:30 | Landing page hero at q-cue-to-close.vercel.app: the glass ring, "Q", "your cue to close". | **JOHN (VO):** "Q listens to your sales call and shows you what the best salespeople would do next, in five words. And every win teaches it something new." | `your cue to close` |
+| 0:28 | Landing page at q-cue-to-close.vercel.app, top of the page: the top bar with the Q mark and "your cue to close", and the hero "Every closer needs a Q." | **JOHN (VO):** "Every closer needs a Q." | (the page says it; no extra text) |
+| 0:30 | Hold on the hero line and the Install button, then a slow tilt down to the Q card below it, cycling its examples. | **JOHN (VO):** "Q listens to your sales call and shows you, at a glance, what the best salespeople would do next. And every win teaches it something new." | |
 
 Bond nod: keep it to the line. No Bond music, logos or footage.
 
@@ -99,7 +99,7 @@ Full-screen recording of the laptop: Meet with Belfort's tile (phone camera) and
 
 | Time | Picture | Sound | On-screen text |
 |---|---|---|---|
-| 1:25 | Simple diagram built in the editor: `Meet captions (both sides)` → `Claude reads the whole call + company profile + brief + call clock` → `best move from the playbook` → `five-word nudge, credited` → `won call teaches a new move`, with a loop arrow back to the playbook. | **JOHN (VO):** "Q reads Meet's live captions. Claude reads the whole call, my company profile and the clock, picks the best move, and fits it to this buyer in about two seconds." (runs over the next shot) | `THE AI · Claude Sonnet 5.5 · prompt caching · ~1.5 to 2 s per nudge` |
+| 1:25 | Simple diagram built in the editor: `Meet captions (both sides)` → `Claude reads the whole call + company profile + brief + call clock` → `best move from the playbook` → `a short nudge, credited` → `won call teaches a new move`, with a loop arrow back to the playbook. | **JOHN (VO):** "Q reads Meet's live captions. Claude reads the whole call, my company profile and the clock, picks the best move, and fits it to this buyer in about two seconds." (runs over the next shot) | `THE AI · Claude Sonnet 5.5 · prompt caching · ~1.5 to 2 s per nudge` |
 | 1:33 | Macro of the card from the demo footage: the ring brightening as Belfort talks, `Hearing Jordan…`, `Thinking…`, the faint line of what it just heard, the clock line. | Room tone from the call | `DESIGN · Tango, my own design system: monochrome glass, one glowing ring` |
 
 ### 1:37-1:52 · Path to $1B
@@ -145,7 +145,7 @@ Do the setup in [DEMO_SCRIPT.md](DEMO_SCRIPT.md#before-you-film) first (API cred
 | 4 | Helper takes the phone to another room and joins the Meet. John joins on the laptop about 4.5 minutes before the first line. Recorder test (see below) in that wait. | Both | 5 min |
 | 5 | The live call, start to finish, per DEMO_SCRIPT.md. Keep recording through End call and Won. | Laptop screen recording | 4 min |
 | 6 | Bring up the second Chrome window, catch the toast. Then /playbook: the new move, the feed, a retired move. | Laptop screen recording | 3 min |
-| 7 | Landing page hero (title shot). | Laptop screen recording | 1 min |
+| 7 | Landing page, top to bottom in one slow scroll (see [Landing page map](#landing-page-map)). | Laptop screen recording | 2 min |
 | 8 | Problem B-roll: John glancing at a text wall; Meet's "You left the meeting" screen. | Phone + laptop | 2 min |
 | 9 | Narration, all lines in one go, quiet room, phone voice memo a hand's width from your mouth. | Phone | 4 min |
 
@@ -154,6 +154,22 @@ If the call needs a second take, reset at /admin first (Q won't relearn a move t
 **Recording the call's audio:** QuickTime records only the mic, so Belfort's voice from Meet can go missing. Use a recorder that also captures computer audio (for example OBS, or Loom with computer audio on) and play back a 20-second test before the real take. Wear earbuds on the laptop so Belfort's voice doesn't leak into your mic and your captions.
 
 **Edit:** CapCut or iMovie. Burned-in captions, chapter labels always in the same corner, the stopwatch as plain monospace text, room tone instead of music (deadpan dies under music). Export 1080p. Upload to YouTube as unlisted (or Loom) and check the length is 2:00 or less.
+
+## Landing page map
+
+What's on q-cue-to-close.vercel.app, top to bottom, and where each part can go in the cut:
+
+| Section | What it shows | Use it for |
+|---|---|---|
+| Top bar | Q mark and "your cue to close" | Title (0:28) |
+| Hero | "Every closer needs a Q.", the line "Q listens to your sales call and shows you, at a glance, what the best salespeople would do next.", one Install button | Title (0:28 to 0:40) |
+| Q card | Cycles example nudges below the hero | Title tilt-down, or a design cutaway |
+| Closing intelligence | 3 steps: hears the call, nudges never scripts, learns from every call | Optional B-roll under the AI VO (1:25) |
+| "It knows the moment, and the clock." | The 36 situations and the call clock | Optional B-roll for the AI VO |
+| "A playbook that writes itself." | Learned moves and lessons | Backup if the /playbook shot fails |
+| Three stats | Moves in the playbook, 36 situations Q recognizes, ~2 s from the buyer's words to your nudge | AI beat (1:25) |
+| Works with | Google Meet live; Zoom, Microsoft Teams, Slack huddles, Webex and phone calls coming soon | Scale card 3 (1:49) |
+| FAQ, Install | Questions and the 5 install steps | Not needed in the video |
 
 ## If it runs long
 

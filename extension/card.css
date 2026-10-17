@@ -155,9 +155,9 @@
   top: 0;
   height: 1px;
   width: 0;
-  background: rgba(255, 255, 255, 0.55);
-  box-shadow: 0 0 8px 1px rgba(255, 255, 255, 0.35);
-  transition: width 1s linear;
+  background: rgba(255, 255, 255, 0.7);
+  box-shadow: 0 0 8px 1px rgba(255, 255, 255, 0.4);
+  transition: width 1.2s var(--tg-ease); /* re-flows smoothly when the target changes */
 }
 .q-clock.late i {
   background: var(--tg-amber-hi);
@@ -215,6 +215,33 @@
   font-weight: 500;
   color: var(--tg-text);
   margin-right: 6px;
+}
+
+/* Under the clock: the phase and time on the left, the kind of moment on the right */
+.q-clockrow {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  margin-top: 8px;
+  font: var(--tg-text-label);
+  color: var(--tg-faint);
+  letter-spacing: 0.02em;
+}
+.q-phase {
+  color: var(--tg-muted);
+  white-space: nowrap;
+}
+.q-clockrow .q-moment {
+  text-align: right;
+}
+/* Why the clock changed: "Buyer's engaged · extended to 20 min" */
+.q-timenote {
+  font: var(--tg-text-fine);
+  color: var(--tg-faint);
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 /* Footer: what kind of moment, and End call */

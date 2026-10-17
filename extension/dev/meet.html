@@ -41,7 +41,7 @@
       block.innerHTML = `<img src="${avatar}" alt=""><div><div class="cap-name">${name}</div><div class="cap-text"><span></span></div></div>`;
       list.appendChild(block);
       const span = block.querySelector(".cap-text span");
-      for (const w of line.split(" ")) { span.textContent += (span.textContent ? " " : "") + w; await sleep(110); }
+      for (const w of line.split(" ")) { span.textContent += (span.textContent ? " " : "") + w; await sleep(320); } // about 3 words a second, like real speech
     }
     document.getElementById("play").onclick = async () => {
       await say("You", "Thanks for jumping on. Membership is 89 a month and includes two personal training sessions.");
@@ -53,8 +53,9 @@
       await say("Taylor Kim", "I felt judged by everyone there because of my weight.");
     };
   </script>
-  <script src="chrome-shim.js"></script>
-  <script src="../moments.js"></script>
-  <script src="../content.js"></script>
+  <script>
+    // Load fresh copies every time, so the preview never runs stale code
+    for (const src of ["chrome-shim.js", "../moments.js", "../content.js"]) document.write(`<script src="${src}?v=${Date.now()}"><\/script>`);
+  </script>
 </body>
 </html>

@@ -17,6 +17,7 @@
   };
   window.chrome = {
     runtime: {
+      id: "dev-preview",
       getURL: (p) => new URL("../" + p, location.href).href,
       sendMessage(msg, cb) {
         fetch(BACKEND + msg.path, {

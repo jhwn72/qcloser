@@ -22,4 +22,9 @@ export type Cue = {
   status: string;
   is_seed: boolean;
   created_at: string;
+  // From supabase/migration-2: optional because some queries don't select them
+  helped?: number; // times the after-call review said this move's nudge helped
+  hurt?: number; // times it said the nudge hurt
+  visibility?: string; // public | org
+  org?: string | null;
 };

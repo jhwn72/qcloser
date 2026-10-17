@@ -1,8 +1,10 @@
 import Link from "next/link";
 import { Suspense } from "react";
 import { MOMENT_LABELS, type Moment } from "@/lib/moments";
+import { oftenMisfires, reviewAdjustment } from "@/lib/ranking";
 import { db, type Cue } from "@/lib/supabase";
 import QMark from "../components/QMark";
+import Verdict from "../components/Verdict";
 import LiveRefresh from "./LiveRefresh";
 
 export const metadata = { title: "Playbook · Q" };
@@ -26,6 +28,16 @@ type Insight = {
   author_name: string | null;
   created_at: string;
   calls: { outcome: string | null } | null; // the call it came from, if any
+};
+
+// A nudge the after-call review said hurt: Q catching its own misfires
+type Miss = {
+  id: string;
+  call_id: string | null;
+  nudge_text: string;
+  reason: string | null;
+  created_at: string;
+  calls: { outcome: string | null; user_name: string | null } | null;
 };
 
 function timeAgo(iso: string, now: number) {
@@ -65,17 +77,30 @@ export default function PlaybookPage() {
 
 async function Playbook() {
   const supabase = db();
-  const [cuesRes, insightsRes] = await Promise.all([
-    supabase.from("cues").select("*").order("created_at", { ascending: false }),
+  const [cuesRes, insightsRes, missesRes, checkedRes, missCountRes] = await Promise.all([
+    // Company-only moves stay with their team, so the public playbook lists shared moves only
+    supabase.from("cues").select("*").eq("visibility", "public").order("created_at", { ascending: false }),
     supabase
       .from("insights")
       .select("id, text, author_name, created_at, calls(outcome)")
       .order("created_at", { ascending: false })
       .limit(12),
+    supabase
+      .from("nudge_reviews")
+      .select("id, call_id, nudge_text, reason, created_at, calls(outcome, user_name)")
+      .eq("verdict", "hurt")
+      .order("created_at", { ascending: false })
+      .limit(4),
+    supabase.from("nudge_reviews").select("id", { count: "exact", head: true }),
+    supabase.from("nudge_reviews").select("id", { count: "exact", head: true }).eq("verdict", "hurt"),
   ]);
   if (cuesRes.error) return <p className="tg-body">Couldn&rsquo;t load the playbook. Is the database reachable?</p>;
   const cues = cuesRes.data as Cue[];
   const insights = (insightsRes.data ?? []) as unknown as Insight[];
+  const misses = (missesRes.data ?? []) as unknown as Miss[];
+  const detecting = !missesRes.error; // false until supabase/migration-2 is applied
+  const checked = checkedRes.count ?? 0;
+  const caught = missCountRes.count ?? 0;
   const now = Date.now(); // eslint-disable-line react-hooks/purity -- rendered per request, for "5 min ago"
 
   const byMoment = new Map<string, Cue[]>();
@@ -115,7 +140,8 @@ async function Playbook() {
         })}
       </div>
 
-      <aside className="lg:sticky lg:top-8 lg:self-start">
+      <aside className="tg-scroll grid gap-6 lg:sticky lg:top-8 lg:max-h-[calc(100vh-4rem)] lg:self-start lg:overflow-y-auto">
+        {detecting && <WhatQGotWrong misses={misses} checked={checked} caught={caught} now={now} />}
         <div className="q-card" style={{ width: "100%" }}>
           <div className="flex items-center gap-2">
             <span className="tg-orb" />
@@ -147,8 +173,60 @@ async function Playbook() {
   );
 }
 
+// Failure detection: after every call Q judges each nudge it showed, and the misfires land here with the reason.
+function WhatQGotWrong({ misses, checked, caught, now }: { misses: Miss[]; checked: number; caught: number; now: number }) {
+  return (
+    <div className="q-card" style={{ width: "100%" }}>
+      <div className="flex items-center gap-2">
+        <span className="tg-orb" style={{ background: "rgb(255, 205, 160)" }} />
+        <span className="tg-label" style={{ margin: 0 }}>
+          What Q got wrong
+        </span>
+      </div>
+      <p className="tg-fine mt-2">
+        {checked
+          ? `After every call, Q checks each nudge it showed against what happened next. ${caught} misfire${caught === 1 ? "" : "s"} caught in ${checked} nudge${checked === 1 ? "" : "s"} checked.`
+          : "After every call, Q checks each nudge it showed against what happened next. Misfires land here."}
+      </p>
+      {misses.length ? (
+        <ul className="mt-4 grid gap-4">
+          {misses.map((m) => (
+            <li key={m.id}>
+              <div className="flex items-start justify-between gap-3">
+                <span style={{ font: "300 16px/1.3 var(--tg-font)", color: "var(--tg-text-soft)" }}>{m.nudge_text.replace(/\.$/, "")}</span>
+                <Verdict verdict="hurt" />
+              </div>
+              {m.reason && (
+                <p className="tg-body" style={{ margin: "4px 0 0", color: "var(--tg-muted)" }}>
+                  {m.reason}
+                </p>
+              )}
+              <p className="tg-fine mt-1">
+                {m.calls?.outcome === "won" ? "On a win · " : m.calls?.outcome === "lost" ? "On a loss · " : ""}
+                {m.calls?.user_name ? `${m.calls.user_name} · ` : ""}
+                {timeAgo(m.created_at, now)}
+                {m.call_id && (
+                  <>
+                    {" · "}
+                    <Link href={`/call/${m.call_id}`} className="tg-link" style={{ fontSize: "inherit" }}>
+                      Call report
+                    </Link>
+                  </>
+                )}
+              </p>
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <p className="tg-body mt-4">{checked ? "No misfires yet." : "Nothing checked yet. End a call as won or lost."}</p>
+      )}
+    </div>
+  );
+}
+
 function MomentCard({ moment, cues, now }: { moment: string; cues: Cue[]; now: number }) {
-  const rate = (c: Cue) => (c.wins + 1) / (c.uses + 2);
+  // Win rate, nudged up or down by how the move's nudges landed (web/lib/ranking.ts)
+  const rate = (c: Cue) => (c.wins + 1) / (c.uses + 2) + reviewAdjustment(c);
   const sorted = [...cues].sort((a, b) => (a.status === b.status ? rate(b) - rate(a) : a.status === "active" ? -1 : 1));
   return (
     <div className="rounded-[var(--tg-radius-card)] border p-5" style={{ borderColor: "var(--tg-line)", background: "rgba(255,255,255,0.025)" }}>
@@ -159,6 +237,7 @@ function MomentCard({ moment, cues, now }: { moment: string; cues: Cue[]; now: n
         {sorted.map((c) => {
           const isNew = !c.is_seed && now - new Date(c.created_at).getTime() < NEW_FOR_MS;
           const retired = c.status !== "active";
+          const misfires = !retired && oftenMisfires(c);
           return (
             <li key={c.id} style={{ opacity: retired ? 0.45 : 1 }}>
               <div className="flex items-start justify-between gap-3">
@@ -167,10 +246,16 @@ function MomentCard({ moment, cues, now }: { moment: string; cues: Cue[]; now: n
                 </span>
                 {isNew && <span className="tg-chip on shrink-0" style={{ cursor: "default", padding: "2px 9px" }}>New</span>}
                 {retired && <span className="tg-chip shrink-0" style={{ cursor: "default", padding: "2px 9px" }}>Retired</span>}
+                {misfires && (
+                  <span className="tg-chip shrink-0" style={{ cursor: "default", padding: "2px 9px", color: "rgb(255, 205, 160)", borderColor: "rgba(255, 170, 95, 0.45)", background: "rgba(255, 170, 95, 0.1)" }}>
+                    Often misfires
+                  </span>
+                )}
               </div>
               <p className="tg-fine mt-1">
                 {c.author_name === "Q Starter" ? "Q starter playbook" : [c.author_name, c.author_city].filter(Boolean).join(" · ")}
                 {c.author_name !== "Q Starter" ? ` · ${timeAgo(c.created_at, now)}` : ""} · {c.wins} won · {c.uses - c.wins} lost
+                {c.helped || c.hurt ? ` · ${c.helped ?? 0} helped · ${c.hurt ?? 0} hurt` : ""}
               </p>
               {c.full_line && (
                 <p className="tg-fine mt-1" style={{ color: "var(--tg-muted)" }}>

@@ -85,3 +85,26 @@ footer {
   padding-top: 12px;
   border-top: 1px solid var(--tg-line);
 }
+
+/* Company name sits above the company profile */
+#org {
+  margin-bottom: 8px;
+}
+
+/* A segmented choice that fills the row (sharing) */
+.tg-seg.full {
+  display: flex;
+}
+.tg-seg.full > * {
+  flex: 1 1 auto;
+  padding: 5px 8px;
+  text-align: center;
+  white-space: nowrap;
+}
+.tg-seg > [role="radio"]:focus-visible {
+  outline: 1px solid var(--tg-line-strong);
+  outline-offset: 1px;
+}
+.hint.two-line {
+  min-height: 3em;
+}

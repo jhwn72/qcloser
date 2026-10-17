@@ -103,3 +103,109 @@ body {
     animation: none;
   }
 }
+
+/* "Works with": two rows, labels sharing one column on wider screens, stacked on a phone */
+.q-works-row {
+  display: grid;
+  gap: 12px;
+  padding: 18px 0;
+  border-top: 1px solid var(--tg-line);
+}
+@media (min-width: 640px) {
+  .q-works-row {
+    grid-template-columns: 148px 1fr;
+    align-items: center;
+    gap: 24px;
+  }
+}
+/* Platforms that aren't supported yet: dimmed, and they don't light up on hover */
+.q-chip-soon {
+  opacity: 0.55;
+}
+.q-chip-soon:hover {
+  color: var(--tg-muted);
+}
+
+/* The big download button at the bottom of the landing page */
+.q-download {
+  padding: 13px 26px;
+  border-radius: var(--tg-radius-card);
+  font: 400 15px var(--tg-font);
+  text-decoration: none;
+  box-shadow: 0 0 28px rgba(255, 255, 255, 0.16);
+  transition: background var(--tg-fast), box-shadow var(--tg-medium) var(--tg-ease);
+}
+.q-download:hover {
+  box-shadow: 0 0 36px rgba(255, 255, 255, 0.28);
+}
+
+/* Royalties page: the revenue bar and the pool split. Segments grow in when their section reveals. */
+:root {
+  --q-warm: rgba(255, 214, 170, 0.85);
+}
+.q-bar {
+  display: flex;
+  gap: 2px;
+  height: 8px;
+}
+.q-bar > i {
+  display: block;
+  flex: none;
+  width: calc(var(--w) - 2px);
+  height: 100%;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 1.1s var(--tg-ease-out) var(--d, 200ms);
+}
+.q-bar > i:first-child {
+  border-radius: 999px 0 0 999px;
+}
+.q-bar > i:last-child {
+  width: var(--w);
+  border-radius: 0 999px 999px 0;
+}
+.reveal.in .q-bar > i {
+  transform: none;
+}
+.q-bar-pool {
+  background: rgb(255, 226, 190);
+  box-shadow: 0 0 12px 1px var(--tg-amber);
+}
+.q-bar-you {
+  box-shadow: 0 0 12px 1px rgba(255, 255, 255, 0.45);
+}
+.q-pool-fan {
+  display: block;
+  width: 100%;
+  height: 30px;
+  opacity: 0;
+  transition: opacity 0.9s var(--tg-ease-out) 700ms;
+}
+.reveal.in .q-pool-fan {
+  opacity: 1;
+}
+@media (prefers-reduced-motion: reduce) {
+  .q-bar > i {
+    transform: none;
+    transition: none;
+  }
+  .q-pool-fan {
+    opacity: 1;
+    transition: none;
+  }
+}
+
+/* The royalties page's share choice, a segmented control that fills its row */
+.q-share-seg {
+  display: flex;
+  width: 100%;
+}
+.q-share-seg > button {
+  flex: 1;
+  padding: 6px 10px;
+  text-align: center;
+}
+.q-share-seg > button:focus-visible {
+  outline: 1px solid var(--tg-line-strong);
+  outline-offset: 1px;
+}

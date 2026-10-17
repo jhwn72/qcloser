@@ -40,6 +40,7 @@
 
     <section>
       <div class="tg-label">Your company</div>
+      <input class="tg-input" id="org" placeholder="Company name" autocomplete="organization" />
       <textarea
         class="tg-input"
         id="profile"
@@ -47,6 +48,14 @@
         placeholder="What you sell, prices, standard offers, ideal customer, anything Q should never suggest…"
       ></textarea>
       <div class="tg-fine hint">Saved. Used on every call.</div>
+    </section>
+
+    <section>
+      <div class="tg-label">Share moves Q learns from you</div>
+      <div class="tg-seg full" id="share" role="radiogroup" aria-label="Share moves Q learns from you">
+        <span data-share="public" role="radio" tabindex="0">Everyone · earns royalties</span><span data-share="org" role="radio" tabindex="-1">My company only</span>
+      </div>
+      <div class="tg-fine hint two-line" id="share-hint"></div>
     </section>
 
     <section>

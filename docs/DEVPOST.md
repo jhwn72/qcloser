@@ -11,7 +11,7 @@ Q: your cue to close
 
 ## Tagline
 
-Every closer needs a Q. It listens to your sales call and shows you what the best salespeople would do next, in five words, and every win teaches it something new.
+Every closer needs a Q. Q listens to your sales call and shows you, at a glance, what the best salespeople would do next. Every win teaches it something new.
 
 (Short version for any field with a tight limit: "Every closer needs a Q." The product tagline stays "your cue to close".)
 
@@ -28,16 +28,16 @@ Every closer needs a Q. It listens to your sales call and shows you what the bes
 
 ## Inspiration
 
-"Sell me this pen" is the most famous sales test there is, and it's easy to freeze on. Real sales calls are the same: the objection lands and you have about two seconds. AI sales tools answer with paragraphs you can't read mid-call, full of lines buyers have heard before. And when a great rep improvises something that actually closes, it disappears when the call ends. James Bond never goes into the field without Q handing him the right gadget at the right moment. Every closer needs a Q: the right move at the right moment, in five words, from a playbook that remembers what works.
+"Sell me this pen" is the most famous sales test there is, and it's easy to freeze on. Real sales calls are the same: the objection lands and you have about two seconds. AI sales tools answer with paragraphs you can't read mid-call, full of lines buyers have heard before. And when a great rep improvises something that actually closes, it disappears when the call ends. James Bond never goes into the field without Q handing him the right gadget at the right moment. Every closer needs a Q: the right move at the right moment, at a glance, from a playbook that remembers what works.
 
 ## What it does
 
-**Q listens to your sales call and shows you what the best salespeople would do next, in five words. Every win teaches it something new.**
+**Q listens to your sales call and shows you, at a glance, what the best salespeople would do next. Every win teaches it something new.**
 
 We call it **closing intelligence**: the moves that are winning right now, getting sharper with every deal. Today Q is a Chrome extension that floats a card over Google Meet.
 
 - **Hears both sides.** Q reads Meet's live captions (the seller's own are labeled "You"). No audio capture, no extra transcription service.
-- **Nudges, never scripts.** When the buyer objects, warms up, or the call drifts, the card flashes a nudge of five words or fewer telling the seller where to steer. "I don't need a pen" becomes "Ask what contracts they sign". The seller says it their own way.
+- **Nudges, never scripts.** When the buyer objects, warms up, or the call drifts, the card flashes a short nudge telling the seller where to steer. "I don't need a pen" becomes "Ask what contracts they sign". The seller says it their own way.
 - **Every nudge has a source.** Each one comes from a playbook move and shows who it was learned from: "Learned from John · Los Angeles".
 - **Fits this buyer and this company.** Claude reads the whole call, a saved company profile and an optional pre-call brief, picks the best move, and fits it to the buyer. Nudges land in about 1.5 to 2 seconds.
 - **Watches the clock.** The seller sets the call length (10, 15, 30 or 45 minutes). The card shows the phase (Discovery, Present and handle, Close window, Ask for the sale), and nudges push toward the close as time runs low.
@@ -65,7 +65,7 @@ We call it **closing intelligence**: the moves that are winning right now, getti
 
 **Speed.** Thinking off and low effort for live nudges. The instructions, playbook and company profile are cached, so each nudge only sends what changed. The playbook is kept in memory for 5 seconds, and the card warms the backend up when a call starts. Measured on our demo call: 1.4 to 2.2 seconds server time across 14 runs. Model cost: about $0.0017 per nudge, about $0.12 per 15-minute call.
 
-**Learning (`/api/learn`).** When a call ends, Q saves it, adds a use (and on a win, a win) to every move it showed, and retires any move with 8 or more uses and under a 25% win rate. In parallel, Claude reviews the call (the turning point and one lesson, for wins and losses alike) and, on a win, finds the seller's own lines right before the buyer moved toward yes. It names the tactic behind them as a reusable move of five or six words, keeps the seller's real line and a one-sentence lesson, and skips anything already in the playbook. New moves go live for every Q card on the next poll.
+**Learning (`/api/learn`).** When a call ends, Q saves it, adds a use (and on a win, a win) to every move it showed, and retires any move with 8 or more uses and under a 25% win rate. In parallel, Claude reviews the call (the turning point and one lesson, for wins and losses alike) and, on a win, finds the seller's own lines right before the buyer moved toward yes. It names the tactic behind them as a short, reusable move, keeps the seller's real line and a one-sentence lesson, and skips anything already in the playbook. New moves go live for every Q card on the next poll.
 
 **Behaving well.** Q never uses an insecurity, grief or money trouble as leverage, never pushes someone who is struggling, and only uses facts from the call, the profile or the brief (no invented prices, offers or claims).
 
@@ -88,7 +88,7 @@ We call it **closing intelligence**: the moves that are winning right now, getti
 
 - Judge AI quality on cases that aren't in the prompt. Ours looked great on its own examples and generic on new ones.
 - Relevance beats win rate. A move that wins often is still a bad nudge in the wrong moment, so Claude ranks fit first and win rate breaks ties.
-- Five words forces a decision. A paragraph can hedge; a five-word nudge has to pick a direction.
+- A short nudge forces a decision. A paragraph can hedge; a nudge you read at a glance has to pick a direction.
 - Losses teach as much as wins. Every call now leaves a lesson.
 
 ## What's next
@@ -127,7 +127,7 @@ Full numbers, assumptions and sources: [SCALE.md](SCALE.md).
 ### Design (Best Visual Design)
 
 - **Tango, John's own design system:** dark, monochrome glass and a glowing glass ring as the Q logo, used across the card, popup, landing page and playbook.
-- **The nudge is the hero.** Five words, big, readable at a glance mid-sentence. Under it, small: who the move was learned from, the situation, the buyer type.
+- **The nudge is the hero.** Short, big, readable at a glance mid-sentence. Under it, small: who the move was learned from, the situation, the buyer type.
 - **A card that shows it's listening.** "Hearing Taylor…" and "Thinking…" states, a faint line of what it just heard, a glass ring that brightens when someone talks, a call clock with the phase (amber in the last 20%), and nudges that dim after a minute so an old one never looks current.
 - **It tells you the next step.** Bright when you need to act ("Press C to turn on captions"), faint while it just listens ("Listening for the buyer…").
 - **Built to live on top of Meet.** Shadow DOM so Meet can't break it, draggable, remembers where you left it, and Meet's own captions hidden.

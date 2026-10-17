@@ -1,12 +1,12 @@
 # Q: the path to $1B
 
-**Every closer needs a Q.** Q listens to your sales call and shows you what the best salespeople would do next, in five words, and every win teaches it something new. The category is **closing intelligence**: the moves that are winning right now, getting sharper with every deal. Every nudge comes from a playbook move, credited to whoever taught it and ranked by how often it wins.
+**Every closer needs a Q.** Q listens to your sales call and shows you, at a glance, what the best salespeople would do next. Every win teaches it something new. The category is **closing intelligence**: the moves that are winning right now, getting sharper with every deal. Every nudge comes from a playbook move, credited to whoever taught it and ranked by how often it wins.
 
 > **Where we are, plainly:** Q is a hackathon build from SEP Hacks 2026. It runs on Google Meet. It has no users, no revenue and no traction yet. The starter playbook (its moves, names and records) is sample data for this demo; moves learned on live calls are real. Every number below is either measured in our build, cited in [Sources](#sources), or labeled as a projection.
 
 ## Say it in 20 seconds
 
-> Every closer needs a Q. It listens to your sales call and shows you what the best salespeople would do next, in five words. When anyone wins with a new move, every Q user gets it in seconds, so Q gets sharper with every deal. Each call costs us about twelve cents to run, against a $39 to $99 seat. About a hundred thousand seats is $100 million a year, and that's a billion-dollar company.
+> Every closer needs a Q. Q listens to your sales call and shows you, at a glance, what the best salespeople would do next. When anyone wins with a new move, every Q user gets it in seconds, so Q gets sharper with every deal. Each call costs us about twelve cents to run, against a $39 to $99 seat. About a hundred thousand seats is $100 million a year, and that's a billion-dollar company.
 
 ## Headline numbers
 
@@ -36,7 +36,7 @@ Q runs on Google Meet today, so the first customers must already sell on Meet. O
 **How it compounds.** Every call produces labeled data: which move was shown, for which objection and buyer type, and whether the call was won.
 
 - **Outcome ranking (built).** Moves are scored by Bayesian win rate, (wins + 1) / (uses + 2), so new moves start near 50% and earn their place. 15% of nudges try a newer move so fresh ideas get a fair shot (skipped in sensitive moments). Moves that reach 8 uses with under a 25% win rate retire.
-- **Learning from wins (built).** On a won call, Q finds the seller's improvised line right before the buyer moved toward yes, compresses it to five words, credits the seller, and every other Q user can get it within seconds.
+- **Learning from wins (built).** On a won call, Q finds the seller's improvised line right before the buyer moved toward yes, turns it into a short, reusable move, credits the seller, and every other Q user can get it within seconds.
 - **The loop.** More sellers, more calls, more confident win rates per objection and buyer type, better nudges, more wins, more sellers.
 - **Projection:** at 10,000 seats and 5 calls a day, Q would log about 1.1 million outcome-labeled calls a month.
 
@@ -106,9 +106,9 @@ Assumptions (all projections, none achieved):
 
 | Risk | Today (built) | Next (planned) |
 |---|---|---|
-| **Wrong nudge** | Five words are easy to ignore and the seller stays in control. Losing moves lose rank and retire. Every nudge shows its source. | CRM-verified outcomes; playbooks per vertical; test nudges against no-nudge calls to prove lift. |
+| **Wrong nudge** | A short nudge is easy to ignore and the seller stays in control. Losing moves lose rank and retire. Every nudge shows its source. | CRM-verified outcomes; playbooks per vertical; test nudges against no-nudge calls to prove lift. |
 | **Noisy credit** (a won call credits every move shown) | Bayesian scoring means a move needs many uses before it's trusted; new moves come from the line right before the buyer turned. | Verify wins in the CRM; weight moves by when they landed. |
-| **Latency** | Q only sends finished buyer lines, and nudges are five words. Target: on screen within 1.5 seconds. Not yet benchmarked at scale. | Smaller model on the fast path; cache the playbook. |
+| **Latency** | Q only sends finished buyer lines, and nudges are short. Target: on screen within 1.5 seconds. Not yet benchmarked at scale. | Smaller model on the fast path; cache the playbook. |
 | **Privacy and consent** | Q reads Meet's captions in the seller's browser and captures no audio. It does save the transcript when the seller ends a call. California requires every party's consent to record a confidential conversation [7]. | Treat Q as recording: a clear notice to the buyer, keep only extracted moves by default, redact personal data, retention controls, enterprise admin settings. |
 | **Dependence on Meet's captions** | Detects when captions are off and asks the seller to turn them on. Typed fallback (Shift+B) if captions can't be read. | Google's real-time Meet Media API is in Developer Preview and closed to new signups [8], and the GA Meet REST API gives transcripts after the meeting [9]. So we'd add our own audio transcription, Zoom, Teams and dialers. The playbook is the moat, and it works on any platform. |
 | **Cold start** | A starter playbook of 250 moves (sample data for this demo: moves, names and records). | Go deep in one segment so data gets dense fast; give-to-get. |
