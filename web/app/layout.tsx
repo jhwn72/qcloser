@@ -3,7 +3,7 @@ import "./globals.css";
 
 export const metadata: Metadata = {
   title: "Q · your cue to close",
-  description: "Every closer needs a Q. Q listens to your sales call and shows you what the best salespeople would do next, in five words.",
+  description: "Every closer needs a Q. Q listens to your sales call and shows you, at a glance, what the best salespeople would do next.",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {

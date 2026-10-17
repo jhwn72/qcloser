@@ -1,21 +1,68 @@
 import Link from "next/link";
 import { Suspense } from "react";
+import { MOMENT_TYPES } from "@/lib/moments";
 import { db } from "@/lib/supabase";
+import ClockDemo from "./components/ClockDemo";
+import CountUp from "./components/CountUp";
+import LearnDemo from "./components/LearnDemo";
 import QMark from "./components/QMark";
+import Reveal from "./components/Reveal";
 import HeroDemo from "./HeroDemo";
 
 const STEPS = [
   {
     title: "Hears the call",
-    body: "Q reads Google Meet's live captions, both sides, and tracks how far into the call you are.",
+    body: "Q reads Google Meet's live captions, both sides, and keeps track of how far into the call you are.",
   },
   {
     title: "Nudges, never scripts",
-    body: "When the buyer pushes back or warms up, a five-word nudge tells you where to steer. You say it your way.",
+    body: "When the buyer pushes back or warms up, a short nudge tells you where to steer. You say it your way.",
   },
   {
     title: "Learns from every call",
     body: "Win, and your best move joins everyone's playbook, credited to you. Lose, and Q keeps the lesson.",
+  },
+];
+
+const SITUATIONS = [
+  "Objection · Price",
+  "Objection · Stall",
+  "Objection · Partner decides",
+  "Brush-off · Send me info",
+  "Worry · Burned before",
+  "Worry · Feeling judged",
+  "Buying signal",
+  "Closing · Yes too early",
+  "Pacing · Talking too long",
+  "Heads up · Hostile buyer",
+];
+
+const COMING = ["Zoom", "Microsoft Teams", "Slack huddles", "Webex", "Phone calls"];
+
+const FAQ = [
+  {
+    q: "Does Q record my calls?",
+    a: "Q never records audio. It reads the live captions Google Meet already shows in your browser and sends the conversation to Q to pick a nudge. When you end a call, the transcript is saved so Q can learn from it. As with any call notes, let the people on the call know.",
+  },
+  {
+    q: "Can the buyer see Q?",
+    a: "No. The card lives in your own browser tab, not in the meeting. The only way they'd see it is if you share your whole screen, so share a window or tab instead.",
+  },
+  {
+    q: "Is it going to put words in my mouth?",
+    a: "No. A nudge tells you where to steer, like “Ask what got in the way”. How you say it is up to you, so you still sound like yourself.",
+  },
+  {
+    q: "How fast is it?",
+    a: "About two seconds from the buyer's last word to the nudge on your screen. If the buyer is just making small talk, Q stays quiet and simply shows that it heard.",
+  },
+  {
+    q: "Where do the moves come from?",
+    a: "Q starts with a playbook of closing moves. Every time a seller wins with a move Q hasn't seen, it's added and credited to them, and every Q user has it within seconds. Moves that keep losing retire on their own.",
+  },
+  {
+    q: "Can I keep my company's moves private?",
+    a: "Today every Q user shares one playbook. Private team playbooks, where your company's best moves stay yours, are next on the roadmap.",
   },
 ];
 
@@ -26,6 +73,8 @@ const INSTALL = [
   "Click the Q icon: add your name, city and what you sell.",
   "Join a Google Meet call and press C to turn on captions.",
 ];
+
+const label = { fontSize: 12, letterSpacing: "0.14em", textTransform: "uppercase" as const, margin: "0 0 20px" };
 
 export default function Home() {
   return (
@@ -54,7 +103,7 @@ export default function Home() {
           Every closer needs a Q.
         </h1>
         <p className="tg-body mt-6 max-w-xl" style={{ fontSize: 18, lineHeight: 1.5 }}>
-          Q listens to your sales call and shows you what the best salespeople would do next, in five words.
+          Q listens to your sales call and shows you, at a glance, what the best salespeople would do next.
         </p>
         <div className="mt-8 flex items-center gap-5">
           <a className="tg-btn primary" href="#install">
@@ -72,57 +121,145 @@ export default function Home() {
       </section>
 
       {/* How it works */}
-      <section className="relative mx-auto w-full max-w-6xl px-4 py-12 sm:px-8">
-        <p className="tg-label" style={{ fontSize: 12, letterSpacing: "0.14em", textTransform: "uppercase", margin: "0 0 24px" }}>
-          Closing intelligence
-        </p>
+      <section className="relative mx-auto w-full max-w-6xl px-4 py-14 sm:px-8">
+        <Reveal>
+          <p className="tg-label" style={label}>
+            Closing intelligence
+          </p>
+        </Reveal>
         <div className="grid gap-8 sm:grid-cols-3">
           {STEPS.map((s, i) => (
-            <div key={s.title}>
+            <Reveal key={s.title} delay={i * 120}>
               <div className="tg-fine" style={{ letterSpacing: "0.08em" }}>0{i + 1}</div>
               <h2 className="tg-headline mt-2" style={{ fontSize: 22 }}>
                 {s.title}
               </h2>
-              <p className="tg-body mt-2" style={{ margin: "8px 0 0" }}>
+              <p className="tg-body" style={{ margin: "8px 0 0" }}>
                 {s.body}
               </p>
-            </div>
+            </Reveal>
           ))}
         </div>
       </section>
 
-      {/* Live numbers from the playbook */}
-      <section className="relative mx-auto w-full max-w-6xl px-4 py-12 sm:px-8">
+      {/* Feature: the moment and the clock */}
+      <section className="relative mx-auto grid w-full max-w-6xl items-center gap-12 px-4 py-20 sm:px-8 lg:grid-cols-2">
+        <Reveal>
+          <h2 className="tg-headline" style={{ fontSize: "clamp(28px, 4vw, 40px)", lineHeight: 1.1, textWrap: "balance" }}>
+            It knows the moment, and the clock.
+          </h2>
+          <p className="tg-body mt-5" style={{ fontSize: 16 }}>
+            Q recognizes {MOMENT_TYPES.length} situations, from price pushback and &ldquo;let me think about it&rdquo; to a buyer
+            who just got personal. It also watches the time: early on it helps you find the need, and near the end it
+            pushes you to ask for the sale.
+          </p>
+          <p className="tg-body mt-3" style={{ fontSize: 16 }}>
+            Tell Q what you sell once, add a quick brief before a call, and every nudge fits your offer.
+          </p>
+          <div className="mt-6 flex flex-wrap gap-2">
+            {SITUATIONS.map((s) => (
+              <span key={s} className="tg-chip" style={{ cursor: "default" }}>
+                {s}
+              </span>
+            ))}
+          </div>
+        </Reveal>
+        <Reveal delay={150} className="flex justify-center lg:justify-end">
+          <ClockDemo />
+        </Reveal>
+      </section>
+
+      {/* Feature: the playbook learns */}
+      <section className="relative mx-auto grid w-full max-w-6xl items-center gap-12 px-4 py-20 sm:px-8 lg:grid-cols-2">
+        <Reveal delay={150} className="order-2 flex justify-center lg:order-1 lg:justify-start">
+          <LearnDemo />
+        </Reveal>
+        <Reveal className="order-1 lg:order-2">
+          <h2 className="tg-headline" style={{ fontSize: "clamp(28px, 4vw, 40px)", lineHeight: 1.1, textWrap: "balance" }}>
+            A playbook that writes itself.
+          </h2>
+          <p className="tg-body mt-5" style={{ fontSize: 16 }}>
+            When you close with a move Q hasn&rsquo;t seen, it learns it, credits it to you, and every other Q user has it
+            within seconds. Lost calls leave a lesson about where things turned. Moves that keep losing retire on their
+            own.
+          </p>
+          <p className="tg-body mt-3" style={{ fontSize: 16 }}>
+            Generic AI guesses what sounds persuasive. Q learns what actually closes.
+          </p>
+        </Reveal>
+      </section>
+
+      {/* Numbers that are true today */}
+      <section className="relative mx-auto w-full max-w-6xl px-4 py-16 sm:px-8">
         <Suspense fallback={<div style={{ height: 96 }} />}>
-          <PlaybookNumbers />
+          <Numbers />
         </Suspense>
-        <p className="tg-fine mt-6" style={{ fontSize: 12 }}>
-          The starter playbook (its moves, names and records, and the examples above) is sample data for this demo.
-          Moves learned on live calls are real.
-        </p>
+      </section>
+
+      {/* Works with */}
+      <section className="relative mx-auto w-full max-w-6xl px-4 py-16 sm:px-8">
+        <Reveal>
+          <p className="tg-label" style={label}>
+            Works with
+          </p>
+          <div className="flex flex-wrap items-center gap-3">
+            <span className="tg-chip on" style={{ cursor: "default", padding: "8px 14px", fontSize: 14 }}>
+              <span className="tg-dot small" /> Google Meet
+            </span>
+            <span className="tg-fine" style={{ margin: "0 6px" }}>
+              Coming soon
+            </span>
+            {COMING.map((c) => (
+              <span key={c} className="tg-chip" style={{ cursor: "default", padding: "8px 14px", fontSize: 14, opacity: 0.6 }}>
+                {c}
+              </span>
+            ))}
+          </div>
+        </Reveal>
+      </section>
+
+      {/* Questions people ask */}
+      <section className="relative mx-auto w-full max-w-3xl px-4 py-16 sm:px-8">
+        <Reveal>
+          <p className="tg-label" style={label}>
+            Questions
+          </p>
+        </Reveal>
+        <div>
+          {FAQ.map((f, i) => (
+            <Reveal key={f.q} delay={i * 60}>
+              <details className="q-faq">
+                <summary>{f.q}</summary>
+                <p className="tg-body">{f.a}</p>
+              </details>
+            </Reveal>
+          ))}
+        </div>
       </section>
 
       {/* Install, for judges */}
       <section id="install" className="relative mx-auto w-full max-w-6xl px-4 pb-24 pt-12 sm:px-8">
-        <div className="q-card" style={{ width: "100%", maxWidth: 620, padding: "24px 26px" }}>
-          <h2 className="tg-title" style={{ marginBottom: 14 }}>
-            Install Q
-          </h2>
-          <ol className="grid gap-3">
-            {INSTALL.map((step, i) => (
-              <li key={step} className="flex gap-3 tg-body" style={{ margin: 0 }}>
-                <span className="tg-fine" style={{ minWidth: 18, paddingTop: 2 }}>
-                  {i + 1}
-                </span>
-                <span style={{ color: "var(--tg-text-soft)" }}>{step}</span>
-              </li>
-            ))}
-          </ol>
-          <p className="tg-fine mt-5" style={{ fontSize: 12.5 }}>
-            Works on Google Meet in Chrome. Shortcuts on the call: Shift+D shows what Q hears, Shift+B types a line,
-            Shift+C shows Meet&rsquo;s captions.
-          </p>
-        </div>
+        <Reveal>
+          <div className="q-card" style={{ width: "100%", maxWidth: 620, padding: "24px 26px" }}>
+            <h2 className="tg-title" style={{ marginBottom: 14 }}>
+              Install Q
+            </h2>
+            <ol className="grid gap-3">
+              {INSTALL.map((step, i) => (
+                <li key={step} className="flex gap-3 tg-body" style={{ margin: 0 }}>
+                  <span className="tg-fine" style={{ minWidth: 18, paddingTop: 2 }}>
+                    {i + 1}
+                  </span>
+                  <span style={{ color: "var(--tg-text-soft)" }}>{step}</span>
+                </li>
+              ))}
+            </ol>
+            <p className="tg-fine mt-5" style={{ fontSize: 12.5 }}>
+              Works on Google Meet in Chrome. Shortcuts on the call: Shift+D shows what Q hears, Shift+B types a line,
+              Shift+C shows Meet&rsquo;s captions.
+            </p>
+          </div>
+        </Reveal>
       </section>
 
       <footer className="relative mx-auto w-full max-w-6xl px-4 pb-10 sm:px-8">
@@ -132,32 +269,23 @@ export default function Home() {
   );
 }
 
-async function PlaybookNumbers() {
-  const supabase = db();
-  const rows = (table: string) => supabase.from(table).select("*", { count: "exact", head: true });
-  const [moves, learned, calls, lessons] = (
-    await Promise.all([
-      rows("cues").eq("status", "active"),
-      rows("cues").eq("is_seed", false),
-      rows("calls"),
-      rows("insights"),
-    ])
-  ).map((r) => r.count ?? 0);
+// Three numbers that are true right now: the playbook's size (live), the situations Q knows, and its speed.
+async function Numbers() {
+  const { count } = await db().from("cues").select("*", { count: "exact", head: true }).eq("status", "active");
   const stats = [
-    { n: moves, label: "moves in the playbook" },
-    { n: learned, label: "learned from live calls" },
-    { n: calls, label: "calls Q learned from" },
-    { n: lessons, label: "lessons kept" },
+    { node: <CountUp to={count ?? 0} />, label: "moves in the playbook" },
+    { node: <CountUp to={MOMENT_TYPES.length} />, label: "situations Q recognizes" },
+    { node: <CountUp to={2} prefix="~" suffix=" s" />, label: "from the buyer's words to your nudge" },
   ];
   return (
-    <div className="grid grid-cols-2 gap-6 sm:grid-cols-4">
-      {stats.map((s) => (
-        <div key={s.label}>
-          <div style={{ font: "var(--tg-text-display)", textShadow: "0 0 24px rgba(255,255,255,0.25)" }}>{s.n}</div>
-          <div className="tg-fine mt-2" style={{ fontSize: 12.5 }}>
+    <div className="grid grid-cols-1 gap-10 sm:grid-cols-3">
+      {stats.map((s, i) => (
+        <Reveal key={s.label} delay={i * 120}>
+          <div style={{ font: "300 56px/1 var(--tg-font)", textShadow: "0 0 24px rgba(255,255,255,0.25)" }}>{s.node}</div>
+          <div className="tg-fine mt-3" style={{ fontSize: 13 }}>
             {s.label}
           </div>
-        </div>
+        </Reveal>
       ))}
     </div>
   );

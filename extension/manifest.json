@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "Q: your cue to close",
   "version": "0.1.0",
-  "description": "Every closer needs a Q. Five-word nudges on Google Meet that tell you where to steer the sale, and it learns from every win.",
+  "description": "Every closer needs a Q. Short nudges on Google Meet that tell you where to steer the sale, and it learns from every win.",
   "icons": {
     "16": "icons/q16.png",
     "48": "icons/q48.png",

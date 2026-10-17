@@ -30,3 +30,76 @@ body {
   letter-spacing: -0.01em;
   text-shadow: 0 0 28px rgba(255, 255, 255, 0.18);
 }
+
+/* Sections rise into place as they scroll into view: slow, soft, once */
+.reveal {
+  opacity: 0;
+  transform: translateY(16px);
+  filter: blur(6px);
+  transition:
+    opacity 0.8s var(--tg-ease-out),
+    transform 0.8s var(--tg-ease-out),
+    filter 0.8s var(--tg-ease-out);
+}
+.reveal.in {
+  opacity: 1;
+  transform: none;
+  filter: none;
+}
+
+/* Questions: a quiet list that opens smoothly */
+.q-faq {
+  border-bottom: 1px solid var(--tg-line);
+}
+.q-faq summary {
+  list-style: none;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  padding: 18px 0;
+  font: 300 19px/1.35 var(--tg-font);
+  color: var(--tg-text-soft);
+  transition: color var(--tg-fast);
+}
+.q-faq summary::-webkit-details-marker {
+  display: none;
+}
+.q-faq summary::after {
+  content: "+";
+  font: 300 22px/1 var(--tg-font);
+  color: var(--tg-faint);
+  transition: transform var(--tg-medium) var(--tg-ease);
+}
+.q-faq[open] summary::after {
+  transform: rotate(45deg);
+}
+.q-faq summary:hover {
+  color: var(--tg-text);
+}
+.q-faq p {
+  margin: 0 0 20px;
+  max-width: 60ch;
+}
+.q-faq[open] p {
+  animation: q-faq-in var(--tg-slow) var(--tg-ease-out);
+}
+@keyframes q-faq-in {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal {
+    opacity: 1;
+    transform: none;
+    filter: none;
+    transition: none;
+  }
+  .q-faq[open] p {
+    animation: none;
+  }
+}
