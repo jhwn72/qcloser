@@ -10,7 +10,7 @@ drop table if exists cues;
 -- A cue is a move from the playbook: a nudge on where to steer, never a script.
 create table cues (
   id uuid primary key default gen_random_uuid(),
-  objection_type text not null,  -- the moment: no_need | price | timing | trust | authority | competitor | stall | buying_signal | pacing
+  objection_type text not null,  -- the moment type; the full list (36) is in web/lib/moments.ts
   buyer_type text,               -- skeptical | rushed | price_focused | curious
   cue_text text not null,        -- the move as a nudge, five words max
   full_line text,                -- how the seller actually said it

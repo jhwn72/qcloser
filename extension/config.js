@@ -1,4 +1,4 @@
-// Where Q's backend lives. Change this one line when the site is deployed to Vercel.
+// Where Q's backend lives. For local development, switch to "http://localhost:3000".
 self.Q_CONFIG = {
-  BACKEND_URL: "http://localhost:3000",
+  BACKEND_URL: "https://q-cue-to-close.vercel.app",
 };

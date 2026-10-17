@@ -66,14 +66,19 @@ export async function POST(req: Request) {
   ]
     .filter(Boolean)
     .join("\n\n");
-  const res = await client.messages.parse({
+  let res;
+  try {
+    res = await client.messages.parse({
     model: JUDGE_MODEL,
     max_tokens: 8000,
     thinking: { type: "adaptive" },
     system: RUBRIC,
     messages: [{ role: "user", content }],
-    output_config: { format: zodOutputFormat(Verdict), effort: "medium" },
-  });
+      output_config: { format: zodOutputFormat(Verdict), effort: "medium" },
+    });
+  } catch (e) {
+    return Response.json({ error: e instanceof Error ? e.message : String(e) }, { status: 500 });
+  }
   if (res.stop_reason === "refusal" || !res.parsed_output) return Response.json({ score: null, reason: "judge gave no verdict", better: "" });
   return Response.json(res.parsed_output);
 }

@@ -1,5 +1,5 @@
 {
-  "_about": "Starting playbook. Every move is a nudge (where to steer), never a script. objection_type is the moment the move answers (see lib/moments.ts). full_line is how the expert actually said it. days = how long ago it was learned. Loaded by the admin reset.",
+  "_about": "Starting playbook. Every move is a nudge (where to steer), never a script. objection_type is the moment the move answers (see lib/moments.ts). full_line is how the expert actually said it. days = how long ago it was learned. Loaded by the admin reset and reseed.",
   "cues": [
     { "objection_type": "opening", "cue_text": "Set the agenda upfront.", "author_name": "Q Starter", "uses": 4, "wins": 1, "days": 30 },
     { "objection_type": "opening", "cue_text": "State your reason, one line.", "author_name": "Q Starter", "uses": 4, "wins": 1, "days": 30 },
@@ -269,13 +269,14 @@
 
     { "objection_type": "confused", "cue_text": "Explain it in plain words.", "author_name": "Q Starter", "uses": 4, "wins": 1, "days": 30 },
     { "objection_type": "confused", "cue_text": "Use one simple example.", "author_name": "Q Starter", "uses": 4, "wins": 1, "days": 30 },
-    { "objection_type": "confused", "cue_text": "Check what's still unclear.", "author_name": "Q Starter", "uses": 4, "wins": 1, "days": 30 },
+    { "objection_type": "confused", "cue_text": "Answer in one plain sentence.", "author_name": "Q Starter", "uses": 4, "wins": 1, "days": 30 },
     { "objection_type": "confused", "cue_text": "Use their own numbers.", "full_line": "Forget the jargon. Using your numbers, here's what changes each month.", "author_name": "Elena", "author_city": "Philadelphia", "uses": 9, "wins": 7, "days": 6 },
-    { "objection_type": "confused", "buyer_type": "curious", "cue_text": "Ask what to clarify first.", "full_line": "I threw a lot of terms at you. Which one should I explain first?", "author_name": "Tess", "author_city": "Portland", "uses": 7, "wins": 5, "days": 9 },
+    { "objection_type": "confused", "buyer_type": "curious", "cue_text": "Use an everyday comparison.", "full_line": "Think of it like rollover minutes: what you don't use today, you get credit for later.", "author_name": "Tess", "author_city": "Portland", "uses": 7, "wins": 5, "days": 9 },
 
     { "objection_type": "tangent", "cue_text": "Enjoy it, then bridge back.", "author_name": "Q Starter", "uses": 4, "wins": 1, "days": 30 },
     { "objection_type": "tangent", "cue_text": "Ask a steering question.", "author_name": "Q Starter", "uses": 4, "wins": 1, "days": 30 },
     { "objection_type": "tangent", "cue_text": "Note the time, refocus kindly.", "author_name": "Q Starter", "uses": 4, "wins": 1, "days": 30 },
+    { "objection_type": "tangent", "cue_text": "Bridge the story to booking.", "author_name": "Q Starter", "uses": 4, "wins": 1, "days": 30 },
     { "objection_type": "tangent", "buyer_type": "curious", "cue_text": "Tie their story back.", "full_line": "That sounds amazing. Funny enough, it's exactly why people come to us.", "author_name": "Reggie", "author_city": "New Orleans", "uses": 8, "wins": 6, "days": 7 },
 
     { "objection_type": "hostile", "cue_text": "Stay calm, acknowledge the frustration.", "author_name": "Q Starter", "uses": 4, "wins": 1, "days": 30 },

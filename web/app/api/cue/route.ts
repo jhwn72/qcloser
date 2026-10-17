@@ -164,7 +164,7 @@ export async function POST(req: Request) {
   const chosen = choose(pool, buyerType, reading.moment);
   if (process.env.NODE_ENV !== "production") {
     const last = turns[turns.length - 1];
-    console.log(`[cue] ${last.speaker}: "${last.text}" -> ${reading.moment} | "${chosen.nudge}" (move: ${chosen.cue.cue_text} / ${chosen.cue.author_name}) | profile ${body.profile ? "yes" : "no"}, brief ${body.brief ? "yes" : "no"}, ${turns.length} turns, ${recent.length} recent nudges`);
+    console.log(`[cue] ${last.speaker}: "${last.text}" -> ${reading.moment}/${reading.aim} | "${chosen.nudge}" (move: ${chosen.cue.cue_text} / ${chosen.cue.author_name}) | profile ${body.profile ? "yes" : "no"}, brief ${body.brief ? "yes" : "no"}, ${turns.length} turns, ${recent.length} recent nudges`);
   }
   return json(req, {
     cue: {
@@ -179,6 +179,6 @@ export async function POST(req: Request) {
     buyer_type: buyerType,
     objection_type: reading.moment,
     ms: Date.now() - started,
-    ...(process.env.NODE_ENV !== "production" ? { picks: reading.picks } : {}), // development only: Claude's raw picks
+    ...(process.env.NODE_ENV !== "production" ? { aim: reading.aim, picks: reading.picks } : {}), // development only: Claude's raw answer
   });
 }

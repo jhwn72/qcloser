@@ -1,5 +1,7 @@
 // Generated from web/lib/moments.ts by web/scripts/sync-moments.mjs. Don't edit by hand.
 self.Q_MOMENT_LABELS = {
+  "opening": "Opening · Set the agenda",
+  "pain": "Discovery · Pain shared",
   "no_need": "Objection · No need",
   "price": "Objection · Price",
   "discount": "Negotiating · Discount",

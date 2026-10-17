@@ -9,6 +9,7 @@ export const metadata = { title: "Playbook · Q" };
 
 // How moments are grouped on the page. Anything not listed lands in "More".
 const GROUPS: { title: string; moments: Moment[] }[] = [
+  { title: "Opening and discovery", moments: ["opening", "pain"] },
   {
     title: "Objections",
     moments: ["no_need", "price", "discount", "timing", "trust", "proof", "authority", "partner", "competitor", "shopping", "locked_in", "stall", "send_info", "process", "compliance", "technical", "tough_question", "not_fit"],

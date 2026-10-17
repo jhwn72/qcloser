@@ -47,11 +47,13 @@ const ROLE = `Q coaches a seller live, using a playbook of moves from expert clo
 A move tells the seller where to steer the conversation, never the words to say: the seller talks in their own style.
 A nudge is a move fitted to this call: five words or fewer (count them; drop words like the, a, their to fit), starts with a verb aimed at the seller (Ask, Find, Offer, Name, Acknowledge, Let...), plain text, no quotation marks.`;
 
-// Field order matters: Claude writes these in order. It writes the concrete nudge before the
-// playbook move it comes from, so it doesn't just echo the generic move.
+// Field order matters: Claude writes these in order. It commits to what this nudge must do (aim) before
+// writing it, and writes the concrete nudge before the playbook move it comes from, so it doesn't just echo the move.
+export const AIMS = ["probe", "answer", "acknowledge", "calm", "advance", "none"] as const;
 const Reading = z.object({
   moment: z.enum([...MOMENT_TYPES, "none"]),
   buyer_type: z.enum([...BUYER_TYPES, "unclear"]),
+  aim: z.enum(AIMS),
   picks: z.array(
     z.object({
       nudge: z.string().describe("Five words or fewer, built from a detail of this call. Never a playbook line word for word."),
@@ -133,7 +135,14 @@ How an elite closer reads the moment:
    ${MOMENT_GUIDE}
    none: small talk, neutral questions, or nothing to coach yet.
 2. buyer_type: only when the buyer's own words clearly show it. skeptical (pushes back on claims), rushed (says they're busy or short on time), price_focused (talks about cost or budget), curious (asks questions, open). A plain "no" or "I don't need it" is not evidence. If the evidence is thin, answer "unclear".
-3. picks: unless moment is none, give 2 nudges built on 2 different moves, best first, each with the playbook move whose tactic it uses (copied exactly as listed). Prefer moves listed under this moment; if none fits, use the closest tactic from any moment.
+3. aim: what this nudge must do now, given the clock and what was already tried.
+   probe: one sharp question. Only in the opening or middle, and only if the last nudge wasn't a probing question too.
+   answer: the buyer asked something directly. Answer it, then steer toward the close.
+   acknowledge: a personal moment. One beat of empathy, then the next step that genuinely helps.
+   calm: hostility. De-escalate.
+   advance: move to commitment: a trial close, a summary plus an ask, an assumptive close, or a dated next step. Use it from the closing window on, after one or two probing questions, and whenever the buyer warms up or says yes.
+   none: when moment is none.
+4. picks: unless moment is none, give 2 nudges that both serve the aim, built on 2 different moves, best first, each with the playbook move whose tactic it uses (copied exactly as listed). Prefer moves listed under this moment; if none fits, use the closest tactic from any moment.
    The move is the tactic. The nudge is the sharpest, most concrete version of that tactic for this buyer, this product and what was just said. It should make the seller think "oh, good idea", not "obviously". In the opening and middle, the best nudge is often a precise question that gets the buyer to name the cost, the stake or the real worry; later, it is usually an ask. A nudge may carry two short beats joined by a comma, like an acknowledgement and an action. Build it from real details: the buyer's own words, what the product is used for, the moments when it matters, offers in the profile or brief.
    Good nudges (concrete, only make sense on this call):
    - Selling a pen, buyer: "I don't need a pen." Move "Ask when it really matters." -> "Ask what contracts they sign"
@@ -141,7 +150,7 @@ How an elite closer reads the moment:
    - Selling a coding course, buyer: "I can learn this free on YouTube." Move "Ask what's been frustrating lately." -> "Ask how long they've tried"
    - Selling software, buyer: "Too expensive." Profile offers a free trial. Move "Offer a small start now." -> "Offer the 14-day free trial"
    - Selling dental cleanings, buyer: "It's been years. Honestly, my teeth are embarrassing." Move "Normalize the feeling." -> "Say long gaps are common"
-   - Selling bookkeeping software. Q already showed "Put a number on it", and the buyer answered: "Probably ten hours a month fixing receipts." Move "Ask how it feels personally." -> "Ask how those ten hours feel"
+   - Selling bookkeeping software, 9 of 15 min. Q already showed "Put a number on it", and the buyer answered: "Probably ten hours a month fixing receipts." Move "Link pain to the offer." -> "Offer to take those ten hours"
    Bad nudges (generic, would fit any call): "Ask what would convince them", "Shift from price to value", "Ask what it's worth", "Ask what's been frustrating lately". A nudge must never just repeat a playbook move; it must contain a detail from this call (the buyer's words, the product, an offer). Also bad: "Say 90% of clients love it" when no such number was given.
    Use only facts you have from the call, the profile or the brief. Don't make up prices, offers, people, numbers, features or claims about other customers, and don't call something an edge unless the profile says it is.
    Personal moments: acknowledge in one beat and speak to the real worry, in their words, then steer to the next step that genuinely helps them. Never change the subject or jump back to an earlier detail, never make light of it, never use an insecurity (body, health, grief, money trouble) as leverage, and never pressure someone who is struggling.
@@ -254,7 +263,7 @@ Look for turning points: the buyer objected, shared a worry or a problem, went q
 Name the real tactic behind the seller's words, as an elite closer would: labeling or mirroring, a calibrated how or what question, an accusation audit, quantifying the cost of the problem, going deeper on pain before pitching, teaching a reframe, future pacing, risk reversal, a trial or assumptive close, a takeaway, tying the close to a date or a deadline the buyer named, anchoring on a stake the buyer named.
 
 Learn a move when the tactic is new to the playbook, or when the seller's version is a meaningfully sharper or more specific angle than the closest playbook move. Example: the playbook has "Book the date now", but the seller tied the start date to the trade show the buyer was dreading, so learn "Tie the close to their deadline". Example: the playbook has "Make them picture using it", but the seller brought back the promotion the buyer had mentioned wanting, so learn "Anchor on the stake they named".
-Skip true duplicates (the same tactic at the same sharpness as a playbook move), small talk, and anything that only worked because of one product's detail.
+Skip true duplicates (the same tactic at the same sharpness as a playbook move; a reworded playbook move is a duplicate), small talk, and anything that only worked because of one product's detail.
 
 For each move:
 - moment: the moment it answered, using these types:

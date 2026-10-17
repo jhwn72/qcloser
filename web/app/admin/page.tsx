@@ -4,14 +4,16 @@ import { useState } from "react";
 
 // Demo control: wipe calls and learned moves, reload the starting playbook.
 export default function AdminPage() {
-  const [state, setState] = useState<"idle" | "busy" | "done" | "error">("idle");
+  const [state, setState] = useState<"idle" | "busy" | "done" | "error" | "denied">("idle");
   const [counts, setCounts] = useState<{ cues: number; insights: number } | null>(null);
+  const [passcode, setPasscode] = useState("");
 
   async function reset() {
     if (!window.confirm("Reset Q to the starting playbook? This deletes every call and every learned move.")) return;
     setState("busy");
     try {
-      const r = await fetch("/api/admin/reset", { method: "POST" });
+      const r = await fetch("/api/admin/reset", { method: "POST", headers: { "x-admin-key": passcode } });
+      if (r.status === 401) return setState("denied");
       const d = await r.json();
       if (!r.ok || !d.ok) throw new Error();
       setCounts({ cues: d.cues, insights: d.insights });
@@ -28,6 +30,14 @@ export default function AdminPage() {
         Puts Q back to the starting playbook, for re-recording the demo. Deletes every call and every move Q
         learned from them.
       </p>
+      <input
+        className="tg-input"
+        type="password"
+        placeholder="Admin passcode (not needed locally)"
+        value={passcode}
+        onChange={(e) => setPasscode(e.target.value)}
+        autoComplete="off"
+      />
       <div>
         <button className="tg-btn primary" onClick={reset} disabled={state === "busy"}>
           {state === "busy" ? "Resetting…" : "Reset to seed"}
@@ -36,6 +46,11 @@ export default function AdminPage() {
       {state === "done" && counts && (
         <p className="tg-fine" style={{ fontSize: 13 }}>
           Done. Loaded {counts.cues} moves and {counts.insights} insights.
+        </p>
+      )}
+      {state === "denied" && (
+        <p className="tg-fine" style={{ fontSize: 13 }}>
+          Wrong passcode. It&rsquo;s ADMIN_KEY in web/.env.local.
         </p>
       )}
       {state === "error" && (

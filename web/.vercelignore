@@ -1,0 +1,5 @@
+# Not uploaded to Vercel: local keys, build output, dev scripts
+.env*
+.next
+node_modules
+scripts
