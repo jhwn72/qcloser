@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import PausedBanner from "./components/PausedBanner";
+import DownloadNotice from "./components/DownloadNotice";
 
 export const metadata: Metadata = {
   title: "Q · your cue to close",
@@ -9,7 +11,11 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html lang="en" className="h-full">
-      <body className="tg min-h-full flex flex-col">{children}</body>
+      <body className="tg min-h-full flex flex-col">
+        <PausedBanner />
+        {children}
+        <DownloadNotice />
+      </body>
     </html>
   );
 }
